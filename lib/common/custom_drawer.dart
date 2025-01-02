@@ -52,8 +52,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   leading: Icon(Icons.account_circle_outlined),
                   title: Text("Profile"),
                   onTap: () {
-                    //  Get.back(); // Close the drawer
-                    //Get.to(ProfileScreen());
+                    Get.back(); // Close the drawer
+                    Get.to(ProfileScreen());
                   },
                 ),
                 ListTile(

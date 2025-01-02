@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kanha_bmc/common/custom_drawer.dart';
 import '../../common/custom_app_bar.dart';
 import '../../controller/reports/reports_homepage_controller.dart';
 
@@ -18,7 +19,9 @@ class _ReportsHomepageScreenState extends State<ReportsHomepageScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: ProcCustomAppBar(title: 'Reports'),
+        appBar: const CustomAppBar(
+          title: 'Reports',
+        ),
         body: OrientationBuilder(
           builder: (context, orientation) {
             return SizedBox(
