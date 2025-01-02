@@ -17,11 +17,12 @@ class MemberCollectionScreen extends StatelessWidget {
         body: OrientationBuilder(
           builder: (context, orientation) {
             bool isPortrait = orientation == Orientation.portrait;
-            double padding = Get.width * 0.04; // Use Get.width for consistent padding
-            double fontSize = Get.width * 0.04; // Font size based on screen width
+            double padding =
+                Get.width * 0.04; // Use Get.width for consistent padding
+            double fontSize =
+                Get.width * 0.04; // Font size based on screen width
 
-            return 
-            Padding(
+            return Padding(
               padding: EdgeInsets.all(padding),
               child: SingleChildScrollView(
                 child: Column(
@@ -30,20 +31,23 @@ class MemberCollectionScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                    Obx(() => Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  '${controller.currentDate.value.toLocal()}'.split(' ')[0],
-                  style: TextStyle(fontSize: 16),
-                ),
-              )),
-          Obx(() => Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  controller.timeShift.value,
-                  style: TextStyle(fontSize: 16),
-                ),
-              )),
+                        Obx(() => Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                '${controller.currentDate.value.toLocal()}'
+                                    .split(' ')[0],
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.w800),
+                              ),
+                            )),
+                        Obx(() => Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                controller.timeShift.value,
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.w800),
+                              ),
+                            )),
                       ],
                     ),
 
@@ -55,7 +59,7 @@ class MemberCollectionScreen extends StatelessWidget {
                         Expanded(
                           child: TextFormField(
                             decoration: InputDecoration(
-                              labelText: 'Code',
+                              labelText: 'Member Code',
                               border: OutlineInputBorder(),
                             ),
                             onChanged: (value) {
@@ -89,7 +93,8 @@ class MemberCollectionScreen extends StatelessWidget {
                           padding: EdgeInsets.all(padding * 0.5),
                           child: Text(
                             'Milk Type:',
-                            style: TextStyle(fontSize: fontSize),
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.w800),
                           ),
                         ),
                         Expanded(
@@ -158,9 +163,7 @@ class MemberCollectionScreen extends StatelessWidget {
                     SizedBox(height: padding),
 
                     // QTY, Fat, SNF input fields (adjusted based on orientation)
-                  
-                  
-                  
+
                     if (isPortrait)
                       Row(
                         children: [
@@ -296,72 +299,80 @@ class MemberCollectionScreen extends StatelessWidget {
                     SizedBox(height: padding),
 
                     // Save Button
-                    Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        ElevatedButton(style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.symmetric(
-          horizontal: Get.width * 0.01,
-          vertical: Get.height * 0.01,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        backgroundColor: CustomColors.appGreenButtomColor,
-      ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: Get.width * 0.01,
+                              vertical: Get.height * 0.01,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            backgroundColor: CustomColors.appGreenButtomColor,
+                          ),
                           onPressed: () {
                             controller.saveEntry();
                           },
-                          child: Text('Save', style: TextStyle(fontSize: fontSize,color: CustomColors.bgColor)),
+                          child: Text('Save',
+                              style: TextStyle(
+                                  fontSize: 20, color: CustomColors.bgColor)),
                         ),
-                          ElevatedButton(style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.symmetric(
-          horizontal: Get.width * 0.01,
-          vertical: Get.height * 0.01,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        backgroundColor: CustomColors.appRedButtomColor,
-      ),
-                      onPressed: () {
-                        controller.clearCollections();
-                      },
-                      child: Text('Clear Data', style: TextStyle(fontSize: fontSize,color: CustomColors.bgColor)),
-                    ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: Get.width * 0.01,
+                              vertical: Get.height * 0.01,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            backgroundColor: CustomColors.appRedButtomColor,
+                          ),
+                          onPressed: () {
+                            controller.clearCollections();
+                          },
+                          child: Text('Clear Data',
+                              style: TextStyle(
+                                  fontSize: 20, color: CustomColors.bgColor)),
+                        ),
                       ],
                     ),
 
                     SizedBox(height: padding),
 
                     // Saved Entries Table
-                    Obx(() => SingleChildScrollView( 
-                      scrollDirection: Axis.horizontal,
-                      child: DataTable(
-                        columnSpacing: Get.width * 0.02, // Use Get.width for consistent spacing
-                        columns: [
-                          DataColumn(label: Text('Sample No')),
-                          DataColumn(label: Text('Code')),
-                          DataColumn(label: Text('QTY')),
-                          DataColumn(label: Text('Fat')),
-                          DataColumn(label: Text('SNF')),
-                          DataColumn(label: Text('Rate')),
-                          DataColumn(label: Text('Amount')),
-                        ],
-                        rows: controller.savedEntries
-                            .map(
-                              (entry) => DataRow(cells: [
-                                DataCell(Text(entry['sampleNo']!)),
-                                DataCell(Text(entry['code']!)),
-                                DataCell(Text(entry['qty']!)),
-                                DataCell(Text(entry['fat']!)),
-                                DataCell(Text(entry['snf']!)),
-                                DataCell(Text(entry['rate']!)),
-                                DataCell(Text(entry['amount']!)),
-                              ]),
-                            )
-                            .toList(),
-                      ),
-                    )),
+                    Obx(() => SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: DataTable(
+                            columnSpacing: Get.width *
+                                0.02, // Use Get.width for consistent spacing
+                            columns: [
+                              DataColumn(label: Text('Sample No')),
+                              DataColumn(label: Text('Code')),
+                              DataColumn(label: Text('QTY')),
+                              DataColumn(label: Text('Fat')),
+                              DataColumn(label: Text('SNF')),
+                              DataColumn(label: Text('Rate')),
+                              DataColumn(label: Text('Amount')),
+                            ],
+                            rows: controller.savedEntries
+                                .map(
+                                  (entry) => DataRow(cells: [
+                                    DataCell(Text(entry['sampleNo']!)),
+                                    DataCell(Text(entry['code']!)),
+                                    DataCell(Text(entry['qty']!)),
+                                    DataCell(Text(entry['fat']!)),
+                                    DataCell(Text(entry['snf']!)),
+                                    DataCell(Text(entry['rate']!)),
+                                    DataCell(Text(entry['amount']!)),
+                                  ]),
+                                )
+                                .toList(),
+                          ),
+                        )),
                   ],
                 ),
               ),

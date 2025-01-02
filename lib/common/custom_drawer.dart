@@ -2,12 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kanha_bmc/common/shared_preferences.dart';
 import 'package:kanha_bmc/pages/dashboard.dart';
-import 'package:kanha_bmc/pages/master/master.dart';
-import 'package:kanha_bmc/pages/procurement/procurement.dart';
+import 'package:kanha_bmc/pages/profile.dart';
 
-class CustomDrawer extends StatelessWidget {
+import '../pages/master/master_homepage.dart';
+import '../pages/procurement/procurement_homepage.dart';
+import '../pages/reports/report_homepage.dart';
+
+class CustomDrawer extends StatefulWidget {
   const CustomDrawer({super.key});
 
+  @override
+  State<CustomDrawer> createState() => _CustomDrawerState();
+}
+
+class _CustomDrawerState extends State<CustomDrawer> {
   @override
   Widget build(BuildContext context) {
     return OrientationBuilder(
@@ -20,7 +28,8 @@ class CustomDrawer extends StatelessWidget {
           child: Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("assets/images/bg_image.png"), // Background image
+                image: AssetImage(
+                    "assets/images/bg_image.png"), // Background image
                 fit: BoxFit.cover,
               ),
             ),
@@ -28,7 +37,7 @@ class CustomDrawer extends StatelessWidget {
               padding: EdgeInsets.zero,
               children: [
                 SizedBox(
-                  height: height * 0.1, 
+                  height: height * 0.1,
                 ),
                 SizedBox(
                   width: width,
@@ -36,14 +45,15 @@ class CustomDrawer extends StatelessWidget {
                   child: Image.asset("assets/images/logo.png"),
                 ),
                 SizedBox(
-                  height: height * 0.05, 
+                  height: height * 0.05,
                 ),
                 // Drawer Items
                 ListTile(
                   leading: Icon(Icons.account_circle_outlined),
                   title: Text("Profile"),
                   onTap: () {
-                    // Navigator.pushReplacementNamed(context, '/profile');
+                    //  Get.back(); // Close the drawer
+                    //Get.to(ProfileScreen());
                   },
                 ),
                 ListTile(
@@ -59,7 +69,7 @@ class CustomDrawer extends StatelessWidget {
                   title: Text("Masters"),
                   onTap: () {
                     Get.back(); // Close the drawer
-                    Get.to(MasterScreen());
+                    Get.to(MasterHomepageScreen());
                   },
                 ),
                 ListTile(
@@ -67,14 +77,15 @@ class CustomDrawer extends StatelessWidget {
                   title: Text("Procurement"),
                   onTap: () {
                     Get.back(); // Close the drawer
-                    Get.to(ProcurementScreen());
+                    Get.to(ProcurementHomepageScreen());
                   },
                 ),
                 ListTile(
                   leading: Icon(Icons.report_outlined),
                   title: Text("Reports"),
                   onTap: () {
-                    // Navigator.pushReplacementNamed(context, '/settings');
+                    Get.back(); // Close the drawer
+                    Get.to(ReportsHomepageScreen());
                   },
                 ),
                 ListTile(

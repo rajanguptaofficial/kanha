@@ -3,11 +3,16 @@ import 'package:get/get.dart';
 import 'package:kanha_bmc/common/colors.dart';
 import 'package:kanha_bmc/common/custom_drawer.dart';
 import 'package:kanha_bmc/controller/dashboard_controller.dart';
+import 'package:kanha_bmc/controller/procurement/bmc_controller.dart';
+import 'package:kanha_bmc/pages/procurement/bmc_collection.dart';
+import 'package:kanha_bmc/pages/procurement/member_collection.dart';
+import 'package:kanha_bmc/pages/reports/report_homepage.dart';
+import 'package:kanha_bmc/pages/rmrd_dashboard_proc.dart';
 import '../common/custom_app_bar.dart';
 
 class DashboardScreen extends StatelessWidget {
   DashboardScreen({super.key});
-  
+
   final DashboardController controller = Get.put(DashboardController());
 
   @override
@@ -16,7 +21,9 @@ class DashboardScreen extends StatelessWidget {
       builder: (context, orientation) {
         return SafeArea(
           child: Scaffold(
-            appBar: CustomAppBar(title: 'Dashboard KMTEPL',),           
+            appBar: CustomAppBar(
+              title: 'Dashboard KMTEPL',
+            ),
             drawer: CustomDrawer(),
             body: SingleChildScrollView(
               padding: EdgeInsets.all(Get.width * 0.02),
@@ -139,7 +146,8 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionCard({required String title, required List<Widget> data}) {
+  Widget _buildSectionCard(
+      {required String title, required List<Widget> data}) {
     return Card(
       margin: EdgeInsets.symmetric(vertical: Get.height * 0.01),
       child: Column(
@@ -184,12 +192,14 @@ class DashboardScreen extends StatelessWidget {
             child: Text(
               label,
               textAlign: TextAlign.center,
-              softWrap: true,overflow: TextOverflow.visible,
-              style: const TextStyle(fontSize: 12, color: Colors.black,),
+              softWrap: true,
+              overflow: TextOverflow.visible,
+              style: const TextStyle(
+                fontSize: 12,
+                color: Colors.black,
+              ),
             ),
           ),
-      
-          
         ],
       ),
     );
@@ -211,10 +221,19 @@ class DashboardScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildTransactionButton("Member"),
-              _buildTransactionButton("BMC"),
-              _buildTransactionButton("RMRD"),
-              _buildTransactionButton("Reports"),
+              // Navigate to Login Screen
+              _buildTransactionButton("Member", () {
+                Get.to(() => MemberCollectionScreen());
+              }),
+              _buildTransactionButton("BMC", () {
+                Get.to(() => BMCCollectionScreen());
+              }),
+              _buildTransactionButton("RMRD", () {
+                //  Get.to(() => RMRDHomepageScreen());
+              }),
+              _buildTransactionButton("Reports", () {
+                Get.to(() => ReportsHomepageScreen());
+              }),
             ],
           ),
           SizedBox(height: Get.height * 0.02),
@@ -223,9 +242,12 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTransactionButton(String label) {
+  Widget _buildTransactionButton(
+    String label,
+    VoidCallback onTap,
+  ) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: onTap,
       style: ElevatedButton.styleFrom(
         padding: EdgeInsets.symmetric(
           horizontal: Get.width * 0.01,
@@ -247,4 +269,3 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 }
-

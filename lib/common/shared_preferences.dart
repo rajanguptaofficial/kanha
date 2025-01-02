@@ -1,5 +1,3 @@
-
-
 import 'package:get/get.dart';
 import 'package:kanha_bmc/pages/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,7 +8,7 @@ class SharedPrefHelper {
 
   // Save login data
   static Future<void> saveLoginData({
-     required String username,
+    required String username,
     required String password,
   }) async {
     final prefs = await SharedPreferences.getInstance();
@@ -34,7 +32,6 @@ class SharedPrefHelper {
     await prefs.remove(_passwordKey);
   }
 
-
   static Future<bool> hasLoginData() async {
     final prefs = await SharedPreferences.getInstance();
     final username = prefs.getString(_usernameKey);
@@ -42,7 +39,7 @@ class SharedPrefHelper {
     return username != null && password != null;
   }
 
-static Future<Map<String, String?>> getLoginCredentials() async {
+  static Future<Map<String, String?>> getLoginCredentials() async {
     final prefs = await SharedPreferences.getInstance();
     return {
       'username': prefs.getString(_usernameKey),
@@ -50,13 +47,10 @@ static Future<Map<String, String?>> getLoginCredentials() async {
     };
   }
 
-
   // Clear all stored data in SharedPreferences
   static Future<void> clearAllData() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
-  Get.off(LoginScreen());
+    Get.off(LoginScreen());
   }
-
 }
-

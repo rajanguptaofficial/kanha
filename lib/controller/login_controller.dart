@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:get/get.dart';
@@ -7,7 +6,6 @@ import 'package:kanha_bmc/common/api_urls.dart';
 import 'package:kanha_bmc/common/shared_preferences.dart';
 import 'package:kanha_bmc/pages/login.dart';
 import 'package:kanha_bmc/pages/dashboard.dart';
-
 
 class LoginController extends GetxController {
   var isLoading = false.obs;
@@ -18,17 +16,16 @@ class LoginController extends GetxController {
   void onInit() {
     super.onInit();
     fetchDeviceInfo();
-     _attemptAutoLogin();
+    _attemptAutoLogin();
   }
 
- // Variable to control password visibility
+  // Variable to control password visibility
   var isPasswordVisible = false.obs;
 
   // Method to toggle password visibility
   void togglePasswordVisibility() {
     isPasswordVisible.value = !isPasswordVisible.value;
   }
-
 
   Future<void> fetchDeviceInfo() async {
     final deviceInfoPlugin = DeviceInfoPlugin();
@@ -38,7 +35,8 @@ class LoginController extends GetxController {
         deviceNo.value = androidInfo.id; // Unique ID for Android
       } else if (GetPlatform.isIOS) {
         final iosInfo = await deviceInfoPlugin.iosInfo;
-        deviceNo.value = iosInfo.identifierForVendor ?? "Unknown"; // Unique ID for iOS
+        deviceNo.value =
+            iosInfo.identifierForVendor ?? "Unknown"; // Unique ID for iOS
       } else {
         deviceNo.value = "Unsupported Platform";
       }
@@ -46,23 +44,19 @@ class LoginController extends GetxController {
       deviceNo.value = "Error fetching device info: $e";
     }
   }
-   
-   
-    Future<void> _attemptAutoLogin() async {
+
+  Future<void> _attemptAutoLogin() async {
     if (await SharedPrefHelper.hasLoginData()) {
-
-          Get.off(DashboardScreen());
-    }
-    else{
-
-    Get.off(LoginScreen());
-
+      Get.off(DashboardScreen());
+    } else {
+      Get.off(LoginScreen());
     }
   }
 
-
-  Future<void> login(String userName, String password, 
- // String deviceNo
+  Future<void> login(
+    String userName,
+    String password,
+    // String deviceNo
   ) async {
     isLoading(true);
     final url = Uri.parse(ApiUrls.login);
@@ -86,8 +80,8 @@ class LoginController extends GetxController {
 
         if (data['responseStatus'] == 200) {
           token.value = data['responseData']['Token'];
- 
-     // Save data using SharedPrefHelper
+
+          // Save data using SharedPrefHelper
           await SharedPrefHelper.saveLoginData(
             username: data['responseData']['username'],
             password: data['responseData']['password'],
@@ -95,12 +89,11 @@ class LoginController extends GetxController {
 
           Get.snackbar('Success', data['responseMessage']);
           print(response.body);
-            Get.off(DashboardScreen());
+          Get.off(DashboardScreen());
         } else {
-           print(response.body);
+          print(response.body);
           Get.snackbar('Error', data['responseMessage']);
         }
-        
       } else {
         Get.snackbar('Error', 'Failed to connect to server');
       }
