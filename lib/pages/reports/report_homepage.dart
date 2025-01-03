@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kanha_bmc/common/custom_drawer.dart';
+import 'package:kanha_bmc/pages/reports/bmc_collection_reports/bmc_collection_reports.dart';
 import '../../common/custom_app_bar.dart';
 import '../../controller/reports/reports_homepage_controller.dart';
+import 'member_collection_reports/member_collection_reports.dart';
+import 'rmrd_reports/rmrd_reports.dart';
 
 class ReportsHomepageScreen extends StatefulWidget {
   const ReportsHomepageScreen({super.key});
@@ -33,22 +35,22 @@ class _ReportsHomepageScreenState extends State<ReportsHomepageScreen> {
                       title: 'Member Collection',
                       imagePath: "assets/icons/tank.png",
                       onTap: () {
-                        // Get.to(() => MemberCollectionScreen());
-                      },
-                    ),
-                    _buildCard(
-                      title: 'RMRD',
-                      imagePath: "assets/icons/truck.png",
-                      onTap: () {
-                        //Get.to(() => RMRD());
-                        // Navigate to the relevant page
+                        Get.to(() => MemberCollReportsHomepage());
                       },
                     ),
                     _buildCard(
                       title: 'BMC Collection',
                       imagePath: "assets/icons/bmc_collection.png",
                       onTap: () {
-                        // Get.to(() => BMCCollectionScreen());
+                        Get.to(() => BMCCollReportsHomepage());
+                      },
+                    ),
+                    _buildCard(
+                      title: 'RMRD',
+                      imagePath: "assets/icons/truck.png",
+                      onTap: () {
+                        Get.to(() => RMRDReportsHomepage());
+                        // Navigate to the relevant page
                       },
                     ),
                   ],

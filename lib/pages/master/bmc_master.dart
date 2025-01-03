@@ -33,7 +33,8 @@ class BmcMasterScreen extends StatelessWidget {
               // Responsive Layout
               if (orientation == Orientation.portrait) {
                 return ListView(
-                  padding: EdgeInsets.all(width * 0.04), // Padding based on width
+                  padding:
+                      EdgeInsets.all(width * 0.04), // Padding based on width
                   children: [
                     SizedBox(
                       height: height * 0.8, // 80% of screen height
@@ -69,14 +70,16 @@ class BmcMasterScreen extends StatelessWidget {
               } else {
                 // Landscape view
                 return Padding(
-                  padding: EdgeInsets.all(width * 0.03), // Padding for landscape
+                  padding:
+                      EdgeInsets.all(width * 0.03), // Padding for landscape
                   child: Row(
                     children: [
                       Expanded(
                         child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: DataTable(
-                            columnSpacing: width * 0.04, // Adjust spacing for landscape
+                            columnSpacing:
+                                width * 0.04, // Adjust spacing for landscape
                             columns: const [
                               DataColumn(label: Text('BMC Name/Code')),
                               DataColumn(label: Text('MCC Name/Code')),

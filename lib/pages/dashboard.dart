@@ -229,7 +229,7 @@ class DashboardScreen extends StatelessWidget {
                 Get.to(() => BMCCollectionScreen());
               }),
               _buildTransactionButton("RMRD", () {
-                //  Get.to(() => RMRDHomepageScreen());
+                Get.to(() => RMRDHomepageScreen());
               }),
               _buildTransactionButton("Reports", () {
                 Get.to(() => ReportsHomepageScreen());

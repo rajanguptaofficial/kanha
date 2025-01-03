@@ -49,13 +49,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   height: isPortrait ? height * 0.1 : width * 0.1,
                 ),
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: Get.height * .1),
               Text(
                 username ?? "Loading...", // Display username or loading text
                 style:
                     const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 30),
+              SizedBox(height: Get.height * .1),
               InfoCard(
                 title: 'Company Name',
                 value: 'KMTEPL',
@@ -74,6 +74,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 height: height,
                 width: width,
               ),
+              SizedBox(height: Get.height * 1),
             ],
           ),
         ),
