@@ -7,6 +7,7 @@ import 'package:kanha_bmc/pages/profile.dart';
 import '../pages/master/master_homepage.dart';
 import '../pages/procurement/procurement_homepage.dart';
 import '../pages/reports/report_homepage.dart';
+import '../pages/setting.dart';
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({super.key});
@@ -92,6 +93,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   leading: Icon(Icons.settings_outlined),
                   title: Text("Settings"),
                   onTap: () {
+                    Get.back(); // Close the drawer
+                    Get.to(SettingsScreen());         
                     // Navigator.pushReplacementNamed(context, '/settings');
                   },
                 ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kanha_bmc/common/colors.dart';
 import 'package:kanha_bmc/controller/reports/reports_homepage_controller.dart';
+import 'package:kanha_bmc/pages/reports/bmc_collection_reports/bmc_shift_reports.dart';
 
 class BMCCollReportsHomepage extends StatefulWidget {
   const BMCCollReportsHomepage({super.key});
@@ -36,7 +37,7 @@ class _BMCCollReportsHomepageState extends State<BMCCollReportsHomepage> {
                       title: 'Shift Report',
                       imagePath: "assets/icons/shift.png",
                       onTap: () {
-                        // Get.to(() => MemberCollectionScreen());
+                         Get.to(() => BMCShiftReportScreen());
                       },
                     ),
                     _buildCard(

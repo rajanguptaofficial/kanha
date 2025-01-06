@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kanha_bmc/common/colors.dart';
 import 'package:kanha_bmc/controller/reports/reports_homepage_controller.dart';
+import 'package:kanha_bmc/pages/reports/rmrd_reports/rmrd_dock_checklist_report.dart';
+import 'package:kanha_bmc/pages/reports/rmrd_reports/rmrd_lab_checklist_report.dart';
 
 class RMRDReportsHomepage extends StatefulWidget {
   const RMRDReportsHomepage({super.key});
@@ -36,14 +38,14 @@ class _RMRDReportsHomepageState extends State<RMRDReportsHomepage> {
                       title: 'DOCK Checklist',
                       imagePath: "assets/icons/weight.png",
                       onTap: () {
-                        // Get.to(() => MemberCollectionScreen());
+                         Get.to(() => RMRDDockCheckListReportScreen());
                       },
                     ),
                     _buildCard(
                       title: 'Lab Checklist',
                       imagePath: "assets/icons/lab.png",
                       onTap: () {
-                        // Get.to(() => BMCCollectionScreen());
+                         Get.to(() => RMRDLabCheckListReportScreen());
                       },
                     ),
                   ],

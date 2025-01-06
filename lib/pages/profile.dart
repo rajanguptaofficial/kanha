@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kanha_bmc/common/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -41,21 +42,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              CircleAvatar(
-                radius: isPortrait ? height * 0.1 : width * 0.1,
-                backgroundColor: Colors.blue.shade100,
-                child: Image.asset(
-                  'assets/images/logo.png', // Add your logo asset here
-                  height: isPortrait ? height * 0.1 : width * 0.1,
+              CircleAvatar(radius: isPortrait ? height * 0.1 : width * 0.1,
+                backgroundColor: CustomColors.appColor,
+                child: CircleAvatar(
+                  radius: isPortrait ? height * 0.099 : width * 0.099,
+                  backgroundColor: Colors.white,
+                  child: Image.asset(
+                    'assets/images/logo.png', // Add your logo asset here
+                    height: isPortrait ? height * 0.1 : width * 0.1,
+                  ),
                 ),
               ),
-              SizedBox(height: Get.height * .1),
+              SizedBox(height: Get.height * .01),
               Text(
                 username ?? "Loading...", // Display username or loading text
                 style:
                     const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: Get.height * .1),
+              SizedBox(height: Get.height * .02),
               InfoCard(
                 title: 'Company Name',
                 value: 'KMTEPL',

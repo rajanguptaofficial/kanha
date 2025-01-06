@@ -11,7 +11,7 @@ class MemberShiftReportScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Shift Report'),
+        title: const Text('Shift Report',style: TextStyle(color: Colors.white,fontWeight: FontWeight.w600),),
         backgroundColor: Colors.blue,
       ),
       body: OrientationBuilder(

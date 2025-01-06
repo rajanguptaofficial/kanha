@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kanha_bmc/common/colors.dart';
 import 'package:kanha_bmc/controller/reports/reports_homepage_controller.dart';
+import 'package:kanha_bmc/pages/reports/member_collection_reports/member_payment_reports.dart';
 import 'package:kanha_bmc/pages/reports/member_collection_reports/member_shift_reports.dart';
+
+import 'member_passbook_report.dart';
 
 class MemberCollReportsHomepage extends StatefulWidget {
   const MemberCollReportsHomepage({super.key});
@@ -45,14 +48,14 @@ class _MemberCollReportsHomepageState extends State<MemberCollReportsHomepage> {
                       title: 'Member Payment Report',
                       imagePath: "assets/icons/rate_rs.png",
                       onTap: () {
-                        // Get.to(() => BMCCollectionScreen());
+                         Get.to(() => MemberPaymentReportScreen());
                       },
                     ),
                     _buildCard(
                       title: 'Member Passbook',
                       imagePath: "assets/icons/passbook.png",
                       onTap: () {
-                        //Get.to(() => RMRD());
+                        Get.to(() => MemberPassbookReportScreen());
                         // Navigate to the relevant page
                       },
                     ),
