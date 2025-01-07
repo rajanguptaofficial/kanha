@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kanha_bmc/common/colors.dart';
+import 'package:kanha_bmc/controller/profile_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -11,12 +12,13 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+   final ProfileController apiController = Get.put(ProfileController());
   String? username; // Variable to hold the username
 
   @override
   void initState() {
     super.initState();
-    getProfileData(); // Fetch profile data during initialization
+    getProfileData(); 
   }
 
   Future<void> getProfileData() async {
@@ -37,50 +39,89 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: AppBar(automaticallyImplyLeading: true),
       body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CircleAvatar(radius: isPortrait ? height * 0.1 : width * 0.1,
-                backgroundColor: CustomColors.appColor,
-                child: CircleAvatar(
-                  radius: isPortrait ? height * 0.099 : width * 0.099,
-                  backgroundColor: Colors.white,
-                  child: Image.asset(
-                    'assets/images/logo.png', // Add your logo asset here
-                    height: isPortrait ? height * 0.1 : width * 0.1,
-                  ),
-                ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+               Obx(() {
+          if (apiController.isLoading.value) {
+            return Center(child: CircularProgressIndicator());
+          } else if (apiController.profiles.isEmpty) {
+            return Center(child: Text('No profiles found'));
+          } else {
+            return Expanded(
+              child: ListView.builder(
+                itemCount: apiController.profiles.length,
+                itemBuilder: (context, index) {
+                  final profile = apiController.profiles[index];
+                  return 
+                  
+                   Column(
+                     children: [
+                       CircleAvatar(radius: isPortrait ? height * 0.1 : width * 0.1,
+                                     backgroundColor: CustomColors.appColor,
+                                     child: CircleAvatar(
+                                       radius: isPortrait ? height * 0.099 : width * 0.099,
+                                       backgroundColor: Colors.white,
+                                       child: Image.asset(
+                                         'assets/images/logo.png', // Add your logo asset here
+                                         height: isPortrait ? height * 0.1 : width * 0.1,
+                                       ),
+                                     ),
+                                   ),
+
+SizedBox(height: Get.height * .01),
+            Text(
+             profile.profileName, // Display username or loading text
+              style:
+                  const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: Get.height * .02),
+            InfoCard(
+              title: 'Company Name',
+              value: profile.companyName,
+              height: height,
+              width: width,
+            ),
+            InfoCard(
+              title: 'Plant Name',
+              value: profile.plantName,
+              height: height,
+              width: width,
+            ),
+            InfoCard(
+              title: 'BMC Name',
+              value: profile.cntName,
+              height: height,
+              width: width,
+            ),
+
+                     ],
+
+                     
+                   );
+                  
+                  
+                  // Card(
+                  //   child: ListTile(
+                  //     title: Text(profile.profileName),
+                  //     subtitle: Column(
+                  //       crossAxisAlignment: CrossAxisAlignment.start,
+                  //       children: [
+                  //         Text('Company: ${profile.companyName}'),
+                  //         Text('Plant: ${profile.plantName}'),
+                  //         Text('Contact: ${profile.cntName}'),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // );
+                },
               ),
-              SizedBox(height: Get.height * .01),
-              Text(
-                username ?? "Loading...", // Display username or loading text
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: Get.height * .02),
-              InfoCard(
-                title: 'Company Name',
-                value: 'KMTEPL',
-                height: height,
-                width: width,
-              ),
-              InfoCard(
-                title: 'Plant Name',
-                value: 'KMTEPL12',
-                height: height,
-                width: width,
-              ),
-              InfoCard(
-                title: 'BMC Name',
-                value: 'KM02',
-                height: height,
-                width: width,
-              ),
-              SizedBox(height: Get.height * 1),
-            ],
-          ),
+            );
+          }
+        }),
+               
+          ],
         ),
       ),
     );

@@ -40,8 +40,19 @@ class BmcMasterScreen extends StatelessWidget {
                       height: height * 0.8, // 80% of screen height
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
-                        child: DataTable(
-                          columnSpacing: width * 0.05, // Adjust column spacing
+                        child: DataTable(headingRowColor: WidgetStateProperty.all(CustomColors.appColor,),
+                          headingTextStyle: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          columnSpacing:12,
+                           //orientation == Orientation.portrait
+                             // ? 15
+                            //  : 30, 
+                           // Adjust spacing based on orientation
+                          dataRowMinHeight: 20,
+                          dataRowMaxHeight: 40,headingRowHeight: 33,
+                        
                           columns: const [
                             DataColumn(label: Text('BMC Name/Code')),
                             DataColumn(label: Text('MCC Name/Code')),
@@ -51,15 +62,18 @@ class BmcMasterScreen extends StatelessWidget {
                             DataColumn(label: Text('Address')),
                             DataColumn(label: Text('DOCK')),
                           ],
-                          rows: controller.bmcData.map((data) {
+                          rows: controller.bmcData!.map((data) {
+                                 data.effectivedate = controller.formatDate(data.effectivedate);
                             return DataRow(cells: [
-                              DataCell(Text(data['bmcNameCode'] ?? '')),
-                              DataCell(Text(data['mccNameCode'] ?? '')),
-                              DataCell(Text(data['plantNameCode'] ?? '')),
-                              DataCell(Text(data['companyNameCode'] ?? '')),
-                              DataCell(Text(data['effectiveDate'] ?? '')),
-                              DataCell(Text(data['address'] ?? '')),
-                              DataCell(Text(data['dock'] ?? '')),
+                                DataCell(Text("${data.bmcname.toString()}/${data.bmccode.toString()}")),
+                              DataCell(Text("${data.mccName.toString()}/${data.mccCode.toString() }")),
+                              DataCell(Text("${data.plantName.toString()}/${data.plantCode.toString() }")),
+                               DataCell(Text("${data.companyName.toString()}/${data.companyCode.toString()}")),
+                             DataCell(Text(data.effectivedate.toString())),
+                             DataCell(Text(data.add1.toString())),
+                             DataCell(Text(data.cntDocks.toString())),
+
+
                             ]);
                           }).toList(),
                         ),
@@ -77,9 +91,19 @@ class BmcMasterScreen extends StatelessWidget {
                       Expanded(
                         child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
-                          child: DataTable(
-                            columnSpacing:
-                                width * 0.04, // Adjust spacing for landscape
+                          child: DataTable(headingRowColor: WidgetStateProperty.all(CustomColors.appColor,),
+                          headingTextStyle: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          columnSpacing:12,
+                           //orientation == Orientation.portrait
+                             // ? 15
+                            //  : 30, 
+                           // Adjust spacing based on orientation
+                          dataRowMinHeight: 20,
+                          dataRowMaxHeight: 40,headingRowHeight: 33,
+                          // Adjust spacing for landscape
                             columns: const [
                               DataColumn(label: Text('BMC Name/Code')),
                               DataColumn(label: Text('MCC Name/Code')),
@@ -89,15 +113,17 @@ class BmcMasterScreen extends StatelessWidget {
                               DataColumn(label: Text('Address')),
                               DataColumn(label: Text('DOCK')),
                             ],
-                            rows: controller.bmcData.map((data) {
+                            rows:  controller.bmcData!.map((data) {
+                                data.effectivedate = controller.formatDate(data.effectivedate);
                               return DataRow(cells: [
-                                DataCell(Text(data['bmcNameCode'] ?? '')),
-                                DataCell(Text(data['mccNameCode'] ?? '')),
-                                DataCell(Text(data['plantNameCode'] ?? '')),
-                                DataCell(Text(data['companyNameCode'] ?? '')),
-                                DataCell(Text(data['effectiveDate'] ?? '')),
-                                DataCell(Text(data['address'] ?? '')),
-                                DataCell(Text(data['dock'] ?? '')),
+                                 DataCell(Text("${data.bmcname}/${data.bmccode.toString()}")),
+                              DataCell(Text("${data.mccName.toString()}/${data.mccCode.toString() }")),
+                              DataCell(Text("${data.plantName.toString()}/${data.plantCode.toString() }")),
+                               DataCell(Text("${data.companyName.toString()}/${data.companyCode.toString()}")),
+                             DataCell(Text(data.effectivedate.toString())),
+                            DataCell(Text(data.add1.toString())),
+                             DataCell(Text(data.cntDocks.toString())),
+
                               ]);
                             }).toList(),
                           ),
@@ -114,3 +140,5 @@ class BmcMasterScreen extends StatelessWidget {
     );
   }
 }
+
+
