@@ -1,16 +1,18 @@
 import 'package:get/get.dart';
 import 'package:kanha_bmc/common/api_urls.dart';
-import 'package:kanha_bmc/response/master/bmc_response.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'package:kanha_bmc/model/master/bmc_model.dart';
+
+
 
 
 class BmcMasterController extends GetxController {
   var isLoading = true.obs;
   var bmcData = [].obs;
 
-  var apiResponse = BmcMasterResponse().obs;
+  var apiResponse = BmcMasterModel().obs;
   @override
   void onInit() {
     fetchData();
@@ -29,38 +31,6 @@ String formatDate(String? date) {
     return '-';
   }
 }
-  // void fetchBmcData() async {
-  //   try {
-  //     isLoading(true);
-  //     // Replace with your API call logic
-  //     var response = await fetchFromServer(); // Your API call here
-  //     if (response != null) {
-  //       bmcData.value = response; // Assuming response is a list
-  //     }
-  //   } catch (e) {
-  //     print("Error fetching data: $e");
-  //   } finally {
-  //     isLoading(false);
-  //   }
-  // }
-
-  // Future<List<Map<String, dynamic>>> fetchFromServer() async {
-  //   // Simulate API call
-  //   await Future.delayed(Duration(seconds: 2));
-  //   return [
-  //     {
-  //       'bmcNameCode': 'BMC-001',
-  //       'mccNameCode': 'MCC001',
-  //       'plantNameCode': 'Plant001',
-  //       'companyNameCode': 'Company001',
-  //       'effectiveDate': '2024-01-01',
-  //       'address': 'Address 1',
-  //       'dock': 'Dock 1',
-  //     },
-  //     // Add more data as needed
-  //   ];
-  // }
-
 
   Future<void> fetchData() async {
     isLoading.value = true;
@@ -81,7 +51,7 @@ String formatDate(String? date) {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        final responseModel = BmcMasterResponse.fromJson(data);
+        final responseModel = BmcMasterModel.fromJson(data);
         bmcData.value = responseModel.responseData!.table!;
       } else {
         Get.snackbar('Error', 'Failed to fetch data');

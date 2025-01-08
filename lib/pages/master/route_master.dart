@@ -4,14 +4,13 @@ import 'package:kanha_bmc/common/colors.dart';
 import '../../controller/masters/route_master_controller.dart';
 
 class RouteMasterScreen extends StatelessWidget {
-  final RouteMasterController controller = Get.put(RouteMasterController());
-
+    final RouteMasterController controller = Get.put(RouteMasterController());
   RouteMasterScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // GetX height and width
-    //final double height = Get.height;
+    // Get dynamic height and width using GetX MediaQuery
+    final double height = Get.height;
     final double width = Get.width;
 
     return SafeArea(
@@ -30,30 +29,53 @@ class RouteMasterScreen extends StatelessWidget {
                 return const Center(child: CircularProgressIndicator());
               }
 
-              // Adjust the layout based on the orientation
+              // Responsive Layout
               if (orientation == Orientation.portrait) {
-                // Portrait view
                 return ListView(
-                  padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                  padding:
+                      EdgeInsets.all(width * 0.04), // Padding based on width
                   children: [
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: DataTable(
-                        columnSpacing: width * 0.1,
-                        columns: const [
-                          DataColumn(label: Text('Route Name/Code')),
-                          DataColumn(label: Text('MCC Name/Code')),
-                          DataColumn(label: Text('Plant Name/Code')),
-                          DataColumn(label: Text('Company Name/Code')),
-                        ],
-                        rows: controller.routeData.map((data) {
-                          return DataRow(cells: [
-                            DataCell(Text(data['routeNameCode'] ?? '')),
-                            DataCell(Text(data['mccNameCode'] ?? '')),
-                            DataCell(Text(data['plantNameCode'] ?? '')),
-                            DataCell(Text(data['companyNameCode'] ?? '')),
-                          ]);
-                        }).toList(),
+                    SizedBox(
+                      height: height * 0.8, // 80% of screen height
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child:DataTable(
+  headingRowColor: WidgetStateProperty.all(CustomColors.appColor),
+  headingTextStyle: const TextStyle(
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
+  ),
+  columnSpacing: 12,
+  dataRowMinHeight: 20,
+  dataRowMaxHeight: 40,
+  headingRowHeight: 33,
+  columns: const [
+    DataColumn(label: Text('Route Name/Code')),
+    DataColumn(label: Text('MCC Name/Code')),
+    DataColumn(label: Text('Plant Name/Code')),
+    DataColumn(label: Text('Company Name/Code')),
+  ],
+  rows: List.generate(controller.routeData.length, (index) {
+    final data = controller.routeData[index];
+    final isGrey = index % 2 == 0; // Alternate rows
+
+    return DataRow(
+      color: WidgetStateProperty.resolveWith<Color?>(
+        (Set<WidgetState> states) {
+          return isGrey ? Colors.white  : Colors.grey[200];
+        },
+      ),
+      cells: [
+        DataCell(Center(child: Text("${data.rtName}/${data.routecode}"))),
+        DataCell(Center(child: Text("${data.mccName}/${data.mccCode}"))),
+        DataCell(Center(child: Text("${data.plantName}/${data.plantCode}"))),
+        DataCell(Center(child: Text("${data.companyName}/${data.companyCode}"))),
+      ],
+    );
+  }),
+)
+
+
                       ),
                     ),
                   ],
@@ -61,29 +83,51 @@ class RouteMasterScreen extends StatelessWidget {
               } else {
                 // Landscape view
                 return Padding(
-                  padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                  padding:
+                      EdgeInsets.all(width * 0.03), // Padding for landscape
                   child: Row(
                     children: [
                       Expanded(
                         child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
-                          child: DataTable(
-                            columnSpacing: width * 0.1,
-                            columns: const [
-                              DataColumn(label: Text('Route Name/Code')),
-                              DataColumn(label: Text('MCC Name/Code')),
-                              DataColumn(label: Text('Plant Name/Code')),
-                              DataColumn(label: Text('Company Name/Code')),
-                            ],
-                            rows: controller.routeData.map((data) {
-                              return DataRow(cells: [
-                                DataCell(Text(data['routeNameCode'] ?? '')),
-                                DataCell(Text(data['mccNameCode'] ?? '')),
-                                DataCell(Text(data['plantNameCode'] ?? '')),
-                                DataCell(Text(data['companyNameCode'] ?? '')),
-                              ]);
-                            }).toList(),
-                          ),
+                          child: 
+                        DataTable(
+  headingRowColor: WidgetStateProperty.all(CustomColors.appColor),
+  headingTextStyle: const TextStyle(
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
+  ),
+  columnSpacing: 12,
+  dataRowMinHeight: 20,
+  dataRowMaxHeight: 40,
+  headingRowHeight: 33,
+  columns: const [
+    DataColumn(label: Text('Route Name/Code')),
+    DataColumn(label: Text('MCC Name/Code')),
+    DataColumn(label: Text('Plant Name/Code')),
+    DataColumn(label: Text('Company Name/Code')),
+  ],
+  rows: List.generate(controller.routeData.length, (index) {
+    final data = controller.routeData[index];
+    final isGrey = index % 2 == 0; // Alternate rows
+
+    return DataRow(
+      color: WidgetStateProperty.resolveWith<Color?>(
+        (Set<WidgetState> states) {
+          return isGrey ? Colors.white  : Colors.grey[200];
+        },
+      ),
+      cells: [
+        DataCell(Center(child: Text("${data.rtName}/${data.routecode}"))),
+        DataCell(Center(child: Text("${data.mccName}/${data.mccCode}"))),
+        DataCell(Center(child: Text("${data.plantName}/${data.plantCode}"))),
+        DataCell(Center(child: Text("${data.companyName}/${data.companyCode}"))),
+      ],
+    );
+  }),
+)
+
+
                         ),
                       ),
                     ],
@@ -97,3 +141,5 @@ class RouteMasterScreen extends StatelessWidget {
     );
   }
 }
+
+

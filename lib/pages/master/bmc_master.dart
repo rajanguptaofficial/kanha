@@ -29,6 +29,9 @@ class BmcMasterScreen extends StatelessWidget {
               if (controller.isLoading.value) {
                 return const Center(child: CircularProgressIndicator());
               }
+                if (controller.bmcData.isEmpty) {
+                return const Center(child: Text("No Data Found"));
+              }
 
               // Responsive Layout
               if (orientation == Orientation.portrait) {
@@ -40,43 +43,51 @@ class BmcMasterScreen extends StatelessWidget {
                       height: height * 0.8, // 80% of screen height
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
-                        child: DataTable(headingRowColor: WidgetStateProperty.all(CustomColors.appColor,),
-                          headingTextStyle: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          columnSpacing:12,
-                           //orientation == Orientation.portrait
-                             // ? 15
-                            //  : 30, 
-                           // Adjust spacing based on orientation
-                          dataRowMinHeight: 20,
-                          dataRowMaxHeight: 40,headingRowHeight: 33,
+                        child: 
                         
-                          columns: const [
-                            DataColumn(label: Text('BMC Name/Code')),
-                            DataColumn(label: Text('MCC Name/Code')),
-                            DataColumn(label: Text('Plant Name/Code')),
-                            DataColumn(label: Text('Company Name/Code')),
-                            DataColumn(label: Text('Effective Date')),
-                            DataColumn(label: Text('Address')),
-                            DataColumn(label: Text('DOCK')),
-                          ],
-                          rows: controller.bmcData!.map((data) {
-                                 data.effectivedate = controller.formatDate(data.effectivedate);
-                            return DataRow(cells: [
-                                DataCell(Text("${data.bmcname.toString()}/${data.bmccode.toString()}")),
-                              DataCell(Text("${data.mccName.toString()}/${data.mccCode.toString() }")),
-                              DataCell(Text("${data.plantName.toString()}/${data.plantCode.toString() }")),
-                               DataCell(Text("${data.companyName.toString()}/${data.companyCode.toString()}")),
-                             DataCell(Text(data.effectivedate.toString())),
-                             DataCell(Text(data.add1.toString())),
-                             DataCell(Text(data.cntDocks.toString())),
+                        DataTable(
+  headingRowColor: WidgetStateProperty.all(CustomColors.appColor),
+  headingTextStyle: const TextStyle(
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
+  ),
+  columnSpacing: 12,
+  dataRowMinHeight: 20,
+  dataRowMaxHeight: 40,
+  headingRowHeight: 33,
+  columns: const [
+                         DataColumn(label: Text('BMC Name/Code')),
+    DataColumn(label: Text('MCC Name/Code')),
+    DataColumn(label: Text('Plant Name/Code')),
+    DataColumn(label: Text('Company Name/Code')),
+    DataColumn(label: Text('Effective Date')),
+    DataColumn(label: Text('Address')),
+    DataColumn(label: Text('DOCK')),
+  ],
+  rows: List.generate(controller.bmcData.length, (index) {
+    final data = controller.bmcData[index];
+    final isGrey = index % 2 == 0; // Alternate rows
+
+    return DataRow(
+      color: WidgetStateProperty.resolveWith<Color?>(
+        (Set<WidgetState> states) {
+          return isGrey ? Colors.white  : Colors.grey[200];
+        },
+      ),
+      cells: [
+       DataCell(Center(child: Text("${data.bmcname}/${data.bmccode}"))),
+      DataCell(Center(child: Text("${data.mccName}/${data.mccCode}"))),
+      DataCell(Center(child: Text("${data.plantName}/${data.plantCode}"))),
+      DataCell(Center(child: Text("${data.companyName}/${data.companyCode}"))),
+      DataCell(Center(child: Text(data.effectivedate.toString()))),
+      DataCell(Center(child: Text(data.add1.toString()))),
+      DataCell(Center(child: Text(data.cntDocks.toString()))),
+      ],
+    );
+  }),
+)                 
 
 
-                            ]);
-                          }).toList(),
-                        ),
                       ),
                     ),
                   ],
@@ -91,43 +102,48 @@ class BmcMasterScreen extends StatelessWidget {
                       Expanded(
                         child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
-                          child: DataTable(headingRowColor: WidgetStateProperty.all(CustomColors.appColor,),
-                          headingTextStyle: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          columnSpacing:12,
-                           //orientation == Orientation.portrait
-                             // ? 15
-                            //  : 30, 
-                           // Adjust spacing based on orientation
-                          dataRowMinHeight: 20,
-                          dataRowMaxHeight: 40,headingRowHeight: 33,
-                          // Adjust spacing for landscape
-                            columns: const [
-                              DataColumn(label: Text('BMC Name/Code')),
-                              DataColumn(label: Text('MCC Name/Code')),
-                              DataColumn(label: Text('Plant Name/Code')),
-                              DataColumn(label: Text('Company Name/Code')),
-                              DataColumn(label: Text('Effective Date')),
-                              DataColumn(label: Text('Address')),
-                              DataColumn(label: Text('DOCK')),
-                            ],
-                            rows:  controller.bmcData!.map((data) {
-                                data.effectivedate = controller.formatDate(data.effectivedate);
-                              return DataRow(cells: [
-                                 DataCell(Text("${data.bmcname}/${data.bmccode.toString()}")),
-                              DataCell(Text("${data.mccName.toString()}/${data.mccCode.toString() }")),
-                              DataCell(Text("${data.plantName.toString()}/${data.plantCode.toString() }")),
-                               DataCell(Text("${data.companyName.toString()}/${data.companyCode.toString()}")),
-                             DataCell(Text(data.effectivedate.toString())),
-                            DataCell(Text(data.add1.toString())),
-                             DataCell(Text(data.cntDocks.toString())),
+                          child: 
+                       DataTable(
+  headingRowColor: WidgetStateProperty.all(CustomColors.appColor),
+  headingTextStyle: const TextStyle(
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
+  ),
+  columnSpacing: 12,
+  dataRowMinHeight: 20,
+  dataRowMaxHeight: 40,
+  headingRowHeight: 33,
+  columns: const [
+                         DataColumn(label: Text('BMC Name/Code')),
+    DataColumn(label: Text('MCC Name/Code')),
+    DataColumn(label: Text('Plant Name/Code')),
+    DataColumn(label: Text('Company Name/Code')),
+    DataColumn(label: Text('Effective Date')),
+    DataColumn(label: Text('Address')),
+    DataColumn(label: Text('DOCK')),
+  ],
+  rows: List.generate(controller.bmcData.length, (index) {
+    final data = controller.bmcData[index];
+    final isGrey = index % 2 == 0; // Alternate rows
 
-                              ]);
-                            }).toList(),
-                          ),
-                        ),
+    return DataRow(
+      color: WidgetStateProperty.resolveWith<Color?>(
+        (Set<WidgetState> states) {
+          return isGrey ? Colors.white  : Colors.grey[200];
+        },
+      ),
+      cells: [
+       DataCell(Center(child: Text("${data.bmcname}/${data.bmccode}"))),
+      DataCell(Center(child: Text("${data.mccName}/${data.mccCode}"))),
+      DataCell(Center(child: Text("${data.plantName}/${data.plantCode}"))),
+      DataCell(Center(child: Text("${data.companyName}/${data.companyCode}"))),
+      DataCell(Center(child: Text(data.effectivedate.toString()))),
+      DataCell(Center(child: Text(data.add1.toString()))),
+      DataCell(Center(child: Text(data.cntDocks.toString()))),
+      ],
+    );
+  }),
+)      ),
                       ),
                     ],
                   ),

@@ -1,45 +1,63 @@
 import 'package:get/get.dart';
+import 'package:kanha_bmc/common/api_urls.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:intl/intl.dart';
+import 'package:kanha_bmc/model/master/mpp_model.dart';
 
 class MppMasterController extends GetxController {
   var isLoading = true.obs;
   var mppData = [].obs;
 
+
   @override
   void onInit() {
-    fetchMppData();
+    fetchData();
     super.onInit();
   }
 
-  void fetchMppData() async {
-    try {
-      isLoading(true);
-      // Replace with your API call logic
-      var response = await fetchFromServer(); // Your API call here
-      if (response != null) {
-        mppData.value = response; // Assuming response is a list
-      }
-    } catch (e) {
-      print("Error fetching data: $e");
-    } finally {
-      isLoading(false);
-    }
+String formatDate(String? date) {
+  if (date == null || date.isEmpty) {
+    return '-';
   }
-
-  Future<List<Map<String, dynamic>>> fetchFromServer() async {
-    // Simulate API call
-    await Future.delayed(Duration(seconds: 2));
-    return [
-      {
-        'nameCode': 'BMC-001',
-        'mccNameCode': 'MCC001',
-        'plantNameCode': 'Plant001',
-        'companyNameCode': 'Company001',
-        'routeNameCode': 'Dock 1',
-        'status': '1',
-        'effectiveDate': '2024-01-01',
-        'address': 'Address 1',
-      },
-      // Add more data as needed
-    ];
+  try {
+    DateTime parsedDate = DateTime.parse(date);
+    return DateFormat('yyyy-MM-dd').format(parsedDate);
+  } catch (e) {
+    return '-';
   }
 }
+
+  Future<void> fetchData() async {
+    isLoading.value = true;
+
+    final url = Uri.parse(ApiUrls.profile);
+    final body = {
+      "deviceid": "0000001111",
+      "usrcode": "226",
+      "requests": "Mpp"
+    };
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(body),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final responseModel = MPPMasterModel.fromJson(data);
+        mppData.value = responseModel.responseData!.table!;
+      } else {
+        Get.snackbar('Error', 'Failed to fetch data');
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Something went wrong');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+}
+
+
