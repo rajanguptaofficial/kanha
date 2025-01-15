@@ -48,13 +48,18 @@ class DashboardScreen extends StatelessWidget {
                         // Date Picker
                         Expanded(
                           flex: 1,
-                          child: Obx(
+                          child:
+                          
+                           Obx(
                             () => TextFormField(
                               readOnly: true,
                               controller: TextEditingController(
-                                text: controller.selectedDate.value.isNotEmpty
-                                    ? controller.selectedDate.value
-                                    : "Select Date",
+                                text:controller.selectedDate.value.isEmpty ? "Select Date" : controller.selectedDate.value
+                                                      
+                                
+                                //  controller.selectedDate.value.isNotEmpty
+                                //     ? controller.selectedDate.value
+                                //     : "Select Date",
                               ),
                               decoration: const InputDecoration(
                                 labelText: "Select Date",

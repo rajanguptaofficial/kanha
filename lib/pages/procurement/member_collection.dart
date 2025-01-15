@@ -346,31 +346,34 @@ class MemberCollectionScreen extends StatelessWidget {
                     // Saved Entries Table
                     Obx(() => SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
-                          child: DataTable(
-                            columnSpacing: Get.width *
-                                0.02, // Use Get.width for consistent spacing
-                            columns: [
-                              DataColumn(label: Text('Sample No')),
-                              DataColumn(label: Text('Code')),
-                              DataColumn(label: Text('QTY')),
-                              DataColumn(label: Text('Fat')),
-                              DataColumn(label: Text('SNF')),
-                              DataColumn(label: Text('Rate')),
-                              DataColumn(label: Text('Amount')),
-                            ],
-                            rows: controller.savedEntries
-                                .map(
-                                  (entry) => DataRow(cells: [
-                                    DataCell(Text(entry['sampleNo']!)),
-                                    DataCell(Text(entry['code']!)),
-                                    DataCell(Text(entry['qty']!)),
-                                    DataCell(Text(entry['fat']!)),
-                                    DataCell(Text(entry['snf']!)),
-                                    DataCell(Text(entry['rate']!)),
-                                    DataCell(Text(entry['amount']!)),
-                                  ]),
-                                )
-                                .toList(),
+                          child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                            child: DataTable(
+                              columnSpacing: Get.width *
+                                  0.02, // Use Get.width for consistent spacing
+                              columns: [
+                                DataColumn(label: Text('Sample No')),
+                                DataColumn(label: Text('Code')),
+                                DataColumn(label: Text('QTY')),
+                                DataColumn(label: Text('Fat')),
+                                DataColumn(label: Text('SNF')),
+                                DataColumn(label: Text('Rate')),
+                                DataColumn(label: Text('Amount')),
+                              ],
+                              rows: controller.savedEntries
+                                  .map(
+                                    (entry) => DataRow(cells: [
+                                      DataCell(Text(entry['sampleNo']!)),
+                                      DataCell(Text(entry['code']!)),
+                                      DataCell(Text(entry['qty']!)),
+                                      DataCell(Text(entry['fat']!)),
+                                      DataCell(Text(entry['snf']!)),
+                                      DataCell(Text(entry['rate']!)),
+                                      DataCell(Text(entry['amount']!)),
+                                    ]),
+                                  )
+                                  .toList(),
+                            ),
                           ),
                         )),
                   ],

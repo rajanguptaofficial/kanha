@@ -21,6 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _attemptAutoLogin() async {
     // Check login status
     bool isLoggedIn = await SharedPrefHelper.hasLoginData();
+   // bool storedRememberMe = await SecureStorageService.getRememberMe();
     Future.delayed(const Duration(seconds: 5), () {
       if (isLoggedIn) {
         Get.off(() =>  DashboardScreen()); // Navigate to Dashboard

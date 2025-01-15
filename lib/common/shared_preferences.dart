@@ -50,7 +50,9 @@ class SharedPrefHelper {
   // Clear all stored data in SharedPreferences
   static Future<void> clearAllData() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
+    //await prefs.clear();
+    await prefs.remove('username');
+    await prefs.remove('password');
     Get.off(LoginScreen());
   }
 }

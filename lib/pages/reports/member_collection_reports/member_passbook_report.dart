@@ -28,72 +28,75 @@ class MemberPassbookReportScreen extends StatelessWidget {
                   // Data Table
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
-                    child: DataTable(
-                      headingRowColor: WidgetStateProperty.all(Colors.blue),
-                      headingTextStyle: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                    child:SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: DataTable(
+                        headingRowColor: WidgetStateProperty.all(Colors.blue),
+                        headingTextStyle: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        columnSpacing: orientation == Orientation.portrait
+                            ? 15
+                            : 30, // Adjust spacing based on orientation
+                        dataRowMinHeight: 40,
+                        dataRowMaxHeight: 60,
+                        columns: const [
+                          DataColumn(label: Center(child: Text('Sr.\nNo.'))),
+                          DataColumn(label: Center(child: Text('Member\nCode'))),
+                          DataColumn(
+                              label:
+                                  Center(child: Text('Collection\nDate/Shift'))),
+                          DataColumn(label: Center(child: Text('Sample\nNo.'))),
+                          DataColumn(label: Center(child: Text('Milk\nType'))),
+                          DataColumn(label: Center(child: Text('QTY'))),
+                          DataColumn(label: Center(child: Text('Fat'))),
+                          DataColumn(label: Center(child: Text('Snf'))),
+                          DataColumn(label: Center(child: Text('Amount'))),
+                        ],
+                        rows: List.generate(controller.currentPageData.length,
+                            (index) {
+                          final item = controller.currentPageData[index];
+                          final isEven = index % 2 == 0;
+                      
+                          return DataRow(
+                            color: WidgetStateProperty.all(
+                              isEven
+                                  ? Colors.grey.shade200
+                                  : Colors.white, // Alternate row colors
+                            ),
+                            cells: [
+                              DataCell(Center(
+                                  child: Text(item['Sr. No.'] ?? '',
+                                      textAlign: TextAlign.center))),
+                              DataCell(Center(
+                                  child: Text(item['Member Code'] ?? '',
+                                      textAlign: TextAlign.center))),
+                              DataCell(Center(
+                                  child: Text(item['Collection Date/Shift'] ?? '',
+                                      textAlign: TextAlign.center))),
+                              DataCell(Center(
+                                  child: Text(item['Sample No.'] ?? '',
+                                      textAlign: TextAlign.center))),
+                              DataCell(Center(
+                                  child: Text(item['Milk Type'] ?? '',
+                                      textAlign: TextAlign.center))),
+                              DataCell(Center(
+                                  child: Text(item['QTY'] ?? '',
+                                      textAlign: TextAlign.center))),
+                              DataCell(Center(
+                                  child: Text(item['Fat'] ?? '',
+                                      textAlign: TextAlign.center))),
+                              DataCell(Center(
+                                  child: Text(item['Snf'] ?? '',
+                                      textAlign: TextAlign.center))),
+                              DataCell(Center(
+                                  child: Text(item['Amount'] ?? '',
+                                      textAlign: TextAlign.center))),
+                            ],
+                          );
+                        }).toList(),
                       ),
-                      columnSpacing: orientation == Orientation.portrait
-                          ? 15
-                          : 30, // Adjust spacing based on orientation
-                      dataRowMinHeight: 40,
-                      dataRowMaxHeight: 60,
-                      columns: const [
-                        DataColumn(label: Center(child: Text('Sr.\nNo.'))),
-                        DataColumn(label: Center(child: Text('Member\nCode'))),
-                        DataColumn(
-                            label:
-                                Center(child: Text('Collection\nDate/Shift'))),
-                        DataColumn(label: Center(child: Text('Sample\nNo.'))),
-                        DataColumn(label: Center(child: Text('Milk\nType'))),
-                        DataColumn(label: Center(child: Text('QTY'))),
-                        DataColumn(label: Center(child: Text('Fat'))),
-                        DataColumn(label: Center(child: Text('Snf'))),
-                        DataColumn(label: Center(child: Text('Amount'))),
-                      ],
-                      rows: List.generate(controller.currentPageData.length,
-                          (index) {
-                        final item = controller.currentPageData[index];
-                        final isEven = index % 2 == 0;
-
-                        return DataRow(
-                          color: WidgetStateProperty.all(
-                            isEven
-                                ? Colors.grey.shade200
-                                : Colors.white, // Alternate row colors
-                          ),
-                          cells: [
-                            DataCell(Center(
-                                child: Text(item['Sr. No.'] ?? '',
-                                    textAlign: TextAlign.center))),
-                            DataCell(Center(
-                                child: Text(item['Member Code'] ?? '',
-                                    textAlign: TextAlign.center))),
-                            DataCell(Center(
-                                child: Text(item['Collection Date/Shift'] ?? '',
-                                    textAlign: TextAlign.center))),
-                            DataCell(Center(
-                                child: Text(item['Sample No.'] ?? '',
-                                    textAlign: TextAlign.center))),
-                            DataCell(Center(
-                                child: Text(item['Milk Type'] ?? '',
-                                    textAlign: TextAlign.center))),
-                            DataCell(Center(
-                                child: Text(item['QTY'] ?? '',
-                                    textAlign: TextAlign.center))),
-                            DataCell(Center(
-                                child: Text(item['Fat'] ?? '',
-                                    textAlign: TextAlign.center))),
-                            DataCell(Center(
-                                child: Text(item['Snf'] ?? '',
-                                    textAlign: TextAlign.center))),
-                            DataCell(Center(
-                                child: Text(item['Amount'] ?? '',
-                                    textAlign: TextAlign.center))),
-                          ],
-                        );
-                      }).toList(),
                     ),
                   ),
                   Container(

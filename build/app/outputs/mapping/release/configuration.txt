@@ -480,6 +480,23 @@
 }
 
 # End of content from C:\Users\USER\.gradle\caches\transforms-3\47338bbf8f160d000bb980bbb8741b0a\transformed\jetified-savedstate-1.2.1\proguard.txt
+# The proguard configuration file for the following section is C:\Users\USER\.gradle\caches\transforms-3\14ad1308bd72826207d25cc4c6d38537\transformed\rules\lib\META-INF\proguard\protobuf.pro
+# Recently Protobuf Javalite introduced a change that relies on reflection,
+# which doesn't work with Proguard. This rule keeps the reflection usages in
+# (shaded) Protobuf classes in Tink as-is.
+# The location of this file is determined by
+# - https://developer.android.com/studio/build/shrink-code#configuration-files
+# - https://docs.bazel.build/versions/master/be/java.html#java_library.resources
+# See also:
+# - https://github.com/google/tink/issues/361
+# - https://github.com/protocolbuffers/protobuf/issues/6463
+# WARNING: the shaded package name com.google.crypto.tink.shaded.protobuf must
+# be kept in sync with jar_jar_rules.txt.
+-keepclassmembers class * extends com.google.crypto.tink.shaded.protobuf.GeneratedMessageLite {
+  <fields>;
+}
+
+# End of content from C:\Users\USER\.gradle\caches\transforms-3\14ad1308bd72826207d25cc4c6d38537\transformed\rules\lib\META-INF\proguard\protobuf.pro
 # The proguard configuration file for the following section is C:\Users\USER\.gradle\caches\transforms-3\6e8db5a03ecfd4c7003ff52b19d087f7\transformed\jetified-startup-runtime-1.1.1\proguard.txt
 # It's important that we preserve initializer names, given they are used in the AndroidManifest.xml.
 -keepnames class * extends androidx.startup.Initializer

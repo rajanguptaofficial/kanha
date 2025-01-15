@@ -33,81 +33,84 @@ class SettingsScreen extends StatelessWidget {
                   Card(
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
-                      child: DataTable(  headingRowColor: WidgetStateProperty.all(CustomColors.appColor,),
-                          headingTextStyle: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          columnSpacing:12,
-                           //orientation == Orientation.portrait
-                             // ? 15
-                            //  : 30, 
-                           // Adjust spacing based on orientation
-                          dataRowMinHeight: 20,
-                          dataRowMaxHeight: 40,headingRowHeight: 33,
-                        columns: const [
-                          DataColumn(label: Text('List Devices')),
-                          DataColumn(label: Text('On/Off')),
-                          DataColumn(label: Text('Device Make')),
-                          DataColumn(label: Text('Baud Rate')),
-                        ],
-                        rows: List.generate(5, (index) {
-                          return DataRow(cells: [
-                            DataCell(Row(spacing: 33,
-                              children: [
-                                Text('Device ${index + 1}',style: TextStyle(fontWeight: FontWeight.bold),),
+                      child:  SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                        child: DataTable(  headingRowColor: WidgetStateProperty.all(CustomColors.appColor,),
+                            headingTextStyle: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            columnSpacing:12,
+                             //orientation == Orientation.portrait
+                               // ? 15
+                              //  : 30, 
+                             // Adjust spacing based on orientation
+                            dataRowMinHeight: 20,
+                            dataRowMaxHeight: 40,headingRowHeight: 33,
+                          columns: const [
+                            DataColumn(label: Text('List Devices')),
+                            DataColumn(label: Text('On/Off')),
+                            DataColumn(label: Text('Device Make')),
+                            DataColumn(label: Text('Baud Rate')),
+                          ],
+                          rows: List.generate(5, (index) {
+                            return DataRow(cells: [
+                              DataCell(Row(spacing: 33,
+                                children: [
+                                  Text('Device ${index + 1}',style: TextStyle(fontWeight: FontWeight.bold),),
+                                  Obx(() => DropdownButton<String>(
+                                      value: controller.selectedDeviceMake[index].value,
+                                      onChanged: (value) {
+                                        controller.selectedDeviceMake[index].value = value!;
+                                      },
+                                      items: ['KM002', 'KM003', 'KM004']
+                                          .map((e) => DropdownMenuItem(
+                                                value: e,
+                                                child: Text(e),
+                                              ))
+                                          .toList(),
+                                    )),
+                                ],
+                              )),
+                              DataCell(
+                                Obx(() => Switch(
+                                      value: controller.devices[index].value,
+                                      onChanged: (value) {
+                                        controller.devices[index].value = value;
+                                      }, activeColor: CustomColors.appColor, // This sets the active color to blue.
+                                    )),
+                              ),
+                              DataCell(
                                 Obx(() => DropdownButton<String>(
-                                    value: controller.selectedDeviceMake[index].value,
-                                    onChanged: (value) {
-                                      controller.selectedDeviceMake[index].value = value!;
-                                    },
-                                    items: ['KM002', 'KM003', 'KM004']
-                                        .map((e) => DropdownMenuItem(
-                                              value: e,
-                                              child: Text(e),
-                                            ))
-                                        .toList(),
-                                  )),
-                              ],
-                            )),
-                            DataCell(
-                              Obx(() => Switch(
-                                    value: controller.devices[index].value,
-                                    onChanged: (value) {
-                                      controller.devices[index].value = value;
-                                    }, activeColor: CustomColors.appColor, // This sets the active color to blue.
-                                  )),
-                            ),
-                            DataCell(
-                              Obx(() => DropdownButton<String>(
-                                    value: controller.selectedDeviceMake[index].value,
-                                    onChanged: (value) {
-                                      controller.selectedDeviceMake[index].value = value!;
-                                    },
-                                    items: ['KM002', 'KM003', 'KM004']
-                                        .map((e) => DropdownMenuItem(
-                                              value: e,
-                                              child: Text(e),
-                                            ))
-                                        .toList(),
-                                  )),
-                            ),
-                            DataCell(
-                              Obx(() => DropdownButton<String>(
-                                    value: controller.selectedBaudRate[index].value,
-                                    onChanged: (value) {
-                                      controller.selectedBaudRate[index].value = value!;
-                                    },
-                                    items: ['KM002', 'KM003', 'KM004']
-                                        .map((e) => DropdownMenuItem(
-                                              value: e,
-                                              child: Text(e),
-                                            ))
-                                        .toList(),
-                                  )),
-                            ),
-                          ]);
-                        }),
+                                      value: controller.selectedDeviceMake[index].value,
+                                      onChanged: (value) {
+                                        controller.selectedDeviceMake[index].value = value!;
+                                      },
+                                      items: ['KM002', 'KM003', 'KM004']
+                                          .map((e) => DropdownMenuItem(
+                                                value: e,
+                                                child: Text(e),
+                                              ))
+                                          .toList(),
+                                    )),
+                              ),
+                              DataCell(
+                                Obx(() => DropdownButton<String>(
+                                      value: controller.selectedBaudRate[index].value,
+                                      onChanged: (value) {
+                                        controller.selectedBaudRate[index].value = value!;
+                                      },
+                                      items: ['KM002', 'KM003', 'KM004']
+                                          .map((e) => DropdownMenuItem(
+                                                value: e,
+                                                child: Text(e),
+                                              ))
+                                          .toList(),
+                                    )),
+                              ),
+                            ]);
+                          }),
+                        ),
                       ),
                     ),
                   ),

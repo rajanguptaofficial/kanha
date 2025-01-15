@@ -39,41 +39,44 @@ class RouteMasterScreen extends StatelessWidget {
                       height: height * 0.8, // 80% of screen height
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
-                        child:DataTable(
-  headingRowColor: WidgetStateProperty.all(CustomColors.appColor),
-  headingTextStyle: const TextStyle(
-    color: Colors.white,
-    fontWeight: FontWeight.bold,
-  ),
-  columnSpacing: 12,
-  dataRowMinHeight: 20,
-  dataRowMaxHeight: 40,
-  headingRowHeight: 33,
-  columns: const [
-    DataColumn(label: Text('Route Name/Code')),
-    DataColumn(label: Text('MCC Name/Code')),
-    DataColumn(label: Text('Plant Name/Code')),
-    DataColumn(label: Text('Company Name/Code')),
-  ],
-  rows: List.generate(controller.routeData.length, (index) {
-    final data = controller.routeData[index];
-    final isGrey = index % 2 == 0; // Alternate rows
-
-    return DataRow(
-      color: WidgetStateProperty.resolveWith<Color?>(
-        (Set<WidgetState> states) {
-          return isGrey ? Colors.white  : Colors.grey[200];
-        },
-      ),
-      cells: [
-        DataCell(Center(child: Text("${data.rtName}/${data.routecode}"))),
-        DataCell(Center(child: Text("${data.mccName}/${data.mccCode}"))),
-        DataCell(Center(child: Text("${data.plantName}/${data.plantCode}"))),
-        DataCell(Center(child: Text("${data.companyName}/${data.companyCode}"))),
-      ],
-    );
-  }),
-)
+                        child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                          child: DataTable(
+                            headingRowColor: WidgetStateProperty.all(CustomColors.appColor),
+                            headingTextStyle: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            columnSpacing: 12,
+                            dataRowMinHeight: 20,
+                            dataRowMaxHeight: 40,
+                            headingRowHeight: 33,
+                            columns: const [
+                              DataColumn(label: Text('Route Name-Code')),
+                              DataColumn(label: Text('MCC Name-Code')),
+                              DataColumn(label: Text('Plant Name-Code')),
+                              DataColumn(label: Text('Company Name-Code')),
+                            ],
+                            rows: List.generate(controller.routeData.length, (index) {
+                              final data = controller.routeData[index];
+                              final isGrey = index % 2 == 0; // Alternate rows
+                          
+                              return DataRow(
+                                color: WidgetStateProperty.resolveWith<Color?>(
+                                  (Set<WidgetState> states) {
+                                    return isGrey ? Colors.white  : Colors.grey[200];
+                                  },
+                                ),
+                                cells: [
+                                  DataCell(Center(child: Text("${data.rtName} - ${data.routecode}"))),
+                                  DataCell(Center(child: Text("${data.mccName} - ${data.mccCode}"))),
+                                  DataCell(Center(child: Text("${data.plantName} - ${data.plantCode}"))),
+                                  DataCell(Center(child: Text("${data.companyName} - ${data.companyCode}"))),
+                                ],
+                              );
+                            }),
+                          ),
+                        )
 
 
                       ),
@@ -102,10 +105,10 @@ class RouteMasterScreen extends StatelessWidget {
   dataRowMaxHeight: 40,
   headingRowHeight: 33,
   columns: const [
-    DataColumn(label: Text('Route Name/Code')),
-    DataColumn(label: Text('MCC Name/Code')),
-    DataColumn(label: Text('Plant Name/Code')),
-    DataColumn(label: Text('Company Name/Code')),
+    DataColumn(label: Text('Route Name-Code')),
+    DataColumn(label: Text('MCC Name-Code')),
+    DataColumn(label: Text('Plant Name-Code')),
+    DataColumn(label: Text('Company Name-Code')),
   ],
   rows: List.generate(controller.routeData.length, (index) {
     final data = controller.routeData[index];
@@ -118,10 +121,10 @@ class RouteMasterScreen extends StatelessWidget {
         },
       ),
       cells: [
-        DataCell(Center(child: Text("${data.rtName}/${data.routecode}"))),
-        DataCell(Center(child: Text("${data.mccName}/${data.mccCode}"))),
-        DataCell(Center(child: Text("${data.plantName}/${data.plantCode}"))),
-        DataCell(Center(child: Text("${data.companyName}/${data.companyCode}"))),
+        DataCell(Center(child: Text("${data.rtName} - ${data.routecode}"))),
+        DataCell(Center(child: Text("${data.mccName} - ${data.mccCode}"))),
+        DataCell(Center(child: Text("${data.plantName} - ${data.plantCode}"))),
+        DataCell(Center(child: Text("${data.companyName} - ${data.companyCode}"))),
       ],
     );
   }),

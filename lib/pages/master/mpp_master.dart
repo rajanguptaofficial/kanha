@@ -1,119 +1,3 @@
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-// import 'package:kanha_bmc/common/colors.dart';
-// import '../../controller/masters/mpp_master_controller.dart';
-
-// class MppMasterScreen extends StatelessWidget {
-//   final MppMasterController controller = Get.put(MppMasterController());
-
-//   MppMasterScreen({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return SafeArea(
-//       child: Scaffold(
-//         appBar: AppBar(
-//           backgroundColor: CustomColors.appColor,
-//           title: const Text(
-//             "MPP Master",
-//             style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-//           ),
-//         ),
-//         body: OrientationBuilder(
-//           builder: (context, orientation) {
-//             return Obx(() {
-//               if (controller.isLoading.value) {
-//                 return const Center(child: CircularProgressIndicator());
-//               }
-
-//               // Adjust layout based on orientation
-//               if (orientation == Orientation.portrait) {
-//                 return ListView(
-//                   children: [
-//                     SizedBox(
-//                       height: Get.height * 0.8, // Dynamic height
-//                       child: SingleChildScrollView(
-//                         scrollDirection: Axis.horizontal,
-//                         child: DataTable(
-//                           columnSpacing: Get.width * 0.05, // Dynamic column spacing
-//                           columns: const [
-//                             DataColumn(label: Text('Name Code')),
-//                             DataColumn(label: Text('MCC Name/Code')),
-//                             DataColumn(label: Text('Plant Name/Code')),
-//                             DataColumn(label: Text('Company Name/Code')),
-//                             DataColumn(label: Text('Route Name/Code')),
-//                             DataColumn(label: Text('Status')),
-//                             DataColumn(label: Text('Effective Date')),
-//                             DataColumn(label: Text('Address')),
-//                           ],
-//                           rows: controller.mppData.map((data) {
-//                             return DataRow(cells: [
-//                               DataCell(Text(data['nameCode'] ?? '')),
-//                               DataCell(Text(data['mccNameCode'] ?? '')),
-//                               DataCell(Text(data['plantNameCode'] ?? '')),
-//                               DataCell(Text(data['companyNameCode'] ?? '')),
-//                               DataCell(Text(data['routeNameCode'] ?? '')),
-//                               DataCell(Text(data['status'] ?? '')),
-//                               DataCell(Text(data['effectiveDate'] ?? '')),
-//                               DataCell(Text(data['address'] ?? '')),
-//                             ]);
-//                           }).toList(),
-//                         ),
-//                       ),
-//                     ),
-//                   ],
-//                 );
-//               } else {
-//                 // Landscape view
-//                 return Row(
-//                   children: [
-//                     Expanded(
-//                       child: SizedBox(
-//                         height: Get.height * 0.9, // Dynamic height for landscape
-//                         child: SingleChildScrollView(
-//                           scrollDirection: Axis.horizontal,
-//                           child: DataTable(
-//                             columnSpacing: Get.width * 0.05, // Dynamic column spacing
-//                             columns: const [
-//                               DataColumn(label: Text('Name Code')),
-//                               DataColumn(label: Text('MCC Name/Code')),
-//                               DataColumn(label: Text('Plant Name/Code')),
-//                               DataColumn(label: Text('Company Name/Code')),
-//                               DataColumn(label: Text('Route Name/Code')),
-//                               DataColumn(label: Text('Status')),
-//                               DataColumn(label: Text('Effective Date')),
-//                               DataColumn(label: Text('Address')),
-//                             ],
-//                             rows: controller.mppData.map((data) {
-//                               return DataRow(cells: [
-//                                 DataCell(Text(data['nameCode'] ?? '')),
-//                                 DataCell(Text(data['mccNameCode'] ?? '')),
-//                                 DataCell(Text(data['plantNameCode'] ?? '')),
-//                                 DataCell(Text(data['companyNameCode'] ?? '')),
-//                                 DataCell(Text(data['routeNameCode'] ?? '')),
-//                                 DataCell(Text(data['status'] ?? '')),
-//                                 DataCell(Text(data['effectiveDate'] ?? '')),
-//                                 DataCell(Text(data['address'] ?? '')),
-//                               ]);
-//                             }).toList(),
-//                           ),
-//                         ),
-//                       ),
-//                     ),
-//                   ],
-//                 );
-//               }
-//             });
-//           },
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
-
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kanha_bmc/common/colors.dart';
@@ -152,56 +36,60 @@ class MppMasterScreen extends StatelessWidget {
                       EdgeInsets.all(width * 0.04), // Padding based on width
                   children: [
                     SizedBox(
-                      height: height * 0.8, // 80% of screen height
+                      height: height * 0.9, // 80% of screen height
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
-                        child:DataTable(
-  headingRowColor: WidgetStateProperty.all(CustomColors.appColor),
-  headingTextStyle: const TextStyle(
-    color: Colors.white,
-    fontWeight: FontWeight.bold,
-  ),
-  columnSpacing: 12,
-  dataRowMinHeight: 20,
-  dataRowMaxHeight: 40,
-  headingRowHeight: 33,
-  columns: const [
-                            DataColumn(label: Text('Name/Code')),
-                            DataColumn(label: Text('MCC Name/Code')),
-                            DataColumn(label: Text('Plant Name/Code')),
-                            DataColumn(label: Text('Company Name/Code')),
-                            DataColumn(label: Text('Route Name/Code')),
-                            DataColumn(label: Text('Status')),
-                            DataColumn(label: Text('Effective Date')),
-                            DataColumn(label: Text('Address')),
-  ],
-  rows: List.generate(controller.mppData.length, (index) {
-    final data = controller.mppData[index];
-    final isGrey = index % 2 == 0; // Alternate rows
-
-    return DataRow(
-      color: WidgetStateProperty.resolveWith<Color?>(
-        (Set<WidgetState> states) {
-          return isGrey ? Colors.white  : Colors.grey[200];
-        },
-      ),
-      cells: [
-        DataCell(Center(child: Text("${data.mppName }/${data.code}"))),
-        DataCell(Center(child: Text("${data.mccName}/${data.mccCode}"))),
-        DataCell(Center(child: Text("${data.plantName}/${data.plantCode}"))),
-        DataCell(Center(child: Text("${data.companyName}/${data.companyCode}"))),
-        DataCell(Center(child: Text("${data.rtName}/${data.routecode}"))),
-        DataCell(Center(child: Text(data.status.toString()))),
-        DataCell(Center(child: Text(data.effectiveDate.toString()))),
-        DataCell(Center(child: Text(data.add1.toString()))),
-      ],
-    );
-  }),
-)
+                        child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                          child: DataTable(
+                            headingRowColor: WidgetStateProperty.all(CustomColors.appColor),
+                            headingTextStyle: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            columnSpacing: 12,
+                            dataRowMinHeight: 20,
+                            dataRowMaxHeight: 40,
+                            headingRowHeight: 33,
+                            columns: const [
+                              DataColumn(label: Text('Name-Code')),
+                              DataColumn(label: Text('MCC Name-Code')),
+                              DataColumn(label: Text('Plant Name-Code')),
+                              DataColumn(label: Text('Company Name-Code')),
+                              DataColumn(label: Text('Route Name-Code')),
+                              DataColumn(label: Text('Status')),
+                              DataColumn(label: Text('Effective Date')),
+                              DataColumn(label: Text('Address')),
+                            ],
+                            rows: List.generate(controller.mppData.length, (index) {
+                              final data = controller.mppData[index];
+                              final isGrey = index % 2 == 0; // Alternate rows
+                          
+                              return DataRow(
+                                color: WidgetStateProperty.resolveWith<Color?>(
+                                  (Set<WidgetState> states) {
+                                    return isGrey ? Colors.white  : Colors.grey[200];
+                                  },
+                                ),
+                                cells: [
+                                  DataCell(Center(child: Text("${data.mppName } - ${data.code}"))),
+                                  DataCell(Center(child: Text("${data.mccName} - ${data.mccCode}"))),
+                                  DataCell(Center(child: Text("${data.plantName} - ${data.plantCode}"))),
+                                  DataCell(Center(child: Text("${data.companyName} - ${data.companyCode}"))),
+                                  DataCell(Center(child: Text("${data.rtName} - ${data.routecode}"))),
+                                  DataCell(Center(child: Text(data.status.toString()))),
+                                  DataCell(Center(child: Text(data.effectiveDate.toString()))),
+                                  DataCell(Center(child: Text(data.add1.toString()))),
+                                ],
+                              );
+                            }),
+                          ),
+                        )
 
 
                       ),
                     ),
+               
                   ],
                 );
               } else {
@@ -215,49 +103,52 @@ class MppMasterScreen extends StatelessWidget {
                         child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: 
-                        DataTable(
-  headingRowColor: WidgetStateProperty.all(CustomColors.appColor),
-  headingTextStyle: const TextStyle(
-    color: Colors.white,
-    fontWeight: FontWeight.bold,
-  ),
-  columnSpacing: 12,
-  dataRowMinHeight: 20,
-  dataRowMaxHeight: 40,
-  headingRowHeight: 33,
-  columns: const [
-     DataColumn(label: Text('Name/Code')),
-                            DataColumn(label: Text('MCC Name/Code')),
-                            DataColumn(label: Text('Plant Name/Code')),
-                            DataColumn(label: Text('Company Name/Code')),
-                            DataColumn(label: Text('Route Name/Code')),
-                            DataColumn(label: Text('Status')),
-                            DataColumn(label: Text('Effective Date')),
-                            DataColumn(label: Text('Address')),
-  ],
-  rows: List.generate(controller.mppData.length, (index) {
-    final data = controller.mppData[index];
-    final isGrey = index % 2 == 0; // Alternate rows
-
-    return DataRow(
-      color: WidgetStateProperty.resolveWith<Color?>(
-        (Set<WidgetState> states) {
-          return isGrey ? Colors.white  : Colors.grey[200];
-        },
-      ),
-      cells: [
-     DataCell(Center(child: Text("${data.mppName }/${data.code}"))),
-        DataCell(Center(child: Text("${data.mccName}/${data.mccCode}"))),
-        DataCell(Center(child: Text("${data.plantName}/${data.plantCode}"))),
-        DataCell(Center(child: Text("${data.companyName}/${data.companyCode}"))),
-        DataCell(Center(child: Text("${data.rtName}/${data.routecode}"))),
-        DataCell(Center(child: Text(data.status.toString()))),
-        DataCell(Center(child: Text(data.effectiveDate.toString()))),
-        DataCell(Center(child: Text(data.add1.toString()))),
-      ],
-    );
-  }),
-)
+                        SingleChildScrollView(
+                               scrollDirection: Axis.vertical,
+                          child: DataTable(
+                            headingRowColor: WidgetStateProperty.all(CustomColors.appColor),
+                            headingTextStyle: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            columnSpacing: 12,
+                            dataRowMinHeight: 20,
+                            dataRowMaxHeight: 40,
+                            headingRowHeight: 33,
+                            columns: const [
+                               DataColumn(label: Text('Name-Code')),
+                              DataColumn(label: Text('MCC Name-Code')),
+                              DataColumn(label: Text('Plant Name-Code')),
+                              DataColumn(label: Text('Company Name-Code')),
+                              DataColumn(label: Text('Route Name-Code')),
+                              DataColumn(label: Text('Status')),
+                              DataColumn(label: Text('Effective Date')),
+                              DataColumn(label: Text('Address')),
+                            ],
+                            rows: List.generate(controller.mppData.length, (index) {
+                              final data = controller.mppData[index];
+                              final isGrey = index % 2 == 0; // Alternate rows
+                          
+                              return DataRow(
+                                color: WidgetStateProperty.resolveWith<Color?>(
+                                  (Set<WidgetState> states) {
+                                    return isGrey ? Colors.white  : Colors.grey[200];
+                                  },
+                                ),
+                                cells: [
+                               DataCell(Center(child: Text("${data.mppName } - ${data.code}"))),
+                                  DataCell(Center(child: Text("${data.mccName} - ${data.mccCode}"))),
+                                  DataCell(Center(child: Text("${data.plantName} - ${data.plantCode}"))),
+                                  DataCell(Center(child: Text("${data.companyName} - ${data.companyCode}"))),
+                                  DataCell(Center(child: Text("${data.rtName} - ${data.routecode}"))),
+                                  DataCell(Center(child: Text(data.status.toString()))),
+                                  DataCell(Center(child: Text(data.effectiveDate.toString()))),
+                                  DataCell(Center(child: Text(data.add1.toString()))),
+                                ],
+                              );
+                            }),
+                          ),
+                        )
 
 
                         ),

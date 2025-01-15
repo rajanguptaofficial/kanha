@@ -16,6 +16,7 @@ class MasterHomepageScreen extends StatefulWidget {
 }
 
 class _MasterHomepageScreenState extends State<MasterHomepageScreen> {
+ 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -29,7 +30,7 @@ class _MasterHomepageScreenState extends State<MasterHomepageScreen> {
             final double cardHeight = Get.height * 0.12;
             final double cardWidth = Get.width * (isPortrait ? 0.9 : 0.4);
             final double imageSize = cardHeight * 0.5;
-
+      
             return SingleChildScrollView(
               child: Padding(
                 padding:

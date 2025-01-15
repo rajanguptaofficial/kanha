@@ -1,0 +1,1 @@
+ D:\\.Mr\ Flutter\ Ji\\working\ Projects\\kanha_bmc\\.dart_tool\\flutter_build\\2ac1ee19a30ad9dbdaf6beca9a1e65fb\\native_assets.yaml: 

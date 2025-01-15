@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.kanha_bmc.app-mergeDebugResources-38:/values-ur/values-ur.xml",
+            "outputFile": "com.example.kanha_bmc.app-mergeDebugResources-39:/values-ur/values-ur.xml",
             "map": [
                 {
                     "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-3\\3423ad43eb5d78e4c674b032a330d643\\transformed\\preference-1.2.1\\res\\values-ur\\values-ur.xml",

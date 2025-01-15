@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.kanha_bmc.app-mergeReleaseResources-38:/values-en-rCA/values-en-rCA.xml",
+            "outputFile": "com.example.kanha_bmc.app-mergeReleaseResources-39:/values-en-rCA/values-en-rCA.xml",
             "map": [
                 {
                     "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-3\\3423ad43eb5d78e4c674b032a330d643\\transformed\\preference-1.2.1\\res\\values-en-rCA\\values-en-rCA.xml",
