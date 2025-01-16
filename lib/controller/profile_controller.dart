@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:kanha_bmc/common/api_urls.dart';
 import 'package:kanha_bmc/model/profile_response.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class ProfileController extends GetxController {
@@ -17,6 +18,10 @@ class ProfileController extends GetxController {
 
   Future<void> fetchProfiles() async {
     isLoading.value = true;
+final pref = await SharedPreferences.getInstance();
+
+
+
 
     final url = Uri.parse(ApiUrls.profile);
     final body = {

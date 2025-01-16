@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:kanha_bmc/common/database_helper.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -17,7 +16,7 @@ class DockCollectionController extends GetxController {
   var amount = ''.obs;
   var savedEntries = <Map<String, String>>[].obs;
 
-  final DatabaseHelper _dbHelper = DatabaseHelper();
+ // final DatabaseHelper _dbHelper = DatabaseHelper();
  var isForm1Visible = true.obs;
 
   // Form 1 fields
@@ -47,7 +46,7 @@ class DockCollectionController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchSavedEntries();
+  //  fetchSavedEntries();
     _initializeDateAndTimeShift();
   }
 
@@ -109,125 +108,125 @@ class DockCollectionController extends GetxController {
       'amount': amount.value,
     };
 
-    await _dbHelper.insertCollection(entry);
-    fetchSavedEntries();
-    clearCollections();
-    clearFields();
-  }
+  //   await _dbHelper.insertCollection(entry);
+  //   fetchSavedEntries();
+  //   clearCollections();
+  //   clearFields();
+  // }
 
-  // Fetch saved entries from the database
-  Future<void> fetchSavedEntries() async {
-    final entries = await _dbHelper.getCollections();
-    savedEntries.value = entries.map((e) => e.cast<String, String>()).toList();
-  }
+  // // Fetch saved entries from the database
+  // Future<void> fetchSavedEntries() async {
+  //   final entries = await _dbHelper.getCollections();
+  //   savedEntries.value = entries.map((e) => e.cast<String, String>()).toList();
+  // }
 
-    Future<void> clearCollections() async {
-   // final entries = await 
-    _dbHelper.clearCollections();
-    //savedEntries.value = entries.map((e) => e.cast<String, String>()).toList();
-  }
+  //   Future<void> clearCollections() async {
+  //  // final entries = await 
+  //   _dbHelper.clearCollections();
+  //   //savedEntries.value = entries.map((e) => e.cast<String, String>()).toList();
+  // }
 
-  // Check for network connectivity
-  Future<bool> isConnected() async {
-    var connectivityResult = await Connectivity().checkConnectivity();
-    return connectivityResult != ConnectivityResult.none;
-  }
+  // // Check for network connectivity
+  // Future<bool> isConnected() async {
+  //   var connectivityResult = await Connectivity().checkConnectivity();
+  //   return connectivityResult != ConnectivityResult.none;
+  // }
 
-  // Sync local database to the server
-  Future<void> syncLocalToServer() async {
-    final db = await DatabaseHelper().database;
+  // // Sync local database to the server
+  // Future<void> syncLocalToServer() async {
+  //   final db = await DatabaseHelper().database;
 
-    // Get unsynced records
-    List<Map<String, dynamic>> unsyncedRecords = await db.query(
-      'collections',
-      where: 'isSynced = ?',
-      whereArgs: [0],
-    );
+  //   // Get unsynced records
+  //   List<Map<String, dynamic>> unsyncedRecords = await db.query(
+  //     'collections',
+  //     where: 'isSynced = ?',
+  //     whereArgs: [0],
+  //   );
 
-    if (unsyncedRecords.isNotEmpty) {
-      // Send data to the server
-      final response = await http.post(
-        Uri.parse('https://yourserver.com/sync'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'data': unsyncedRecords}),
-      );
+  //   if (unsyncedRecords.isNotEmpty) {
+  //     // Send data to the server
+  //     final response = await http.post(
+  //       Uri.parse('https://yourserver.com/sync'),
+  //       headers: {'Content-Type': 'application/json'},
+  //       body: jsonEncode({'data': unsyncedRecords}),
+  //     );
 
-      if (response.statusCode == 200) {
-        // Mark records as synced
-        for (var record in unsyncedRecords) {
-          await db.update(
-            'collections',
-            {'isSynced': 1},
-            where: 'id = ?',
-            whereArgs: [record['id']],
-          );
-        }
-      }
-    }
-  }
+  //     if (response.statusCode == 200) {
+  //       // Mark records as synced
+  //       for (var record in unsyncedRecords) {
+  //         await db.update(
+  //           'collections',
+  //           {'isSynced': 1},
+  //           where: 'id = ?',
+  //           whereArgs: [record['id']],
+  //         );
+  //       }
+  //     }
+  //   }
+  // }
 
-  // Sync server data to the local database
-  Future<void> syncServerToLocal() async {
-    final db = await DatabaseHelper().database;
+  // // Sync server data to the local database
+  // Future<void> syncServerToLocal() async {
+  //   final db = await DatabaseHelper().database;
 
-    // Get data from server
-    final response = await http.get(
-      Uri.parse('https://yourserver.com/sync'),
-    );
+  //   // Get data from server
+  //   final response = await http.get(
+  //     Uri.parse('https://yourserver.com/sync'),
+  //   );
 
-    if (response.statusCode == 200) {
-      List<dynamic> serverData = jsonDecode(response.body)['data'];
+  //   if (response.statusCode == 200) {
+  //     List<dynamic> serverData = jsonDecode(response.body)['data'];
 
-      for (var record in serverData) {
-        // Check if record already exists
-        List<Map<String, dynamic>> existingRecord = await db.query(
-          'collections',
-          where: 'sampleNo = ?',
-          whereArgs: [record['sampleNo']],
-        );
+  //     for (var record in serverData) {
+  //       // Check if record already exists
+  //       List<Map<String, dynamic>> existingRecord = await db.query(
+  //         'collections',
+  //         where: 'sampleNo = ?',
+  //         whereArgs: [record['sampleNo']],
+  //       );
 
-        if (existingRecord.isEmpty) {
-          // Insert new record
-          await db.insert('collections', {
-            'sampleNo': record['sampleNo'],
-            'code': record['code'],
-            'qty': record['qty'],
-            'fat': record['fat'],
-            'snf': record['snf'],
-            'rate': record['rate'],
-            'amount': record['amount'],
-            'isSynced': 1,
-            'lastUpdated': record['lastUpdated'],
-          });
-        } else {
-          // Update existing record if server data is newer
-          if (record['lastUpdated'].compareTo(existingRecord[0]['lastUpdated']) > 0) {
-            await db.update(
-              'collections',
-              {
-                'code': record['code'],
-                'qty': record['qty'],
-                'fat': record['fat'],
-                'snf': record['snf'],
-                'rate': record['rate'],
-                'amount': record['amount'],
-                'isSynced': 1,
-                'lastUpdated': record['lastUpdated'],
-              },
-              where: 'sampleNo = ?',
-              whereArgs: [record['sampleNo']],
-            );
-          }
-        }
-      }
-    }
-  }
+  //       if (existingRecord.isEmpty) {
+  //         // Insert new record
+  //         await db.insert('collections', {
+  //           'sampleNo': record['sampleNo'],
+  //           'code': record['code'],
+  //           'qty': record['qty'],
+  //           'fat': record['fat'],
+  //           'snf': record['snf'],
+  //           'rate': record['rate'],
+  //           'amount': record['amount'],
+  //           'isSynced': 1,
+  //           'lastUpdated': record['lastUpdated'],
+  //         });
+  //       } else {
+  //         // Update existing record if server data is newer
+  //         if (record['lastUpdated'].compareTo(existingRecord[0]['lastUpdated']) > 0) {
+  //           await db.update(
+  //             'collections',
+  //             {
+  //               'code': record['code'],
+  //               'qty': record['qty'],
+  //               'fat': record['fat'],
+  //               'snf': record['snf'],
+  //               'rate': record['rate'],
+  //               'amount': record['amount'],
+  //               'isSynced': 1,
+  //               'lastUpdated': record['lastUpdated'],
+  //             },
+  //             where: 'sampleNo = ?',
+  //             whereArgs: [record['sampleNo']],
+  //           );
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 
   // Sync data between local database and server
-  void syncData() async {
-    if (await isConnected()) {
-      await syncLocalToServer();
-      await syncServerToLocal();
-    }
+  // void syncData() async {
+  //   if (await isConnected()) {
+  //     await syncLocalToServer();
+  //     await syncServerToLocal();
+  //   }
   }
 }

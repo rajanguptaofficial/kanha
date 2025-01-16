@@ -314,7 +314,7 @@ class BMCCollectionScreen extends StatelessWidget {
                             backgroundColor: CustomColors.appGreenButtomColor,
                           ),
                           onPressed: () {
-                            controller.saveEntry();
+                           // controller.saveEntry();
                           },
                           child: Text('Save',
                               style: TextStyle(
@@ -332,7 +332,7 @@ class BMCCollectionScreen extends StatelessWidget {
                             backgroundColor: CustomColors.appRedButtomColor,
                           ),
                           onPressed: () {
-                            controller.clearCollections();
+                            //controller.clearCollections();
                           },
                           child: Text('Clear Data',
                               style: TextStyle(

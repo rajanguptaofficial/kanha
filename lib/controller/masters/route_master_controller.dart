@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:kanha_bmc/model/master/route_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class RouteMasterController extends GetxController {
@@ -31,13 +32,16 @@ String formatDate(String? date) {
   }
 }
 
-  Future<void> fetchData() async {
-    isLoading.value = true;
+ Future<void> fetchData() async {
+      final pref = await SharedPreferences.getInstance();
+      var userCode =pref.getString('userCode');
+      var user =pref.getString('username');
+       isLoading.value = true;
 
     final url = Uri.parse(ApiUrls.profile);
     final body = {
-      "deviceid": "0000001111",
-      "usrcode": "226",
+      "deviceid": user.toString(),
+      "usrcode": userCode.toString(),
       "requests": "Route"
     };
 

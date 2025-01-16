@@ -3,7 +3,6 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:kanha_bmc/common/api_urls.dart';
-import 'package:kanha_bmc/common/secure_storage_service.dart';
 import 'package:kanha_bmc/common/shared_preferences.dart';
 import 'package:kanha_bmc/pages/login.dart';
 import 'package:kanha_bmc/pages/dashboard.dart';
@@ -89,6 +88,9 @@ class LoginController extends GetxController {
           await SharedPrefHelper.saveLoginData(
             username: data['responseData']['username'],
             password: data['responseData']['password'],
+              userCode: data['responseData']['usercode'],
+            
+
           );
 
           Get.snackbar('Success', data['responseMessage']);

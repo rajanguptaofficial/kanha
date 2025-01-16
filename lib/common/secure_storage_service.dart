@@ -63,4 +63,14 @@ class SecureStorageService {
   static Future<void> clearAll() async {
     await _storage.deleteAll();
   }
+
+
+   Future<bool> hasLoginData() async {
+   final FlutterSecureStorage storage = const FlutterSecureStorage();
+ 
+    String? userName = await storage.read(key: _usernameKey);
+   String? password = await storage.read(key: _passwordKey);
+    return userName != null && password != null;
+  }
+
 }

@@ -1,46 +1,55 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
+import 'package:kanha_bmc/common/api_urls.dart';
+import 'package:kanha_bmc/model/master/rate_master.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RateMasterController extends GetxController {
   var isLoading = true.obs;
-  var rateData = [].obs;
+  var rateMasterData = [].obs;
 
   @override
   void onInit() {
-    fetchRateData();
+    fetchData();
     super.onInit();
   }
 
-  void fetchRateData() async {
+
+  Future<void> fetchData() async {
+      final pref = await SharedPreferences.getInstance();
+      var userCode =pref.getString('userCode');
+      var user =pref.getString('username');
+       isLoading.value = true;
+
+    final url = Uri.parse(ApiUrls.profile);
+    final body = {
+      "deviceid": user.toString(),
+      "usrcode": userCode.toString(),
+      "requests": "RateHeader"
+    };
+
+
+
     try {
-      isLoading(true);
-      // Replace with your API call logic
-      var response = await fetchFromServer(); // Your API call here
-      if (response != null) {
-        rateData.value = response; // Assuming response is a list
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(body),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final responseModel = RateHeaderMasterReportModel.fromJson(data);
+        rateMasterData.value = responseModel.responseData!.table!;
+      } else {
+        Get.snackbar('Error', 'Failed to fetch data');
       }
     } catch (e) {
-      print("Error fetching data: $e");
+      Get.snackbar('Error', 'Something went wrong');
     } finally {
-      isLoading(false);
+      isLoading.value = false;
     }
   }
 
-  Future<List<Map<String, dynamic>>> fetchFromServer() async {
-    // Simulate API call
-    await Future.delayed(Duration(seconds: 2));
-    return [
-      {
-        'bmcCode': 'BMC-001',
-        'mppCode': 'MCC001',
-        'rateCode': 'Plant001',
-        'rateDesc': 'Company001',
-        'rateLocation': '2024-01-01',
-        'effectiveDate': 'Address 1',
-        'effectiveShift': 'Dock 1',
-        'uploadDate': 'December ',
-        'downloadDate': 'December',
-      },
-      // Add more data as needed
-    ];
-  }
 }

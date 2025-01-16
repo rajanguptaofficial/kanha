@@ -337,7 +337,7 @@ class DockCollectionScreen extends StatelessWidget {
         backgroundColor: CustomColors.appRedButtomColor,
       ),
                       onPressed: () {
-                        controller.clearCollections();
+                       // controller.clearCollections();
                       },
                       child: Text('Clear Data', style: TextStyle(fontSize: fontSize,color: CustomColors.bgColor)),
                     ),
