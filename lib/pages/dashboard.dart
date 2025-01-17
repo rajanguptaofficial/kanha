@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:kanha_bmc/common/colors.dart';
 import 'package:kanha_bmc/common/custom_drawer.dart';
 import 'package:kanha_bmc/controller/dashboard_controller.dart';
-import 'package:kanha_bmc/controller/procurement/bmc_controller.dart';
 import 'package:kanha_bmc/pages/procurement/bmc_collection.dart';
 import 'package:kanha_bmc/pages/procurement/member_collection.dart';
 import 'package:kanha_bmc/pages/reports/report_homepage.dart';
@@ -17,15 +16,17 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return OrientationBuilder(
-      builder: (context, orientation) {
-        return SafeArea(
-          child: Scaffold(
-            appBar: CustomAppBar(
-              title: 'Dashboard KMTEPL',
-            ),
-            drawer: CustomDrawer(),
-            body: SingleChildScrollView(
+ return SafeArea(
+      child: Scaffold(
+        appBar: CustomAppBar(
+          title:"Dashboard"
+        ),
+         drawer:  CustomDrawer(),
+        body: 
+        OrientationBuilder(
+            builder: (context, orientation) {
+              return 
+             SingleChildScrollView(
               padding: EdgeInsets.all(Get.width * 0.02),
               child: Column(
                 children: [
@@ -136,20 +137,19 @@ class DashboardScreen extends StatelessWidget {
                   _buildTransactionsRow(),
                 ],
               ),
+            );
+       }),
+          bottomNavigationBar: Padding(
+            padding: EdgeInsets.all(Get.width * 0.02),
+            child: const Text(
+              '© KMTEPL | App Version-1.0 | 17 Dec 2024',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 12, color: Colors.black),
             ),
-            bottomNavigationBar: Padding(
-              padding: EdgeInsets.all(Get.width * 0.02),
-              child: const Text(
-                '© KMTEPL | App Version-1.0 | 17 Dec 2024',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 12, color: Colors.black),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
+          )));}}
+        
+      
+  
 
   Widget _buildSectionCard(
       {required String title, required List<Widget> data}) {
@@ -273,4 +273,4 @@ class DashboardScreen extends StatelessWidget {
       ),
     );
   }
-}
+

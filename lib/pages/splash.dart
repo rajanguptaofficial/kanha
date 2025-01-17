@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kanha_bmc/common/shared_preferences.dart';
+import 'package:kanha_bmc/database/data%20syncing/data_syncing_homepage.dart';
 import 'package:kanha_bmc/pages/login.dart';
 import 'package:kanha_bmc/pages/dashboard.dart';
 
@@ -24,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
    // bool storedRememberMe = await SecureStorageService.getRememberMe();
     Future.delayed(const Duration(seconds: 5), () {
       if (isLoggedIn) {
-        Get.off(() =>  DashboardScreen()); // Navigate to Dashboard
+        Get.off(() =>  DataSyncingHomepageScreen()); // Navigate to Dashboard
       } else {
         Get.off(() => LoginScreen()); // Navigate to Login Screen
       }
