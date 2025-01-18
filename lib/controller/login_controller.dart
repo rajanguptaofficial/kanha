@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:kanha_bmc/common/api_urls.dart';
 import 'package:kanha_bmc/common/shared_preferences.dart';
+import 'package:kanha_bmc/database/data%20syncing/data_syncing_homepage.dart';
 import 'package:kanha_bmc/pages/login.dart';
 import 'package:kanha_bmc/pages/dashboard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,7 +19,7 @@ class LoginController extends GetxController {
     super.onInit();
      _loadRememberedLogin();
     fetchDeviceInfo();
-    _attemptAutoLogin();
+   // _attemptAutoLogin();
    
   }
 
@@ -95,7 +96,7 @@ class LoginController extends GetxController {
 
           Get.snackbar('Success', data['responseMessage']);
           print(response.body);
-          Get.off(DashboardScreen());
+          Get.off(DataSyncingHomepageScreen());
         } else {
           print(response.body);
           Get.snackbar('Error', data['responseMessage']);

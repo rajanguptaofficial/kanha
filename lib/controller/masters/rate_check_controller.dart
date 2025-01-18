@@ -2,11 +2,13 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:kanha_bmc/common/api_urls.dart';
-import 'package:kanha_bmc/database/rate_check.dart';
+import 'package:kanha_bmc/database/data%20syncing/data_syncing_homepage.dart';
+
+import 'package:kanha_bmc/database/master/rate_check_db.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RateCheckController extends GetxController {
-  final DatabaseHelper dbHelper = DatabaseHelper.instance;
+  final RateCheckDBHelper rateCheckDB = RateCheckDBHelper.instance;
 
   var fat = ''.obs;
   var snf = ''.obs;
@@ -36,7 +38,7 @@ class RateCheckController extends GetxController {
   }
 
   // Fetch data from the API and save it locally
-  Future<void> fetchData(RxBool isLoading) async {
+  Future<void> fetchData() async {
     final pref = await SharedPreferences.getInstance();
     var userCode = pref.getString('userCode');
     var user = pref.getString('username');
@@ -61,7 +63,7 @@ class RateCheckController extends GetxController {
         final tableData =
             List<Map<String, dynamic>>.from(responseData['responseData']['table']);
         // Save data to SQLite
-        await dbHelper.insertRates(tableData);
+        await rateCheckDB.insertData(tableData);
 
         Get.snackbar("Success", "Data fetched and saved locally");
       } else {
@@ -71,6 +73,7 @@ class RateCheckController extends GetxController {
       Get.snackbar("Error", "An error occurred: $e");
     }
     isLoading.value = false;
+     Get.to(() =>  DataSyncingHomepageScreen());
   }
 
   // Filter data from SQLite based on inputs
@@ -78,7 +81,7 @@ class RateCheckController extends GetxController {
     updateSelectedMilkType(selectedMilkType.value); 
     isLoading.value = true;
     try {
-      final filteredRates = await dbHelper.getFilteredRates(
+      final filteredRates = await rateCheckDB.getFilteredRates(
         double.tryParse(fat.value) ?? 0,
         double.tryParse(snf.value) ?? 0,
         // selectedMilkType.value,

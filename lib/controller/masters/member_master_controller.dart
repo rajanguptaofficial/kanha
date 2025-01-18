@@ -1,84 +1,45 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:kanha_bmc/common/api_urls.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:intl/intl.dart';
-import 'package:kanha_bmc/model/master/bmc_model.dart';
-import 'package:kanha_bmc/model/master/member_model.dart';
+import 'package:kanha_bmc/database/master/member_master_db.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 class MemberMasterController extends GetxController {
   var isLoading = true.obs;
-  var memberData = [].obs;
+  var memberData = <Map<String, dynamic>>[].obs;
 
-  void fetchMemberData() async {
+  final MemberMasterDBHelper memberMasterDB = MemberMasterDBHelper.instance;
+
+  @override
+  void onInit() {
+    super.onInit();
+    initializeMemberData();
+  }
+
+  Future<void> initializeMemberData() async {
+    isLoading.value = true;
     try {
-      isLoading(true);
-      // Replace with your API call logic
-      var response = await fetchFromServer(); // Your API call here
-      if (response != null) {
-        memberData.value = response; // Assuming response is a list
-      }
-    } catch (e) {
-      print("Error fetching data: $e");
+      final data = await memberMasterDB.fetchLocalData();
+      memberData.assignAll(data);
     } finally {
-      isLoading(false);
+      isLoading.value = false;
     }
   }
 
-  Future<List<Map<String, dynamic>>> fetchFromServer() async {
-    // Simulate API call
-    await Future.delayed(Duration(seconds: 2));
-    return [
-      {
-        'societyCodeName': 'SuuC001',
-        'memberCodeName': 'MCC001',
-        'membShortCode': 'Plant001',
-        'farmerName': 'Pawan',
-        'mobNo': '9454826162',
-        'Status': ' 1',
-      },
-      // Add more data as needed
-    ];
-  }
-
-
- var apiResponse = BmcMasterModel().obs;
-  @override
-  void onInit() {
-    fetchData();
-    super.onInit();
-  }
-
-
-String formatDate(String? date) {
-  if (date == null || date.isEmpty) {
-    return '-';
-  }
-  try {
-    DateTime parsedDate = DateTime.parse(date);
-    return DateFormat('yyyy-MM-dd').format(parsedDate);
-  } catch (e) {
-    return '-';
-  }
-}
-
-
   Future<void> fetchData() async {
-      final pref = await SharedPreferences.getInstance();
-      var userCode =pref.getString('userCode');
-      var user =pref.getString('username');
-       isLoading.value = true;
+    final pref = await SharedPreferences.getInstance();
+    var userCode = pref.getString('userCode');
+    var username = pref.getString('username');
+
+    isLoading.value = true;
 
     final url = Uri.parse(ApiUrls.profile);
     final body = {
-      "deviceid": user.toString(),
-      "usrcode": userCode.toString(),
+      "deviceid": username ?? '',
+      "usrcode": userCode ?? '',
       "requests": "Member"
     };
-
-
 
     try {
       final response = await http.post(
@@ -88,9 +49,14 @@ String formatDate(String? date) {
       );
 
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final responseModel = MemberMasterModel.fromJson(data);
-        memberData.value = responseModel.responseData.table;
+        final responseData = json.decode(response.body);
+        final tableData = List<Map<String, dynamic>>.from(
+          responseData['responseData']['table'],
+        );
+
+        await memberMasterDB.insertData(tableData);
+
+        memberData.assignAll(await memberMasterDB.fetchLocalData());
       } else {
         Get.snackbar('Error', 'Failed to fetch data');
       }
@@ -100,8 +66,4 @@ String formatDate(String? date) {
       isLoading.value = false;
     }
   }
-
-
-
-
 }
