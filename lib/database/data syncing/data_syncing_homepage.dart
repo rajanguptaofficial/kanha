@@ -92,11 +92,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kanha_bmc/common/colors.dart';
-import 'package:kanha_bmc/common/custom_app_bar.dart';
-import 'package:kanha_bmc/common/custom_drawer.dart';
-import 'package:kanha_bmc/database/data%20syncing/data_syncing_homepage_controller.dart';
-import 'package:kanha_bmc/pages/dashboard.dart';
+import 'data_syncing_homepage_controller.dart';
+
 
 class DataSyncingHomepageScreen extends StatefulWidget {
   const DataSyncingHomepageScreen({super.key});
@@ -174,3 +171,10 @@ class _DataSyncingHomepageScreenState extends State<DataSyncingHomepageScreen> {
     );
   }
 }
+
+
+
+
+
+
+

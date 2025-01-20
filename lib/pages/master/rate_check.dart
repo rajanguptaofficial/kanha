@@ -11,7 +11,7 @@ class RateCheckScreen extends StatefulWidget {
 }
 
 class _RateCheckScreenState extends State<RateCheckScreen> {
-  final RateCheckController controller = Get.put(RateCheckController());
+  final RateCheckMasterController controller = Get.put(RateCheckMasterController());
 
   @override
   Widget build(BuildContext context) {

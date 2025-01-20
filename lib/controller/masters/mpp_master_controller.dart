@@ -1,46 +1,114 @@
+// import 'package:get/get.dart';
+// import 'package:kanha_bmc/common/api_urls.dart';
+// import 'package:http/http.dart' as http;
+// import 'dart:convert';
+// import 'package:intl/intl.dart';
+// import 'package:kanha_bmc/model/master/mpp_model.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
+
+// class MppMasterController extends GetxController {
+//   var isLoading = true.obs;
+//   var mppData = [].obs;
+
+
+//   @override
+//   void onInit() {
+//     fetchData();
+//     super.onInit();
+//   }
+
+// String formatDate(String? date) {
+//   if (date == null || date.isEmpty) {
+//     return '-';
+//   }
+//   try {
+//     DateTime parsedDate = DateTime.parse(date);
+//     return DateFormat('yyyy-MM-dd').format(parsedDate);
+//   } catch (e) {
+//     return '-';
+//   }
+// }
+
+
+
+//   Future<void> fetchData() async {
+//       final pref = await SharedPreferences.getInstance();
+//       var userCode =pref.getString('userCode');
+//       var user =pref.getString('username');
+//        isLoading.value = true;
+
+//     final url = Uri.parse(ApiUrls.profile);
+//     final body = {
+//       "deviceid": user.toString(),
+//       "usrcode": userCode.toString(),
+//       "requests": "Mpp"
+//     };
+
+//     try {
+//       final response = await http.post(
+//         url,
+//         headers: {"Content-Type": "application/json"},
+//         body: json.encode(body),
+//       );
+
+//       if (response.statusCode == 200) {
+//         final data = json.decode(response.body);
+//         final responseModel = MPPMasterModel.fromJson(data);
+//         mppData.value = responseModel.responseData!.table!;
+//       } else {
+//         Get.snackbar('Error', 'Failed to fetch data');
+//       }
+//     } catch (e) {
+//       Get.snackbar('Error', 'Something went wrong');
+//     } finally {
+//       isLoading.value = false;
+//     }
+//   }
+// }
+
+
+
+
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:kanha_bmc/common/api_urls.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:intl/intl.dart';
-import 'package:kanha_bmc/model/master/mpp_model.dart';
+import 'package:kanha_bmc/database/master/mpp_master_db.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MppMasterController extends GetxController {
   var isLoading = true.obs;
-  var mppData = [].obs;
+  var mppData = <Map<String, dynamic>>[].obs;
 
+  final MppMasterDBHelper mppMasterDB = MppMasterDBHelper.instance;
 
   @override
   void onInit() {
-    fetchData();
     super.onInit();
+    initializeMPPData();
   }
 
-String formatDate(String? date) {
-  if (date == null || date.isEmpty) {
-    return '-';
+  Future<void> initializeMPPData() async {
+    isLoading.value = true;
+    try {
+      final data = await mppMasterDB.fetchLocalData();
+      mppData.assignAll(data);
+    } finally {
+      isLoading.value = false;
+    }
   }
-  try {
-    DateTime parsedDate = DateTime.parse(date);
-    return DateFormat('yyyy-MM-dd').format(parsedDate);
-  } catch (e) {
-    return '-';
-  }
-}
-
-
 
   Future<void> fetchData() async {
-      final pref = await SharedPreferences.getInstance();
-      var userCode =pref.getString('userCode');
-      var user =pref.getString('username');
-       isLoading.value = true;
+    final pref = await SharedPreferences.getInstance();
+    var userCode = pref.getString('userCode');
+    var username = pref.getString('username');
+
+    isLoading.value = true;
 
     final url = Uri.parse(ApiUrls.profile);
     final body = {
-      "deviceid": user.toString(),
-      "usrcode": userCode.toString(),
+      "deviceid": username ?? '',
+      "usrcode": userCode ?? '',
       "requests": "Mpp"
     };
 
@@ -52,9 +120,14 @@ String formatDate(String? date) {
       );
 
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final responseModel = MPPMasterModel.fromJson(data);
-        mppData.value = responseModel.responseData!.table!;
+        final responseData = json.decode(response.body);
+        final tableData = List<Map<String, dynamic>>.from(
+          responseData['responseData']['table'],
+        );
+
+        await mppMasterDB.insertData(tableData);
+
+        mppData.assignAll(await mppMasterDB.fetchLocalData());
       } else {
         Get.snackbar('Error', 'Failed to fetch data');
       }
@@ -65,5 +138,3 @@ String formatDate(String? date) {
     }
   }
 }
-
-

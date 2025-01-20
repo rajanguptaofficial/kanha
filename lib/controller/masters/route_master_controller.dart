@@ -1,47 +1,43 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:kanha_bmc/common/api_urls.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:intl/intl.dart';
-import 'package:kanha_bmc/model/master/route_model.dart';
+import 'package:kanha_bmc/database/master/rute_master_db.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
-class RouteMasterController extends GetxController {
+class RuteMasterController extends GetxController {
   var isLoading = true.obs;
-  var routeData = [].obs;
- var apiResponse = RouteMasterModel().obs;
+  var ruteData = <Map<String, dynamic>>[].obs;
 
+  final RuteMasterDBHelper ruteMasterDB = RuteMasterDBHelper.instance;
 
   @override
   void onInit() {
-    fetchData();
     super.onInit();
+    initializeRateData();
   }
 
-
-String formatDate(String? date) {
-  if (date == null || date.isEmpty) {
-    return '-';
+  Future<void> initializeRateData() async {
+    isLoading.value = true;
+    try {
+      final data = await ruteMasterDB.fetchLocalData();
+      ruteData.assignAll(data);
+    } finally {
+      isLoading.value = false;
+    }
   }
-  try {
-    DateTime parsedDate = DateTime.parse(date);
-    return DateFormat('yyyy-MM-dd').format(parsedDate);
-  } catch (e) {
-    return '-';
-  }
-}
 
- Future<void> fetchData() async {
-      final pref = await SharedPreferences.getInstance();
-      var userCode =pref.getString('userCode');
-      var user =pref.getString('username');
-       isLoading.value = true;
+  Future<void> fetchData() async {
+    final pref = await SharedPreferences.getInstance();
+    var userCode = pref.getString('userCode');
+    var username = pref.getString('username');
+
+    isLoading.value = true;
 
     final url = Uri.parse(ApiUrls.profile);
     final body = {
-      "deviceid": user.toString(),
-      "usrcode": userCode.toString(),
+      "deviceid": username ?? '',
+      "usrcode": userCode ?? '',
       "requests": "Route"
     };
 
@@ -53,9 +49,14 @@ String formatDate(String? date) {
       );
 
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final responseModel = RouteMasterModel.fromJson(data);
-        routeData.value = responseModel.responseData!.table!;
+        final responseData = json.decode(response.body);
+        final tableData = List<Map<String, dynamic>>.from(
+          responseData['responseData']['table'],
+        );
+
+        await ruteMasterDB.insertData(tableData);
+
+        ruteData.assignAll(await ruteMasterDB.fetchLocalData());
       } else {
         Get.snackbar('Error', 'Failed to fetch data');
       }
@@ -66,5 +67,3 @@ String formatDate(String? date) {
     }
   }
 }
-
-

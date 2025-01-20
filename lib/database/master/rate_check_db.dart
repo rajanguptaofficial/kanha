@@ -2,11 +2,11 @@ import 'dart:async';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-class RateCheckDBHelper {
-  static final RateCheckDBHelper instance = RateCheckDBHelper._internal();
+class RateCheckMasterDBHelper {
+  static final RateCheckMasterDBHelper instance = RateCheckMasterDBHelper._internal();
   static Database? _database;
 
-  RateCheckDBHelper._internal();
+  RateCheckMasterDBHelper._internal();
 
   Future<Database> get database async {
     if (_database != null) return _database!;
@@ -16,7 +16,7 @@ class RateCheckDBHelper {
 
   Future<Database> _initDatabase() async {
     final dbPath = await getDatabasesPath();
-    final path = join(dbPath, 'rate_check.db');
+    final path = join(dbPath, 'rate_check_master.db');
 
     return await openDatabase(
       path,
@@ -27,7 +27,7 @@ class RateCheckDBHelper {
 
   Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
-      CREATE TABLE rates (
+      CREATE TABLE ratesCheckMaster (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         fat REAL,
         snf REAL,
@@ -43,11 +43,11 @@ class RateCheckDBHelper {
     final db = await database;
 
     // Clear existing data before inserting new data
-    await db.delete('rates');
+    await db.delete('ratesCheckMaster');
 
     for (var rate in rates) {
       
-      await db.insert('rates', rate);
+      await db.insert('ratesCheckMaster', rate);
     }
   }
 
@@ -56,7 +56,7 @@ class RateCheckDBHelper {
     final db = await database;
 
     return await db.query(
-      'rates',
+      'ratesCheckMaster',
       where: 'fat = ? AND snf = ? AND cattletype = ?',
       whereArgs: [fat, snf, cattletype],
     );

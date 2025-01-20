@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kanha_bmc/common/shared_preferences.dart';
-import 'package:kanha_bmc/database/data%20syncing/data_syncing_homepage.dart';
 import 'package:kanha_bmc/pages/login.dart';
 import 'package:kanha_bmc/pages/dashboard.dart';
 

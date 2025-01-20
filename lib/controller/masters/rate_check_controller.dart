@@ -7,8 +7,8 @@ import 'package:kanha_bmc/database/data%20syncing/data_syncing_homepage.dart';
 import 'package:kanha_bmc/database/master/rate_check_db.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class RateCheckController extends GetxController {
-  final RateCheckDBHelper rateCheckDB = RateCheckDBHelper.instance;
+class RateCheckMasterController extends GetxController {
+  final RateCheckMasterDBHelper rateCheckDB = RateCheckMasterDBHelper.instance;
 
   var fat = ''.obs;
   var snf = ''.obs;
