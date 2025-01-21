@@ -72,7 +72,10 @@ class RateMasterController extends GetxController {
   void onInit() {
     super.onInit();
     initializeRateData();
+    rateMasterDB.checkEntryCount();
+    super.onInit();
   }
+  
 
   Future<void> initializeRateData() async {
     isLoading.value = true;

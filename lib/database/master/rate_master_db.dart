@@ -57,4 +57,29 @@ Future<void> _onCreate(Database db, int version) async {
   }
 
 
+
+  Future<int> getEntryCount() async {
+    final db = await database;
+
+    // Query to count the number of rows in the table
+    final List<Map<String, dynamic>> result =
+        await db.rawQuery('SELECT COUNT(*) as count FROM rateMaster');
+
+    // Return the count from the first row of the result
+    return Sqflite.firstIntValue(result) ?? 0;
+  }
+
+  Future<void> checkEntryCount() async {
+    final count = await getEntryCount();
+    print('Number of entries in rateMaster: $count');
+  }
+
+
+
+
+
+
+
+
+
 }

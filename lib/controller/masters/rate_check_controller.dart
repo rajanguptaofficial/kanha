@@ -6,6 +6,7 @@ import 'package:kanha_bmc/database/data%20syncing/data_syncing_homepage.dart';
 
 import 'package:kanha_bmc/database/master/rate_check_db.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqflite/sqflite.dart';
 
 class RateCheckMasterController extends GetxController {
   final RateCheckMasterDBHelper rateCheckDB = RateCheckMasterDBHelper.instance;
@@ -18,11 +19,10 @@ class RateCheckMasterController extends GetxController {
   var milkTypes = ["Buff", "Cow", "Mixed"].obs;
   var rtpl = ''.obs;
 
-  // @override
-  // void onInit() {
-  //   fetchData();
-  //   super.onInit();
-  // }
+
+
+
+
 
   // Map milk type names to their codes
   void updateSelectedMilkType(String milkType) {

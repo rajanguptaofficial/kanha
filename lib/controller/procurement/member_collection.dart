@@ -1,19 +1,30 @@
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:kanha_bmc/database/master/member_master_db.dart';
 
 class MemberCollectionController extends GetxController {
-  var currentDate = DateTime.now().obs;
-  var timeShift = ''.obs;
-  var code = ''.obs;
-  var memberName = ''.obs;
-  var milkType = ''.obs;
-  var qty = ''.obs;
-  var fat = ''.obs;
-  var snf = ''.obs;
-  var rate = ''.obs;
-  var amount = ''.obs;
+ 
+    // Perform the multiplication
+// Corrected and added an observable for the calculated amountValue
+var currentDate = DateTime.now().obs;
+var timeShift = ''.obs;
+var code = ''.obs;
+var memberName = ''.obs;
+var milkType = ''.obs;
+var qty = ''.obs;
+// var fat = ''.obs;
+// var snf = ''.obs;
+var rate = ''.obs; // Keep rate as a string because it might be from user input
+var amount = ''.obs; // Same as above
+var amountValue = 0.0.obs; // Observable to hold the calculated amount value
+
+// Function to calculate and update amountValue
+void calculateAmountValue() {
+  double rateValue = double.tryParse(rate.value) ?? 0.0;
+  double qtyValue = double.tryParse(qty.value) ?? 0.0;
+
+  amountValue.value = rateValue * qtyValue;
+}
+
   var savedEntries = <Map<String, String>>[].obs;
 
   //final DatabaseHelper _dbHelper = DatabaseHelper();
@@ -42,34 +53,95 @@ class MemberCollectionController extends GetxController {
     _initializeDateAndTimeShift();
   }
 
-  // Fetch member details
-  void fetchMemberDetails(String code) {
-    // Simulate fetching member details
-    memberName.value = 'Member $code';
-  }
+  // // Fetch member details
+  // void fetchMemberDetails(String code) {
+  //   // Simulate fetching member details
+  //   memberName.value = 'Member $code';
+  // }
 
   // Calculate rate and amount based on qty, fat, and snf
-  void calculateRateAndAmount() {
-    double qtyValue = double.tryParse(qty.value) ?? 0;
-    double fatValue = double.tryParse(fat.value) ?? 0;
-    double snfValue = double.tryParse(snf.value) ?? 0;
+  // void calculateRateAndAmount() {
+  //   double qtyValue = double.tryParse(qty.value) ?? 0;
+  //   double fatValue = double.tryParse(fat.value) ?? 0;
+  //   double snfValue = double.tryParse(snf.value) ?? 0;
 
-    rate.value = (fatValue + snfValue).toStringAsFixed(2);
-    amount.value = (qtyValue * (fatValue + snfValue)).toStringAsFixed(2);
-  }
+  //   rate.value = (fatValue + snfValue).toStringAsFixed(2);
+  //   amount.value = (qtyValue * (fatValue + snfValue)).toStringAsFixed(2);
+  // }
 
-  // Clear all input fields
-  void clearFields() {
-    ;
-    code.value = 'sampleNo';
-    memberName.value = '';
-    milkType.value = '';
-    qty.value = '';
-    fat.value = '';
-    snf.value = '';
-    rate.value = '';
-    amount.value = '';
+  // // Clear all input fields
+  // void clearFields() {
+    
+  //   code.value = 'sampleNo';
+  //   memberName.value = '';
+  //   milkType.value = '';
+  //   qty.value = '';
+  //   fat.value = '';
+  //   snf.value = '';
+  //   rate.value = '';
+  //   amount.value = '';
+  // }
+
+
+
+
+void fetchMemberNameDetails(String otherCode) async {
+  try {
+    // Get the database instance
+    final db = await MemberMasterDBHelper.instance.database;
+
+    // Query the memberMaster table for the member name
+    final result = await db.query(
+      'memberMaster',
+      columns: ['firstName'], // Assuming 'mppName' is the member name column
+      where: 'otherCode = ?',
+      whereArgs: [otherCode],
+    );
+
+    if (result.isNotEmpty) {
+      // Set the member name if a match is found
+      memberName.value = result.first['firstName'] as String;
+    } else {
+      // Clear the member name if no match is found
+      memberName.value = '';
+    }
+  } catch (e) {
+    // Handle any database or query errors
+    memberName.value = 'Error fetching member details';
+    print('Error fetching member details: $e');
   }
+ }
+
+ 
+
+
+// "DEMO  "
+Future<void> fetchOtherCodeByFirstName(String memberName) async {
+  try {
+    final db = await MemberMasterDBHelper.instance.database;
+
+    final result = await db.query(
+      'memberMaster',
+      columns: ['otherCode'], // Fetch the otherCode column
+      where: 'firstName = ?',  // Match the firstName with the passed value
+      whereArgs: [memberName],  // Use the passed firstName (e.g., 'DEMO')
+    );
+
+    if (result.isNotEmpty) {
+      // Fetch the otherCode value
+      code.value = result.first['otherCode'] as String;
+      print('Other Code: $code.value');
+    } else {
+      print('No record found for firstName: ${code.value}');
+      code.value = '';
+    }
+  } catch (e) {
+     // Handle any database or query errors
+    code.value = 'Error fetching code details';
+    print('Error fetching member details: $e');
+}
+}
+
 
   // // Save entry to the database
   // Future<void> saveEntry() async {

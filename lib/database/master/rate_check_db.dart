@@ -62,6 +62,9 @@ class RateCheckMasterDBHelper {
     );
   }
 
+
+
+
 // Future<void> deleteDatabaseFile() async {
 //   try {
 //     // Get the database path
