@@ -3,7 +3,7 @@ import 'package:kanha_bmc/database/master/member_master_db.dart';
 
 class MemberCollectionController extends GetxController {
  
-    // Perform the multiplication
+// Perform the multiplication
 // Corrected and added an observable for the calculated amountValue
 var currentDate = DateTime.now().obs;
 var timeShift = ''.obs;
@@ -11,8 +11,6 @@ var code = ''.obs;
 var memberName = ''.obs;
 var milkType = ''.obs;
 var qty = ''.obs;
-// var fat = ''.obs;
-// var snf = ''.obs;
 var rate = ''.obs; // Keep rate as a string because it might be from user input
 var amount = ''.obs; // Same as above
 var amountValue = 0.0.obs; // Observable to hold the calculated amount value
