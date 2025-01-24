@@ -3,39 +3,36 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:kanha_bmc/common/api_urls.dart';
 import 'package:kanha_bmc/database/data%20syncing/data_syncing_homepage.dart';
-
-import 'package:kanha_bmc/database/master/rate_check_db.dart';
+import 'package:kanha_bmc/database/kanha_db.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sqflite/sqflite.dart';
 
 class RateCheckMasterController extends GetxController {
-  final RateCheckMasterDBHelper rateCheckDB = RateCheckMasterDBHelper.instance;
+
+ final KanhaDBHelper _kanhaDBHelper = KanhaDBHelper.instance;
 
   var fat = ''.obs;
   var snf = ''.obs;
   var selectedMilkType = ''.obs;
   RxBool isLoading = true.obs;
-   var milk;
+   var milk = ''.obs;
   var milkTypes = ["Buff", "Cow", "Mixed"].obs;
   var rtpl = ''.obs;
 
 
+// Map milk type names to their codes
+Future updateSelectedMilkType(String milkType) async {
+  // Define a mapping of milk types to their codes
+  const milkTypeMap = {
+    "Buff": "B",
+    "Cow": "C",
+    "Mixed": "M",
+  };
 
+  // Use the map to set the milk value or default to an empty string
+  milk.value = milkTypeMap[milkType] ?? "";
 
-
-
-  // Map milk type names to their codes
-  void updateSelectedMilkType(String milkType) {
-    if (milkType == "Buff") {
-      milk = "B";
-    } else if (milkType == "Cow") {
-      milk = "C";
-    } else if (milkType == "Mixed") {
-      milk = "M";
-    } else {
-      milk = ""; // Fallback if invalid type
-    }
-  }
+  return milk.value;
+}
 
   // Fetch data from the API and save it locally
   Future<void> fetchData() async {
@@ -63,7 +60,7 @@ class RateCheckMasterController extends GetxController {
         final tableData =
             List<Map<String, dynamic>>.from(responseData['responseData']['table']);
         // Save data to SQLite
-        await rateCheckDB.insertData(tableData);
+        await insertData(tableData);
 
         Get.snackbar("Success", "Data fetched and saved locally");
       } else {
@@ -81,11 +78,11 @@ class RateCheckMasterController extends GetxController {
     updateSelectedMilkType(selectedMilkType.value); 
     isLoading.value = true;
     try {
-      final filteredRates = await rateCheckDB.getFilteredRates(
+      final filteredRates = await getFilteredRates(
         double.tryParse(fat.value) ?? 0,
         double.tryParse(snf.value) ?? 0,
         // selectedMilkType.value,
-        milk
+        milk.value
       );
 
       if (filteredRates.isNotEmpty) {
@@ -98,4 +95,32 @@ class RateCheckMasterController extends GetxController {
     }
     isLoading.value = false;
   }
+
+
+  Future<void> insertData(List<Map<String, dynamic>> rates) async {
+    final db = await _kanhaDBHelper.database;
+
+    // Clear existing data before inserting new data
+    await db.delete('ratesCheckMaster');
+
+    for (var rate in rates) {
+      
+      await db.insert('ratesCheckMaster', rate);
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getFilteredRates(
+      double fat, double snf, String cattletype) async {
+    final db = await _kanhaDBHelper.database;
+
+    return await db.query(
+      'ratesCheckMaster',
+      where: 'fat = ? AND snf = ? AND cattletype = ?',
+      whereArgs: [fat, snf, cattletype],
+    );
+  }
+
+
+
+
 }

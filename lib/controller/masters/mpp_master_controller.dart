@@ -73,14 +73,15 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:kanha_bmc/common/api_urls.dart';
-import 'package:kanha_bmc/database/master/mpp_master_db.dart';
+import 'package:kanha_bmc/database/kanha_db.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MppMasterController extends GetxController {
   var isLoading = true.obs;
   var mppData = <Map<String, dynamic>>[].obs;
 
-  final MppMasterDBHelper mppMasterDB = MppMasterDBHelper.instance;
+
+ final KanhaDBHelper _kanhaDBHelper = KanhaDBHelper.instance;
 
   @override
   void onInit() {
@@ -91,7 +92,7 @@ class MppMasterController extends GetxController {
   Future<void> initializeMPPData() async {
     isLoading.value = true;
     try {
-      final data = await mppMasterDB.fetchLocalData();
+      final data = await fetchLocalData();
       mppData.assignAll(data);
     } finally {
       isLoading.value = false;
@@ -125,9 +126,9 @@ class MppMasterController extends GetxController {
           responseData['responseData']['table'],
         );
 
-        await mppMasterDB.insertData(tableData);
+        await insertData(tableData);
 
-        mppData.assignAll(await mppMasterDB.fetchLocalData());
+        mppData.assignAll(await fetchLocalData());
       } else {
         Get.snackbar('Error', 'Failed to fetch data');
       }
@@ -137,4 +138,29 @@ class MppMasterController extends GetxController {
       isLoading.value = false;
     }
   }
+
+
+
+
+  Future<void> insertData(List<Map<String, dynamic>> mppMasterData) async {
+    final db = await _kanhaDBHelper.database;
+
+    // Clear existing data before inserting new data
+    await db.delete('mppMaster');
+
+    for (var mppMasters in mppMasterData) {
+      
+      await db.insert('mppMaster', mppMasters);
+    }
+  }
+
+ Future<List<Map<String, dynamic>>> fetchLocalData() async {
+    final db = await _kanhaDBHelper.database;
+    return await db.query('mppMaster');
+  }
+
+
+
+
+
 }

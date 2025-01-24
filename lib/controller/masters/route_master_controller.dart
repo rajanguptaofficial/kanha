@@ -2,14 +2,15 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:kanha_bmc/common/api_urls.dart';
-import 'package:kanha_bmc/database/master/rute_master_db.dart';
+import 'package:kanha_bmc/database/kanha_db.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RuteMasterController extends GetxController {
   var isLoading = true.obs;
   var ruteData = <Map<String, dynamic>>[].obs;
 
-  final RuteMasterDBHelper ruteMasterDB = RuteMasterDBHelper.instance;
+
+ final KanhaDBHelper _kanhaDBHelper = KanhaDBHelper.instance;
 
   @override
   void onInit() {
@@ -20,7 +21,7 @@ class RuteMasterController extends GetxController {
   Future<void> initializeRateData() async {
     isLoading.value = true;
     try {
-      final data = await ruteMasterDB.fetchLocalData();
+      final data = await fetchLocalData();
       ruteData.assignAll(data);
     } finally {
       isLoading.value = false;
@@ -54,9 +55,9 @@ class RuteMasterController extends GetxController {
           responseData['responseData']['table'],
         );
 
-        await ruteMasterDB.insertData(tableData);
+        await insertData(tableData);
 
-        ruteData.assignAll(await ruteMasterDB.fetchLocalData());
+        ruteData.assignAll(await fetchLocalData());
       } else {
         Get.snackbar('Error', 'Failed to fetch data');
       }
@@ -66,4 +67,27 @@ class RuteMasterController extends GetxController {
       isLoading.value = false;
     }
   }
+
+
+
+  Future<void> insertData(List<Map<String, dynamic>> ruteMasterData) async {
+    final db = await _kanhaDBHelper.database;
+
+    // Clear existing data before inserting new data
+    await db.delete('ruteMaster');
+
+    for (var ruteMasters in ruteMasterData) {
+      
+      await db.insert('ruteMaster', ruteMasters);
+    }
+  }
+
+ Future<List<Map<String, dynamic>>> fetchLocalData() async {
+    final db = await _kanhaDBHelper.database;
+    return await db.query('ruteMaster');
+  }
+
+
+
+
 }

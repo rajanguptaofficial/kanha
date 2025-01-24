@@ -59,20 +59,22 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:kanha_bmc/common/api_urls.dart';
-import 'package:kanha_bmc/database/master/rate_master_db.dart';
+import 'package:kanha_bmc/database/kanha_db.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqflite/sqflite.dart';
 
 class RateMasterController extends GetxController {
   var isLoading = true.obs;
   var rateData = <Map<String, dynamic>>[].obs;
 
-  final RateMasterDBHelper rateMasterDB = RateMasterDBHelper.instance;
+
+ final KanhaDBHelper _kanhaDBHelper = KanhaDBHelper.instance;
 
   @override
   void onInit() {
     super.onInit();
     initializeRateData();
-    rateMasterDB.checkEntryCount();
+    checkEntryCount();
     super.onInit();
   }
   
@@ -80,7 +82,7 @@ class RateMasterController extends GetxController {
   Future<void> initializeRateData() async {
     isLoading.value = true;
     try {
-      final data = await rateMasterDB.fetchLocalData();
+      final data = await fetchLocalData();
       rateData.assignAll(data);
     } finally {
       isLoading.value = false;
@@ -114,9 +116,9 @@ class RateMasterController extends GetxController {
           responseData['responseData']['table'],
         );
 
-        await rateMasterDB.insertData(tableData);
+        await insertData(tableData);
+        rateData.assignAll(await fetchLocalData());
 
-        rateData.assignAll(await rateMasterDB.fetchLocalData());
       } else {
         Get.snackbar('Error', 'Failed to fetch data');
       }
@@ -126,4 +128,48 @@ class RateMasterController extends GetxController {
       isLoading.value = false;
     }
   }
+
+
+
+  Future<void> insertData(List<Map<String, dynamic>> rateMasterData) async {
+    final db = await _kanhaDBHelper.database;
+
+    // Clear existing data before inserting new data
+    await db.delete('rateMaster');
+
+    for (var rateMasters in rateMasterData) {
+      
+      await db.insert('rateMaster', rateMasters);
+    }
+  }
+
+ Future<List<Map<String, dynamic>>> fetchLocalData() async {
+    final db = await _kanhaDBHelper.database;
+    return await db.query('rateMaster');
+  }
+
+
+
+  Future<int> getEntryCount() async {
+    final db = await _kanhaDBHelper.database;
+
+    // Query to count the number of rows in the table
+    final List<Map<String, dynamic>> result =
+        await db.rawQuery('SELECT COUNT(*) as count FROM rateMaster');
+
+    // Return the count from the first row of the result
+    return Sqflite.firstIntValue(result) ?? 0;
+  }
+
+  Future<void> checkEntryCount() async {
+    final count = await getEntryCount();
+    print('Number of entries in rateMaster: $count');
+  }
+
+
+
+
+
+
+
 }

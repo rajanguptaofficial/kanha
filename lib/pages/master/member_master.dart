@@ -71,8 +71,7 @@ class MemberMasterScreen extends StatelessWidget {
           cells: [
                                           DataCell(Center(child: Text("${data['code']} - ${data['mppName']}"))),
                                           DataCell(Center(child: Text("${data['otherCode']} - ${data['firstName']}"))),
-                                          DataCell(Center(child: Text(data['status'] == true ? "Active" : "Inactive"  ))),
-                          
+                       DataCell(Center(child: Text(data['status'] == true ? "Active" : "Inactive"  ))),                                       
           ],
         );
       }),

@@ -1,8 +1,13 @@
 import 'package:get/get.dart';
-import 'package:kanha_bmc/database/master/member_master_db.dart';
+import 'package:intl/intl.dart';
+import 'package:kanha_bmc/database/kanha_db.dart';
+
+import '../masters/rate_check_controller.dart';
 
 class MemberCollectionController extends GetxController {
  
+ final KanhaDBHelper _kanhaDBHelper = KanhaDBHelper.instance;
+
 // Perform the multiplication
 // Corrected and added an observable for the calculated amountValue
 var currentDate = DateTime.now().obs;
@@ -11,9 +16,11 @@ var code = ''.obs;
 var memberName = ''.obs;
 var milkType = ''.obs;
 var qty = ''.obs;
+var fat = ''.obs;
+var snf = ''.obs;
 var rate = ''.obs; // Keep rate as a string because it might be from user input
-var amount = ''.obs; // Same as above
 var amountValue = 0.0.obs; // Observable to hold the calculated amount value
+
 
 // Function to calculate and update amountValue
 void calculateAmountValue() {
@@ -25,13 +32,18 @@ void calculateAmountValue() {
 
   var savedEntries = <Map<String, String>>[].obs;
 
-  //final DatabaseHelper _dbHelper = DatabaseHelper();
+  final KanhaDBHelper _dbHelper = KanhaDBHelper.instance;
+
+  late final controller2 = Get.put(RateCheckMasterController());
+
+
 
   @override
   void onInit() {
     super.onInit();
    // fetchSavedEntries();
     _initializeDateAndTimeShift();
+
   }
 
   // Initialize the date and time shift
@@ -67,18 +79,18 @@ void calculateAmountValue() {
   //   amount.value = (qtyValue * (fatValue + snfValue)).toStringAsFixed(2);
   // }
 
-  // // Clear all input fields
-  // void clearFields() {
+  // Clear all input fields
+  void clearFields() {
     
-  //   code.value = 'sampleNo';
-  //   memberName.value = '';
-  //   milkType.value = '';
-  //   qty.value = '';
-  //   fat.value = '';
-  //   snf.value = '';
-  //   rate.value = '';
-  //   amount.value = '';
-  // }
+    code.value = 'sampleNo';
+    memberName.value = '';
+    milkType.value = '';
+    qty.value = '';
+    fat.value = '';
+    snf.value = '';
+    rate.value = '';
+    //amountV.value = '';
+  }
 
 
 
@@ -86,7 +98,7 @@ void calculateAmountValue() {
 void fetchMemberNameDetails(String otherCode) async {
   try {
     // Get the database instance
-    final db = await MemberMasterDBHelper.instance.database;
+    final db = await KanhaDBHelper.instance.database;
 
     // Query the memberMaster table for the member name
     final result = await db.query(
@@ -116,13 +128,13 @@ void fetchMemberNameDetails(String otherCode) async {
 // "DEMO  "
 Future<void> fetchOtherCodeByFirstName(String memberName) async {
   try {
-    final db = await MemberMasterDBHelper.instance.database;
+    final db = await KanhaDBHelper.instance.database;
 
     final result = await db.query(
       'memberMaster',
       columns: ['otherCode'], // Fetch the otherCode column
       where: 'firstName = ?',  // Match the firstName with the passed value
-      whereArgs: [memberName],  // Use the passed firstName (e.g., 'DEMO')
+      whereArgs: [memberName], // Use the passed firstName (e.g., 'DEMO')
     );
 
     if (result.isNotEmpty) {
@@ -141,23 +153,105 @@ Future<void> fetchOtherCodeByFirstName(String memberName) async {
 }
 
 
-  // // Save entry to the database
-  // Future<void> saveEntry() async {
-  //   final entry = {
-  //     'sampleNo': DateTime.now().millisecondsSinceEpoch.toString(),
-  //     'code': code.value,
-  //     'qty': qty.value,
-  //     'fat': fat.value,
-  //     'snf': snf.value,
-  //     'rate': rate.value,
-  //     'amount': amount.value,
-  //   };
 
-  //   await _dbHelper.insertCollection(entry);
-  //   fetchSavedEntries();
-  //   clearCollections();
-  //   clearFields();
-  // }
+// // Save entry to the database
+// Future<void> saveEntry() async {
+//   // Get the current date and time
+//   final now = DateTime.now();
+
+//   // Format the date (e.g., "YYYY-MM-DD")
+//   final formattedDate = DateFormat('yyyy-MM-dd').format(now);
+
+//   // Format the time (e.g., "HH:mm:ss")
+//   final formattedTime = DateFormat('HH:mm:ss').format(now);
+//   milkType.value = await controller2.updateSelectedMilkType(milkType.value);
+//   // Create an entry map with the current data
+//   final entry = {
+//     'date': formattedDate,
+//     'time': formattedTime,
+//     'memberCode': code.value,
+//     'memberName': memberName.value,
+//     'fat': fat.value,
+//     'snf': snf.value,
+//     'qty': qty.value,
+//     'milkType': milkType.value,
+//     'rate': rate.value,
+//     'amount': amountValue.value,
+//   };
+
+//   // Insert the entry into the database
+//   await insertData([entry]);
+// }
+
+// // Insert data into the database
+// Future<void> insertData(List<Map<String, dynamic>> entries) async {
+//   final db = await _kanhaDBHelper.database;
+
+//   // Clear existing data before inserting new data
+//   await db.transaction((txn) async {
+//    //await txn.delete('memberCollection');
+//     for (var entry in entries) {
+//    // await txn.insert('memberCollection', entry);
+//     }
+//   });
+// }
+
+
+
+
+Future<void> saveEntry() async {
+  // Get the current date and time
+  final now = DateTime.now();
+
+  // Format the date (e.g., "YYYY-MM-DD")
+  final formattedDate = DateFormat('yyyy-MM-dd').format(now);
+
+  // Format the time (e.g., "HH:mm:ss")
+  final formattedTime = DateFormat('HH:mm:ss').format(now);
+
+  // Ensure milkType value is updated
+  milkType.value = await controller2.updateSelectedMilkType(milkType.value);
+
+  // Create an entry map with the current data
+  final entry = {
+    'farmer_collection_main_id' : null,   
+    'collection_date': formattedDate, /// current Date   
+    'mpp_code': null, /// mpp table  "othercode"              
+    'member_code': code.value,    
+    'member_name': memberName.value,
+    'milk_type_code': milkType.value, 
+    'milk_quality_type_code': null, 
+    'sample_no': null,    /// sift by incremental         
+    'fat': fat.value,
+    'snf': snf.value,
+    'clr': null,                  
+    'rate': rate.value,
+    'amount': amountValue.value,
+    'qty': qty.value,
+    'is_qty_auto': false,    ///  true     
+    'is_quality_auto': false,  /// true  
+    'quality_sample_time': null,   ///  /// current time  
+    'is_sync': false,             // false
+    'CollectionType': null,  /// Farmer
+    'can': null       // 0            
+  };
+
+  // Insert the entry into the database
+  await insertData([entry]);
+}
+
+
+Future<void> insertData(List<Map<String, dynamic>> entries) async {
+  final db = await _kanhaDBHelper.database;
+  // Insert entries into the memberCollection table
+  await db.transaction((txn) async {
+    for (var entry in entries) {
+      await txn.insert('memberCollection', entry);
+    }
+  });
+}
+
+
 
   // // Fetch saved entries from the database
   // Future<void> fetchSavedEntries() async {

@@ -76,14 +76,14 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:kanha_bmc/common/api_urls.dart';
-import 'package:kanha_bmc/database/master/bmc_master_db.dart';
+import 'package:kanha_bmc/database/kanha_db.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BmcMasterController extends GetxController {
   var isLoading = true.obs;
   var bmcData = <Map<String, dynamic>>[].obs;
 
-  final BmcMasterDBHelper bmcMasterDB = BmcMasterDBHelper.instance;
+  final KanhaDBHelper _kanhaDBHelper = KanhaDBHelper.instance;
 
   @override
   void onInit() {
@@ -94,7 +94,7 @@ class BmcMasterController extends GetxController {
   Future<void> initializeBMCData() async {
     isLoading.value = true;
     try {
-      final data = await bmcMasterDB.fetchLocalData();
+      final data = await fetchLocalData();
       bmcData.assignAll(data);
     } finally {
       isLoading.value = false;
@@ -128,9 +128,9 @@ class BmcMasterController extends GetxController {
           responseData['responseData']['table'],
         );
 
-        await bmcMasterDB.insertData(tableData);
+        await insertData(tableData);
 
-        bmcData.assignAll(await bmcMasterDB.fetchLocalData());
+        bmcData.assignAll(await fetchLocalData());
       } else {
         Get.snackbar('Error', 'Failed to fetch data');
       }
@@ -140,4 +140,27 @@ class BmcMasterController extends GetxController {
       isLoading.value = false;
     }
   }
+
+
+  Future<void> insertData(List<Map<String, dynamic>> bmcMasterData) async {
+    final db = await _kanhaDBHelper.database;
+
+    // Clear existing data before inserting new data
+    await db.delete('bmcMaster');
+
+    for (var bmcMasters in bmcMasterData) {
+      
+      await db.insert('bmcMaster', bmcMasters);
+    }
+  }
+
+ Future<List<Map<String, dynamic>>> fetchLocalData() async {
+    final db = await _kanhaDBHelper.database;
+    return await db.query('bmcMaster');
+  }
+
+
+
+
+
 }

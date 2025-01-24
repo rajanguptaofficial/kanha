@@ -2,14 +2,14 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:kanha_bmc/common/api_urls.dart';
-import 'package:kanha_bmc/database/master/member_master_db.dart';
+import 'package:kanha_bmc/database/kanha_db.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MemberMasterController extends GetxController {
   var isLoading = true.obs;
   var memberData = <Map<String, dynamic>>[].obs;
 
-  final MemberMasterDBHelper memberMasterDB = MemberMasterDBHelper.instance;
+ final KanhaDBHelper _kanhaDBHelper = KanhaDBHelper.instance;
 
   @override
   void onInit() {
@@ -20,7 +20,7 @@ class MemberMasterController extends GetxController {
   Future<void> initializeMemberData() async {
     isLoading.value = true;
     try {
-      final data = await memberMasterDB.fetchLocalData();
+      final data = await fetchLocalData();
       memberData.assignAll(data);
     } finally {
       isLoading.value = false;
@@ -54,9 +54,9 @@ class MemberMasterController extends GetxController {
           responseData['responseData']['table'],
         );
 
-        await memberMasterDB.insertData(tableData);
+        await insertData(tableData);
 
-        memberData.assignAll(await memberMasterDB.fetchLocalData());
+        memberData.assignAll(await fetchLocalData());
       } else {
         Get.snackbar('Error', 'Failed to fetch data');
       }
@@ -66,4 +66,26 @@ class MemberMasterController extends GetxController {
       isLoading.value = false;
     }
   }
+
+
+
+  Future<void> insertData(List<Map<String, dynamic>> members) async {
+    final db = await _kanhaDBHelper.database;
+
+    await db.delete('memberMaster');
+    for (var member in members) {
+      await db.insert('memberMaster', member);
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> fetchLocalData() async {
+    final db = await _kanhaDBHelper.database;
+    return await db.query('memberMaster');
+  }
+
+
+
+
+
+
 }
