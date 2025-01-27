@@ -46,6 +46,24 @@ void calculateAmountValue() {
 
   }
 
+
+
+Future<void> currentDateTime() async {
+  // Get the current date and time
+  final now = DateTime.now();
+
+  // Format the date (e.g., "YYYY-MM-DD")
+  final formattedDate = DateFormat('yyyy-MM-dd').format(now);
+
+  // Format the time (e.g., "HH:mm:ss")
+  final formattedTime = DateFormat('HH:mm:ss').format(now);
+
+}
+
+
+
+
+
   // Initialize the date and time shift
   void _initializeDateAndTimeShift() {
     DateTime now = DateTime.now();
@@ -63,25 +81,8 @@ void calculateAmountValue() {
     _initializeDateAndTimeShift();
   }
 
-  // // Fetch member details
-  // void fetchMemberDetails(String code) {
-  //   // Simulate fetching member details
-  //   memberName.value = 'Member $code';
-  // }
-
-  // Calculate rate and amount based on qty, fat, and snf
-  // void calculateRateAndAmount() {
-  //   double qtyValue = double.tryParse(qty.value) ?? 0;
-  //   double fatValue = double.tryParse(fat.value) ?? 0;
-  //   double snfValue = double.tryParse(snf.value) ?? 0;
-
-  //   rate.value = (fatValue + snfValue).toStringAsFixed(2);
-  //   amount.value = (qtyValue * (fatValue + snfValue)).toStringAsFixed(2);
-  // }
-
   // Clear all input fields
   void clearFields() {
-    
     code.value = 'sampleNo';
     memberName.value = '';
     milkType.value = '';
@@ -123,9 +124,6 @@ void fetchMemberNameDetails(String otherCode) async {
  }
 
  
-
-
-// "DEMO  "
 Future<void> fetchOtherCodeByFirstName(String memberName) async {
   try {
     final db = await KanhaDBHelper.instance.database;
@@ -153,48 +151,18 @@ Future<void> fetchOtherCodeByFirstName(String memberName) async {
 }
 
 
-
-// // Save entry to the database
-// Future<void> saveEntry() async {
-//   // Get the current date and time
-//   final now = DateTime.now();
-
-//   // Format the date (e.g., "YYYY-MM-DD")
-//   final formattedDate = DateFormat('yyyy-MM-dd').format(now);
-
-//   // Format the time (e.g., "HH:mm:ss")
-//   final formattedTime = DateFormat('HH:mm:ss').format(now);
-//   milkType.value = await controller2.updateSelectedMilkType(milkType.value);
-//   // Create an entry map with the current data
-//   final entry = {
-//     'date': formattedDate,
-//     'time': formattedTime,
-//     'memberCode': code.value,
-//     'memberName': memberName.value,
-//     'fat': fat.value,
-//     'snf': snf.value,
-//     'qty': qty.value,
-//     'milkType': milkType.value,
-//     'rate': rate.value,
-//     'amount': amountValue.value,
-//   };
-
-//   // Insert the entry into the database
-//   await insertData([entry]);
-// }
-
-// // Insert data into the database
-// Future<void> insertData(List<Map<String, dynamic>> entries) async {
-//   final db = await _kanhaDBHelper.database;
-
-//   // Clear existing data before inserting new data
-//   await db.transaction((txn) async {
-//    //await txn.delete('memberCollection');
-//     for (var entry in entries) {
-//    // await txn.insert('memberCollection', entry);
-//     }
-//   });
-// }
+  // Method to clear collections (reset the form data)
+  void clearCollections() {
+    code.value = '';
+    memberName.value = '';
+    qty.value = '';
+    fat.value = '';
+    snf.value = '';
+    rate.value = '';
+    amountValue.value = 0.0;
+    milkType.value = '';
+    
+  }
 
 
 
@@ -208,20 +176,32 @@ Future<void> saveEntry() async {
 
   // Format the time (e.g., "HH:mm:ss")
   final formattedTime = DateFormat('HH:mm:ss').format(now);
-
+currentDateTime();
   // Ensure milkType value is updated
   milkType.value = await controller2.updateSelectedMilkType(milkType.value);
+final db = await _kanhaDBHelper.database;
+
+//  final result = await db.rawQuery('''
+//     SELECT sample_no
+//     FROM memberCollection
+//     WHERE collection_date = ? AND shift_code = ?
+//     ORDER BY sample_no DESC
+//     LIMIT 1
+//   ''', [formattedDate,timeShift.value = timeShift.value == "Morning" ? "M" : "E",]);
+
+
 
   // Create an entry map with the current data
   final entry = {
     'farmer_collection_main_id' : null,   
     'collection_date': formattedDate, /// current Date   
-    'mpp_code': null, /// mpp table  "othercode"              
+    'mpp_code': null, /// mpp table  "othercode"  
+    'shift_code': timeShift.value == "Morning" ? "M" : "E", ///ask            
     'member_code': code.value,    
     'member_name': memberName.value,
     'milk_type_code': milkType.value, 
     'milk_quality_type_code': null, 
-    'sample_no': null,    /// sift by incremental         
+    'sample_no': null,   /// sift by incremental         
     'fat': fat.value,
     'snf': snf.value,
     'clr': null,                  
@@ -230,7 +210,7 @@ Future<void> saveEntry() async {
     'qty': qty.value,
     'is_qty_auto': false,    ///  true     
     'is_quality_auto': false,  /// true  
-    'quality_sample_time': null,   ///  /// current time  
+    'quality_sample_time': formattedTime,   ///  /// current time  
     'is_sync': false,             // false
     'CollectionType': null,  /// Farmer
     'can': null       // 0            
@@ -249,6 +229,24 @@ Future<void> insertData(List<Map<String, dynamic>> entries) async {
       await txn.insert('memberCollection', entry);
     }
   });
+}
+
+
+Future<int?> getSampleNo( ) async {
+    final db = await _kanhaDBHelper.database;
+  final result = await db.rawQuery('''
+    SELECT sample_no
+    FROM memberCollection
+    WHERE collection_date = ? AND shift_code = ?
+    ORDER BY sample_no DESC
+    LIMIT 1
+  ''', ["25-01-2025", "M"]);
+
+  if (result.isNotEmpty) {
+    return result.first['sample_no'] as int?;
+  } else {
+    return null; // Return null if no record is found
+  }
 }
 
 
