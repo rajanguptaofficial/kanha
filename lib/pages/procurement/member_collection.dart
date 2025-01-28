@@ -51,7 +51,7 @@
 //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //           children: [
 //             Obx(() => Text(
-//                   '${controller.currentDate.value.toLocal()}'.split(' ')[0],
+//                   controller.currentDate.value,
 //                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
 //                 )),
 //             Obx(() => Text(
@@ -113,7 +113,7 @@
 //         SizedBox(height: padding),
 
 //         // Saved Entries Table
-//         _buildSavedEntriesTable(),
+//         buildDataTable(),
 //       ],
 //     );
 //   }
@@ -126,7 +126,7 @@
 //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //           children: [
 //             Obx(() => Text(
-//                   '${controller.currentDate.value.toLocal()}'.split(' ')[0],
+//                    controller.currentDate.value,
 //                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
 //                 )),
 //             Obx(() => Text(
@@ -162,7 +162,7 @@
 //         // Buttons and Table
 //         _buildButtons(),
 //         SizedBox(height: padding),
-//         _buildSavedEntriesTable(),
+//         buildDataTable(),
 //       ],
 //     );
 //   }
@@ -348,7 +348,7 @@
 //             backgroundColor: CustomColors.appGreenButtomColor,
 //           ),
 //           onPressed: () {
-//            //controller.saveEntry();
+//            controller.saveEntry();
 //           },
 //           child: Text('Save', style: TextStyle(fontSize: 20, color: CustomColors.bgColor)),
 //         ),
@@ -367,42 +367,63 @@
 //     );
 //   }
 
-//   Widget _buildSavedEntriesTable() {
+//   Widget buildDataTable() {
 //     return Obx(() => SingleChildScrollView(
 //           scrollDirection: Axis.horizontal,
-//           child: DataTable(
-//             columnSpacing: Get.width * 0.02,
-//             columns: [
-//               DataColumn(label: Text('Sample No')),
-//               DataColumn(label: Text('Code')),
-//               DataColumn(label: Text('QTY')),
-//               DataColumn(label: Text('Fat')),
-//               DataColumn(label: Text('SNF')),
-//               DataColumn(label: Text('Rate')),
-//               DataColumn(label: Text('Amount')),
-//             ],
-//             rows: controller.savedEntries.map(
-//               (entry) {
-//                 return DataRow(cells: [
-//                   DataCell(Text(entry['sampleNo']!)),
-//                   DataCell(Text(entry['code']!)),
-//                   DataCell(Text(entry['qty']!)),
-//                   DataCell(Text(entry['fat']!)),
-//                   DataCell(Text(entry['snf']!)),
-//                   DataCell(Text(entry['rate']!)),
-//                   DataCell(Text(entry['amount']!)),
-//                 ]);
-//               },
-//             ).toList(),
-//           ),
-//         ));
+//           child:
+
+
+//  DataTable(
+//       headingRowColor:
+//           WidgetStateProperty.all(CustomColors.appColor),
+//       headingTextStyle: const TextStyle(
+//           color: Colors.white, fontWeight: FontWeight.bold),
+//       columnSpacing: 12,
+//       dataRowMinHeight: 20,
+//       dataRowMaxHeight: 40,
+//       headingRowHeight: 33,
+//       columns: const [
+
+//                      DataColumn(label: Text('S. No.')),
+//     DataColumn(label: Text('Code')),
+//     DataColumn(label: Text('Qty')),
+//     DataColumn(label: Text('Fat')),
+//     DataColumn(label: Text('SNF')),
+//     DataColumn(label: Text('Rate')),
+//     DataColumn(label: Text('Amount')),
+
+//       ],
+//       rows: List.generate(controller.memberCollData.length, (index) {
+//         final data = controller.memberCollData[index];
+//         final isGrey = index % 2 == 0;
+//         return DataRow(
+//           color: WidgetStateProperty.all(isGrey ? Colors.white : Colors.grey[200]),
+//           cells: [
+
+
+//    DataCell(Center(child: Text("${data["sample_no"]}"))),
+//       DataCell(Center(child: Text("${data['member_code']}"))),
+//          DataCell(Center(child: Text("${data['qty']}"))),
+//             DataCell(Center(child: Text("${data['fat']}"))),
+//               DataCell(Center(child: Text(data['snf'].toString()))), 
+//                DataCell(Center(child: Text(data['rate'].toString()  ))), 
+//                 DataCell(Center(child: Text(data["amount"].toString()  ))),            
+//           ],
+//         );
+//       }),
+//     )));}
 //   }
-// }
+
+
+
+
+
 
 
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kanha_bmc/common/colors.dart';
 import 'package:kanha_bmc/common/custom_app_bar.dart';
 import 'package:kanha_bmc/controller/masters/rate_check_controller.dart';
 import '../../controller/procurement/member_collection.dart';
@@ -412,6 +433,9 @@ class MemberCollectionScreen extends StatelessWidget {
   final controller2 = Get.put(RateCheckMasterController());
   final _formKey = GlobalKey<FormState>(); // Global key for form validation
 
+ final TextEditingController _codeController = TextEditingController();
+
+
   MemberCollectionScreen({super.key});
 
   @override
@@ -419,135 +443,142 @@ class MemberCollectionScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: ProcCustomAppBar(title: 'Member Collection'),
-        body: OrientationBuilder(
-          builder: (context, orientation) {
-            final isPortrait = orientation == Orientation.portrait;
-            final double padding = Get.width * 0.04;
-
-            return Obx(() {
-              controller.rate.value = controller2.rtpl.value;
-              double rateValue = double.tryParse(controller.rate.value) ?? 0.0;
-              double qtyValue = double.tryParse(controller.qty.value) ?? 0.0;
-              controller.amountValue.value = rateValue * qtyValue;
-              controller.fat.value = controller2.fat.value;
-              controller.snf.value = controller2.snf.value;
-              return Padding(
-                padding: EdgeInsets.all(padding),
-                child: SingleChildScrollView(
+        body:
+         Form(
+           key: _formKey, // Associate the form key here
+           child: OrientationBuilder(
+            builder: (context, orientation) {
+              final isPortrait = orientation == Orientation.portrait;
+              final double padding = Get.width * 0.04;
+           
+              return Obx(() {
+                // Update calculated values based on inputs
+                controller.rate.value = controller2.rtpl.value;
+                double rateValue = double.tryParse(controller.rate.value) ?? 0.0;
+                double qtyValue = double.tryParse(controller.qty.value) ?? 0.0;
+                controller.amountValue.value = rateValue * qtyValue;
+                controller.fat.value = controller2.fat.value;
+                controller.snf.value = controller2.snf.value;
+           
+                return Padding(
+                  padding: EdgeInsets.all(padding),
                   child: isPortrait
                       ? _buildPortraitLayout(padding)
                       : _buildLandscapeLayout(padding),
-                ),
-              );
-            });
-          },
-        ),
+                );
+              });
+            },
+                   ),
+         ),
       ),
     );
   }
 
   Widget _buildPortraitLayout(double padding) {
-    return Form(
-      key: _formKey, // Form widget to validate fields
-      child: Column(
-        children: [
-          // Date and Time Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Obx(() => Text(
-                    '${controller.currentDate.value.toLocal()}'.split(' ')[0],
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
-                  )),
-              Obx(() => Text(
-                    controller.timeShift.value,
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
-                  )),
-            ],
+    return Column(
+      children: [
+        // Static content
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Obx(() => Text(
+                  controller.currentDate.value,
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+                )),
+                  Obx(() => Text(
+              controller.timeShift.value,
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+            )),
+          ],
+        ),
+      
+        SizedBox(height: padding),
+
+        _buildMemberDetailsRow(padding),
+
+        SizedBox(height: padding),
+
+        _buildFatSnfRow(padding),
+
+        SizedBox(height: padding),
+
+        _buildQtyMilkTypeRow(padding),
+
+        SizedBox(height: padding),
+
+        _buildRateAmountRow(padding),
+
+        SizedBox(height: padding),
+
+        _buildButtons(),
+
+        SizedBox(height: padding),
+
+        // Scrollable Data Table
+        Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: buildDataTable(),
+            ),
           ),
-          SizedBox(height: padding),
-
-          // Member Details
-          _buildMemberDetailsRow(padding),
-
-          SizedBox(height: padding),
-
-          // Fat and SNF Fields
-          _buildFatSnfRow(padding),
-
-          SizedBox(height: padding),
-
-          // Quantity and Milk Type Fields
-          _buildQtyMilkTypeRow(padding),
-
-          SizedBox(height: padding),
-
-          // Rate and Amount Fields
-          _buildRateAmountRow(padding),
-
-          SizedBox(height: padding),
-
-          // Buttons
-          _buildButtons(),
-
-          SizedBox(height: padding),
-
-          // Saved Entries Table
-          _buildSavedEntriesTable(),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
   Widget _buildLandscapeLayout(double padding) {
-    return Form(
-      key: _formKey, // Form widget to validate fields
-      child: Column(
-        children: [
-          // Date and Time Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Obx(() => Text(
-                    '${controller.currentDate.value.toLocal()}'.split(' ')[0],
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
-                  )),
-              Obx(() => Text(
-                    controller.timeShift.value,
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
-                  )),
-            ],
+    return Column(
+      children: [
+        // Static content
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Obx(() => Text(
+                  controller.currentDate.value,
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+                )),
+            Obx(() => Text(
+                  controller.timeShift.value,
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+                )),
+          ],
+        ),
+        SizedBox(height: padding),
+
+        Row(
+          children: [
+            Expanded(child: _buildMemberDetailsRow(padding)),
+            SizedBox(width: padding),
+            Expanded(child: _buildFatSnfRow(padding)),
+          ],
+        ),
+        SizedBox(height: padding),
+
+        Row(
+          children: [
+            Expanded(child: _buildQtyMilkTypeRow(padding)),
+            SizedBox(width: padding),
+            Expanded(child: _buildRateAmountRow(padding)),
+          ],
+        ),
+        SizedBox(height: padding),
+
+        _buildButtons(),
+
+        SizedBox(height: padding),
+
+        // Scrollable Data Table
+        Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: buildDataTable(),
+            ),
           ),
-          SizedBox(height: padding),
-
-          // Member, Fat, and SNF Fields in a Single Row
-          Row(
-            children: [
-              Expanded(child: _buildMemberDetailsRow(padding)),
-              SizedBox(width: padding),
-              Expanded(child: _buildFatSnfRow(padding)),
-            ],
-          ),
-
-          SizedBox(height: padding),
-
-          // Quantity, Milk Type, Rate, and Amount in a Single Row
-          Row(
-            children: [
-              Expanded(child: _buildQtyMilkTypeRow(padding)),
-              SizedBox(width: padding),
-              Expanded(child: _buildRateAmountRow(padding)),
-            ],
-          ),
-
-          SizedBox(height: padding),
-
-          // Buttons and Table
-          _buildButtons(),
-          SizedBox(height: padding),
-          _buildSavedEntriesTable(),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -564,8 +595,10 @@ class MemberCollectionScreen extends StatelessWidget {
               controller.code.value = value;
               controller.fetchMemberNameDetails(value);
             },
-            controller: TextEditingController(text: controller.code.value),
-            validator: (value) => value!.isEmpty ? 'Please enter Member Code' : null, // Field validation
+            
+            //controller: TextEditingController(text: controller.code.value),
+            validator: (value) =>
+                value!.isEmpty ? 'Please enter Member Code' : null,
           ),
         ),
         SizedBox(width: padding),
@@ -579,8 +612,10 @@ class MemberCollectionScreen extends StatelessWidget {
               controller.memberName.value = value;
               controller.fetchOtherCodeByFirstName(value);
             },
-            controller: TextEditingController(text: controller.memberName.value),
-            validator: (value) => value!.isEmpty ? 'Please enter Member Name' : null, // Field validation
+            controller:
+                TextEditingController(text: controller.memberName.value),
+            validator: (value) =>
+                value!.isEmpty ? 'Please enter Member Name' : null,
           ),
         ),
       ],
@@ -601,9 +636,9 @@ class MemberCollectionScreen extends StatelessWidget {
               controller2.fat.value = value;
               controller2.filterData();
               controller.calculateAmountValue();
-              controller.fat.value = controller2.fat.value;      
+              controller.fat.value = controller2.fat.value;
             },
-            validator: (value) => value!.isEmpty ? 'Please enter Fat' : null, // Field validation
+            validator: (value) => value!.isEmpty ? 'Please enter Fat' : null,
           ),
         ),
         SizedBox(width: padding),
@@ -620,7 +655,7 @@ class MemberCollectionScreen extends StatelessWidget {
               controller.calculateAmountValue();
               controller.snf.value = controller2.snf.value;
             },
-            validator: (value) => value!.isEmpty ? 'Please enter SNF' : null, // Field validation
+            validator: (value) => value!.isEmpty ? 'Please enter SNF' : null,
           ),
         ),
       ],
@@ -642,7 +677,8 @@ class MemberCollectionScreen extends StatelessWidget {
               controller.calculateAmountValue();
             },
             controller: TextEditingController(text: controller.qty.value),
-            validator: (value) => value!.isEmpty ? 'Please enter Quantity' : null, // Field validation
+            validator: (value) =>
+                value!.isEmpty ? 'Please enter Quantity' : null,
           ),
         ),
         SizedBox(width: padding),
@@ -685,26 +721,15 @@ class MemberCollectionScreen extends StatelessWidget {
                     ),
                   ),
                 ],
-
-   onChanged: (value) {
-          if (value != null) { // Check to ensure value is not null
-            controller2.selectedMilkType.value = value;
-            controller2.filterData();
-            controller.calculateAmountValue();
-            controller.milkType.value = controller2.selectedMilkType.value;
-          }
-        },
-        validator: (value) => value == null || value.isEmpty
-            ? 'Please select Milk Type'
-            : null, // Field validation
-    
-                // onChanged: (value) {
-                //   controller2.selectedMilkType.value = value!;
-                //   controller2.filterData();
-                //   controller.calculateAmountValue();
-                //   controller.milkType.value = controller2.selectedMilkType.value;
-                // },
-                // validator: (value) => value == null ? 'Please select Milk Type' : null, // Field validation
+                onChanged: (value) {
+                  controller2.selectedMilkType.value = value ?? '';
+                  controller2.filterData();
+                  controller.calculateAmountValue();
+                  controller.milkType.value = controller2.selectedMilkType.value;
+             
+                },
+                validator: (value) =>
+                    value == null || value.isEmpty ? 'Please select Milk Type' : null,
               )),
         ),
       ],
@@ -732,42 +757,121 @@ class MemberCollectionScreen extends StatelessWidget {
                   labelText: 'Amount',
                   border: OutlineInputBorder(),
                 ),
-                controller: TextEditingController(text: controller.amountValue.value.toString()),
+                controller:
+                    TextEditingController(text: controller.amountValue.value.toString()),
               )),
         ),
       ],
     );
   }
-
-  Widget _buildButtons() {
+ 
+ Widget _buildButtons() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         ElevatedButton(
-          onPressed: () {
+          style: ElevatedButton.styleFrom(
+            padding: EdgeInsets.symmetric(horizontal: Get.width * 0.01, vertical: Get.height * 0.01),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            backgroundColor: CustomColors.appGreenButtomColor,
+          ),
+         onPressed: () {
             if (_formKey.currentState!.validate()) {
               // Process data if form is valid
-              controller.saveEntry();
-              //controller.getSampleNo();
+           
+    Future.wait([
+        controller.saveEntry()
+    ]).then((_) {
+      // Call afterSyncing to handle post-sync actions after both fetches complete
+            //  controller.rate.value = "";
+            //     //  rateValue
+            //     //  qtyValue
+               controller.amountValue.value =  0.0;
+            //     controller.fat.value = "";
+            //     controller.snf.value = "";
+              controller.milkType.value = ""; 
+                controller.qty.value = "";
+            //      controller.memberName.value = "";
+            //       controller.code.value = "";
+                 controller2.selectedMilkType.value= "";
+
+
+
+          controller.clearCollections();
+            _formKey.currentState!.reset(); // Reset form validation state
+           controller.clearCollections();
+           controller2.selectedMilkType.value = ""; // Clear all data
+    });
             }
+
           },
-          child: Text('Submit'),
+          child: Text('Save', style: TextStyle(fontSize: 20, color: CustomColors.bgColor)),
         ),
-        SizedBox(width: 20),
         ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            padding: EdgeInsets.symmetric(horizontal: Get.width * 0.01, vertical: Get.height * 0.01),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            backgroundColor: CustomColors.appRedButtomColor,
+          ),
           onPressed: () {
+            controller.clearCollections();
             _formKey.currentState!.reset(); // Reset form validation state
            controller.clearCollections();
            controller2.selectedMilkType.value = ""; // Clear all data
           },
-          child: Text('Clear Data'),
+          child: Text('Clear Data', style: TextStyle(fontSize: 20, color: CustomColors.bgColor)),
         ),
       ],
     );
   }
+ 
+ 
+  Widget buildDataTable() {
+    return Obx(() => SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child:
 
-  Widget _buildSavedEntriesTable() {
-    return Container(
-      // Add your saved entries table here
-    );
+
+ DataTable(
+      headingRowColor:
+          WidgetStateProperty.all(CustomColors.appColor),
+      headingTextStyle: const TextStyle(
+          color: Colors.white, fontWeight: FontWeight.bold),
+      columnSpacing: 12,
+      dataRowMinHeight: 20,
+      dataRowMaxHeight: 40,
+      headingRowHeight: 33,
+      columns: const [
+
+                     DataColumn(label: Text('S. No.')),
+    DataColumn(label: Text('Code')),
+    DataColumn(label: Text('Qty')),
+    DataColumn(label: Text('Fat')),
+    DataColumn(label: Text('SNF')),
+    DataColumn(label: Text('Rate')),
+    DataColumn(label: Text('Amount')),
+
+      ],
+      rows: List.generate(controller.memberCollData.length, (index) {
+        final data = controller.memberCollData[index];
+        final isGrey = index % 2 == 0;
+        return DataRow(
+          color: WidgetStateProperty.all(isGrey ? Colors.white : Colors.grey[200]),
+          cells: [
+
+
+ DataCell(Center(child: Text("${data["sample_no"]}"))),
+DataCell(Center(child: Text("${data['member_code']}"))),
+DataCell(Center(child: Text("${data['qty']}"))),
+DataCell(Center(child: Text("${data['fat']}"))),
+DataCell(Center(child: Text((double.tryParse(data['snf'].toString())?.toStringAsFixed(2)) ?? "0.00"))),
+DataCell(Center(child: Text((double.tryParse(data['rate'].toString())?.toStringAsFixed(2)) ?? "0.00"))),
+DataCell(Center(child: Text((double.tryParse(data["amount"].toString())?.toStringAsFixed(2)) ?? "0.00"))),
+    
+          ],
+        );
+      }),
+    )));}
   }
-}
+
+
