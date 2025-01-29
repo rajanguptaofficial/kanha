@@ -18,8 +18,12 @@ class MemberCollectionController extends GetxController {
 var currentDate =   DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
 var currentTime =   DateFormat('HH:mm').format(DateTime.now()).obs;
 var timeShift = ''.obs;
-var code = ''.obs;
+var membercode = ''.obs;
 var memberName = ''.obs;
+
+var memberSocCode = ''.obs;
+var mppCode = ''.obs;
+
 var milkType = ''.obs;
 var qty = ''.obs;
 var fat = ''.obs;
@@ -30,8 +34,15 @@ var amountValue = 0.0.obs; // Observable to hold the calculated amount value
   @override
   void onInit() {
     super.onInit();
-    initializeMemberCollData();
-    _initializeDateAndTimeShift();
+ Future.wait([
+        _initializeDateAndTimeShift()
+    ]).then((_) {
+      // Call afterSyncing to handle post-sync actions after both fetches complete
+       initializeMemberCollData();
+    });
+
+
+
   }
 
 Future<void> initializeMemberCollData() async {
@@ -69,7 +80,7 @@ Future<List<Map<String, dynamic>>> fetchLocalData({
     whereArgs: [date, shift], // Filter values
   );
   qty.value="";
-  clearCollections();
+ // clearCollections();
 print(filteredData);
   return filteredData;
  
@@ -88,10 +99,9 @@ void calculateAmountValue() {
 }
 
 
-
   // Initialize the date and time shift
-  void _initializeDateAndTimeShift() {
-    DateTime now = DateTime.now();
+  Future _initializeDateAndTimeShift()async {
+    DateTime now = await DateTime.now();
     // Determine Morning or Evening based on time
     int currentHour = now.hour;
     timeShift.value = currentHour < 12 ? 'Morning' : 'Evening';
@@ -113,7 +123,7 @@ void fetchMemberNameDetails(String otherCode) async {
     // Query the memberMaster table for the member name
     final result = await db.query(
       'memberMaster',
-      columns: ['firstName'], // Assuming 'mppName' is the member name column
+      //columns: ['firstName'], // Assuming 'mppName' is the member name column
       where: 'otherCode = ?',
       whereArgs: [otherCode],
     );
@@ -121,16 +131,27 @@ void fetchMemberNameDetails(String otherCode) async {
     if (result.isNotEmpty) {
       // Set the member name if a match is found
       memberName.value = result.first['firstName'] as String;
+     memberSocCode.value =   result.first['socCode'].toString();
+
+  final getMppCode = await db.query(
+      'mppMaster',
+     columns: ['code'], // Assuming 'code' is the mpp name column
+      where: 'socCode = ?',
+      whereArgs: [memberSocCode.value.toString()],
+    );
+  mppCode.value = getMppCode.first['code'] as String;
+
+
     } else {
       // Clear the member name if no match is found
-      memberName.value = '';
+    memberName.value = '';
     }
   } catch (e) {
     // Handle any database or query errors
     memberName.value = 'Error fetching member details';
     print('Error fetching member details: $e');
   }
- }
+}
 
  
 Future<void> fetchOtherCodeByFirstName(String memberName) async {
@@ -139,28 +160,40 @@ Future<void> fetchOtherCodeByFirstName(String memberName) async {
 
     final result = await db.query(
       'memberMaster',
-      columns: ['otherCode'], // Fetch the otherCode column
+     // columns: ['otherCode'], // Fetch the otherCode column
       where: 'firstName = ?',  // Match the firstName with the passed value
       whereArgs: [memberName], // Use the passed firstName (e.g., 'DEMO')
     );
 
     if (result.isNotEmpty) {
       // Fetch the otherCode value
-      code.value = result.first['otherCode'] as String;
-      print('Other Code: $code.value');
+      membercode.value = result.first['otherCode'] as String;
+
+      print('Other Code: $membercode.value');
+
+ memberSocCode.value =   result.first['socCode'].toString();
+
+  final getMppCode = await db.query(
+      'mppMaster',
+     columns: ['code'], // Assuming 'code' is the mpp name column
+      where: 'socCode = ?',
+      whereArgs: [memberSocCode.value.toString()],
+    );
+  mppCode.value = getMppCode.first['code'] as String;
+
     } else {
-      print('No record found for firstName: ${code.value}');
-      code.value = '';
+      print('No record found for firstName: ${membercode.value}');
+      membercode.value = '';
     }
   } catch (e) {
      // Handle any database or query errors
-    code.value = 'Error fetching code details';
+    membercode.value = 'Error fetching code details';
     print('Error fetching member details: $e');
 }
 }
 
 void clearCollections() {
-  code.value = '';
+  membercode.value = '';
   memberName.value = '';
   qty.value = '';
   rate.value = '0.0';
@@ -168,7 +201,7 @@ void clearCollections() {
     fat.value = '';
     snf.value = '';
     rate.value = '';
-    milkType.value = '';
+   // milkType.value = '';
   //initializeMemberCollData();
     // Get.to(MemberCollectionScreen());
     // Get.off(MemberCollectionScreen());
@@ -181,9 +214,9 @@ Future<void> saveEntry() async {
   final entry = {
     'farmer_collection_main_id' : "",   
     'collection_date': currentDate.value.toString(), /// current Date   
-    'mpp_code': "", /// mpp table  "othercode"  
+    'mpp_code':  mppCode.value.toString(), /// mpp table  "othercode"  
     'shift_code': timeShift.value == "Morning" ? "M" : "E", ///ask            
-    'member_code': code.value.toString(),    
+    'member_code': membercode.value.toString(),    
     'member_name': memberName.value.toString(),
     'milk_type_code': milkType.value.toString(), 
     'milk_quality_type_code': "", 
@@ -227,12 +260,12 @@ Future<void> insertData(List<Map<String, dynamic>> entries) async {
       sampleNo = 1;
     }
   // Clear existing data before inserting new data
-    //await db.delete('memberCollection');
+   // await db.delete('memberCollection');
 
     await db.transaction((txn) async {
       for (var entry in entries) {
         entry['sample_no'] = sampleNo.toString();
-        await txn.insert('memberCollection', entry);
+       await txn.insert('memberCollection', entry);
       }
     });
   // Show success message
@@ -249,19 +282,16 @@ Future<void> insertData(List<Map<String, dynamic>> entries) async {
     rethrow;
   }
 
-  // Refresh memberCollData after saving
-  await initializeMemberCollData();
-  
-
-
 controller2.fat.value = "";
 controller2.snf.value = "";
-controller2.selectedMilkType.value = "";
-controller2.milk.value = "";
-controller2.milkTypes.value = [];
+// controller2.selectedMilkType.value = "";
+// controller2.milk.value = "";
+// controller2.milkTypes.value = [];
 controller2.rtpl.value = "";
 clearCollections(); // Clear the form fields after saving
 
+  // Refresh memberCollData after saving
+  await initializeMemberCollData();
 }
 
 
