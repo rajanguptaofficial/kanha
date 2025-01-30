@@ -81,14 +81,10 @@ Future<List<Map<String, dynamic>>> fetchLocalData({
   );
   qty.value="";
  // clearCollections();
-print(filteredData);
+  print(filteredData);
   return filteredData;
  
 }
-
-
-
-
 
 // Function to calculate and update amountValue
 void calculateAmountValue() {
@@ -98,6 +94,25 @@ void calculateAmountValue() {
   amountValue.value = rateValue * qtyValue;
 }
 
+// Future<List<String>> getTables() async {
+//    final db =   await _kanhaDBHelper.database;
+//   List<Map<String, dynamic>> result =
+//       await db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'");
+//       print( result.map((row) => row['name'] as String).toList());
+//   return result.map((row) => row['name'] as String).toList();
+// }
+
+
+// Future<bool> doesTableExist() async {
+//   final db =   await _kanhaDBHelper.database;
+//   final result = await db.rawQuery(
+//       "SELECT name FROM sqlite_master WHERE type='table' AND name=?",
+//       ["memberCollection"]);
+//       getTables();
+//    print("no  bmc collection Table: $result");
+//   return result.isNotEmpty;
+  
+// }
 
   // Initialize the date and time shift
   Future _initializeDateAndTimeShift()async {
@@ -231,7 +246,7 @@ Future<void> saveEntry() async {
     'is_quality_auto': "true",  /// true  
     'quality_sample_time': currentTime.value.toString(),   ///  /// current time  
     'is_sync': "false",             // false
-    'CollectionType': "Farmer",  /// Farmer
+    'collectionType': "Farmer",  /// Farmer
     'can': ""       // 0            
   };
 
@@ -261,6 +276,7 @@ Future<void> insertData(List<Map<String, dynamic>> entries) async {
     }
   // Clear existing data before inserting new data
    // await db.delete('memberCollection');
+   // await db.execute('DROP TABLE IF EXISTS memberCollection');
 
     await db.transaction((txn) async {
       for (var entry in entries) {

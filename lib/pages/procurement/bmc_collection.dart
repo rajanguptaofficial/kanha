@@ -145,17 +145,13 @@ SizedBox(
     ),
     style: TextStyle(fontSize: 14),
     onChanged: (value) {
-      controller.membercode.value = value;
+      controller.mppCode.value = value;
       controller.fetchMemberNameDetails(value);
     },
     validator: (value) => value!.isEmpty ? 'Please enter Society Code' : null,
   ),
-),
-
-
-
-
-        ),
+), ),
+        
         SizedBox(width: padding),
         Expanded(
           child: SizedBox( height: 50,
@@ -166,11 +162,11 @@ SizedBox(
                 border: OutlineInputBorder(),
               ),
               onChanged: (value) {
-                controller.memberName.value = value;
+                controller.mppName.value = value;
                 controller.fetchOtherCodeByFirstName(value);
               },
               controller:
-                  TextEditingController(text: controller.memberName.value),
+                  TextEditingController(text: controller.mppName.value),
               validator: (value) =>
                   value!.isEmpty ? 'Please enter Society Name' : null,
             ),
@@ -359,11 +355,11 @@ SizedBox(
                   contentPadding: EdgeInsets.symmetric(vertical: 6, horizontal: 10), // Reduce padding
               ),
               onChanged: (value) {
-                controller.membercode.value = value;
+                controller.mppCode.value = value;
                 controller.fetchMemberNameDetails(value);
               },
               
-              //controller: TextEditingController(text: controller.code.value),
+              controller: TextEditingController(text: controller.mppCode.value),
               validator: (value) =>
                   value!.isEmpty ? 'Please enter Society Code' : null,
             ),
@@ -379,11 +375,11 @@ SizedBox(
                   contentPadding: EdgeInsets.symmetric(vertical: 6, horizontal: 10), // Reduce padding
               ),
               onChanged: (value) {
-                controller.memberName.value = value;
+                controller.mppName.value = value;
                 controller.fetchOtherCodeByFirstName(value);
               },
               controller:
-                  TextEditingController(text: controller.memberName.value),
+                  TextEditingController(text: controller.mppName.value),
               validator: (value) =>
                   value!.isEmpty ? 'Please enter Society Name' : null,
             ),
@@ -636,17 +632,17 @@ SizedBox(
     DataColumn(label: Text('Amount')),
 
       ],
-      rows: List.generate(controller.memberCollData.length, (index) {
-        final data = controller.memberCollData[index];
+      rows: List.generate(controller.mppCollData.length, (index) {
+        final data = controller.mppCollData[index];
         final isGrey = index % 2 == 0;
         return DataRow(
           color: WidgetStateProperty.all(isGrey ? Colors.white : Colors.grey[200]),
           cells: [
 
 
- DataCell(Center(child: Text("${data["sample_no"]}"))),
-DataCell(Center(child: Text("${data['member_code']}"))),
-DataCell(Center(child: Text("${data['qty']}"))),
+ DataCell(Center(child: Text("${data["sampleId"]}"))),
+DataCell(Center(child: Text("${data['mppOtherCode']}"))),
+DataCell(Center(child: Text("${data['weight']}"))),
 DataCell(Center(child: Text("${data['fat']}"))),
 DataCell(Center(child: Text((double.tryParse(data['snf'].toString())?.toStringAsFixed(2)) ?? "0.00"))),
 DataCell(Center(child: Text((double.tryParse(data['rate'].toString())?.toStringAsFixed(2)) ?? "0.00"))),
