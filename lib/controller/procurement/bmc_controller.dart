@@ -36,6 +36,7 @@ var amountValue = 0.0.obs; // Observable to hold the calculated amount value
   void onInit() {
     super.onInit();
  Future.wait([
+         fetchDockNumbers(),
         _initializeDateAndTimeShift(),
         getLocalIp(),
     ]).then((_) {
@@ -351,6 +352,17 @@ clearCollections(); // Clear the form fields after saving
   // Refresh mppCollData after saving
   await initializeMemberCollData();
 }
+
+
+
+Future<List<int>> fetchDockNumbers() async {
+  final db = await _kanhaDBHelper.database;
+  final List<Map<String, dynamic>> result =
+      await db.rawQuery('SELECT DISTINCT dockNo FROM bmcCollection WHERE dockNo IS NOT NULL');
+
+  return result.map((row) => row['dockNo'] as int).toList();
+}
+
 
 
 

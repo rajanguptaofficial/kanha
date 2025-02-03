@@ -738,6 +738,37 @@ class KanhaDBHelper {
     ''');
     
 
+await db.execute('''
+  CREATE TABLE IF NOT EXISTS truckArrival (
+    rtcode INTEGER NULL,
+    dumpDate TEXT NULL,
+    shift TEXT NULL,
+    sampleId INTEGER,
+    arrivalTime TEXT NULL,
+    truckNo TEXT NULL,
+    schTime TEXT NULL,
+    arrivalDelay INTEGER NULL,
+    arrivalDelayTxt TEXT NULL,
+    arrivalTimeTxt TEXT NULL,
+    schTimeTxt TEXT NULL,
+    companyCode INTEGER NULL,
+    cId INTEGER NULL,
+    cDate TEXT NULL,
+    mId TEXT NULL,
+    mDate TEXT NULL,
+    isUpload INTEGER NULL,
+    cntCode INTEGER NULL,
+    collectionCode INTEGER NULL,
+    insertMode TEXT NULL,
+    autoId INTEGER NULL
+  )
+''');
+
+
+
+
+
+
 
   // Query and print all tables after table creation
   List<String> tables = await getTables(db);
