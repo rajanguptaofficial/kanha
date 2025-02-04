@@ -1,191 +1,9 @@
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-// import '../../common/custom_app_bar.dart';
-// import '../../controller/procurement/truck_arrival_controller.dart';
-
-// // Combined Form Widget
-// class TruckArrivalFormScreen extends StatelessWidget {
-//   final TruckArrivalController controller = Get.put(TruckArrivalController());
-
-//   TruckArrivalFormScreen({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return OrientationBuilder(
-//       builder: (context, orientation) {
-//         final isPortrait = orientation == Orientation.portrait;
-//         final height = MediaQuery.of(context).size.height;
-//         final width = MediaQuery.of(context).size.width;
-
-//         return SafeArea(
-//           child: Scaffold(
-//                 appBar: ProcCustomAppBar(title: 'Truck Arrival'),
-//             body: Obx(
-//               () => controller.isForm1Visible.value
-//                   ? buildFirstForm(context, height, width, isPortrait)
-//                   : buildSecondForm(context, height, width, isPortrait),
-//             ),
-//           ),
-//         );
-//       },
-//     );
-//   }
-
-//   // First Form Widget
-//   Widget buildFirstForm(BuildContext context, double height, double width, bool isPortrait) {
-//     return Padding(
-//       padding: EdgeInsets.all(isPortrait ? 16.0 : 32.0), // Adjust padding based on orientation
-//       child: SingleChildScrollView(
-//         child: Column(
-//           children: [
-
-// DropdownButtonFormField<String>(
-//   value: controller.dockCollData.contains(controller.selectedDockNo.value)
-//       ? controller.selectedDockNo.value
-//       : null, // Ensure value is in the list
-//   decoration: const InputDecoration(labelText: 'Select Dock'),
-//   hint: const Text("Select Dock No"),
-//   onChanged: (newValue) {
-//     if (newValue != null) {
-//       controller.selectedDockNo.value = newValue;
-//     }
-//   },
-//   items: controller.dockCollData.map<DropdownMenuItem<String>>((dockNo) {
-//     return DropdownMenuItem<String>(
-//       value: dockNo.toString(),
-//       child: Text(dockNo.toString()),
-//     );
-//   }).toList(),
-// ),
-
-
-
-//             SizedBox(height: height * 0.02),
-//              Obx(() => TextFormField(
-//                      readOnly: true,
-//                      decoration: InputDecoration(
-//                        labelText: 'Date',
-//                         border: OutlineInputBorder(),
-//                      //contentPadding: EdgeInsets.symmetric(vertical: 6, horizontal: 10), // Reduce padding
-//                      ),
-//                      controller:
-//                          TextEditingController(text: controller.currentDate.value.toString()),
-//                    )),
-          
-//             SizedBox(height: height * 0.02),
-           
-//                Obx(() => TextFormField(
-//                      readOnly: true,
-//                      decoration: InputDecoration(
-//                        labelText: 'Shift',
-//                         border: OutlineInputBorder(),
-//                      //contentPadding: EdgeInsets.symmetric(vertical: 6, horizontal: 10), // Reduce padding
-//                      ),
-//                      controller:
-//                          TextEditingController(text: controller.timeShift.value.toString()),
-//                    )),
-//             SizedBox(height: height * 0.04),
-//             ElevatedButton(
-//               onPressed: () {
-//                 if (controller.selectedDockNo.value.isNotEmpty &&
-//                     controller.currentDate.value.isNotEmpty &&
-//                     controller.timeShift.value.isNotEmpty) {
-//                   controller.isForm1Visible.value = false; // Switch to Form 2
-//                 } else {
-//                   Get.snackbar('Error', 'Please select all fields',
-//                       snackPosition: SnackPosition.BOTTOM);
-//                 }
-//               },
-//               child: const Text('Go'),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-
-//   // Second Form Widget
-//   Widget buildSecondForm(BuildContext context, double height, double width, bool isPortrait) {
-//     return Padding(
-//       padding: EdgeInsets.all(isPortrait ? 16.0 : 32.0), // Adjust padding based on orientation
-//       child: SingleChildScrollView(
-//         child: Column(
-//           children: [
-
-
-//             DropdownButtonFormField<String>(
-//   value: controller.routeData.contains(controller.selectedRoute.value)
-//       ? controller.selectedRoute.value
-//       : null, // Set to null if not found in list
-//   decoration: const InputDecoration(labelText: 'Select Route'),
-//   hint: const Text("Select Route"),
-//   onChanged: (newValue) {
-//     if (newValue != null) {
-//       controller.selectedRoute.value = newValue;
-//     }
-//   },
-//   items: controller.routeData.toSet().map<DropdownMenuItem<String>>((route) { 
-//     return DropdownMenuItem<String>(
-//       value: route,
-//       child: Text(route),
-//     );
-//   }).toList(),
-// ),
-
-     
-//             SizedBox(height: height * 0.02),
-//              Obx(() => TextFormField(
-//                      readOnly: true,
-//                      decoration: InputDecoration(
-//                         labelText: 'Arrival Time',
-//                         border: OutlineInputBorder(),
-//                      //contentPadding: EdgeInsets.symmetric(vertical: 6, horizontal: 10), // Reduce padding
-//                      ),
-//                      controller:
-//                          TextEditingController(text: controller.currentTime.value.toString()),
-//                    )),
-          
-//             SizedBox(height: height * 0.02),
-//             TextField(
-//               decoration: const InputDecoration(labelText: 'Enter Truck No.'),
-//               onChanged: (value) {
-//                 controller.truckNumber.value = value;
-//               },
-//             ),
-//             SizedBox(height: height * 0.04),
-//             ElevatedButton(
-//               onPressed: () {
-//                 if (controller.selectedRoute.value.isNotEmpty &&
-//                     controller.truckNumber.value.isNotEmpty &&
-//                     controller.arrival.value.isNotEmpty) {
-//                   controller.saveData();
-//                   Get.snackbar('Success', 'Data saved successfully',
-//                       snackPosition: SnackPosition.BOTTOM);
-//                 } else {
-//                   Get.snackbar('Error', 'Please fill all fields',
-//                       snackPosition: SnackPosition.BOTTOM);
-//                 }
-//               },
-//               child: const Text('Add'),
-//             ),
-//             SizedBox(height: height * 0.02),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:kanha_bmc/common/colors.dart';
 import 'package:kanha_bmc/common/custom_app_bar.dart';
 import 'package:kanha_bmc/controller/procurement/truck_arrival_controller.dart';
-
-
-
 
 class TruckArrivalFormScreen extends StatelessWidget {
   final TruckArrivalController controller = Get.put(TruckArrivalController());
@@ -202,12 +20,13 @@ class TruckArrivalFormScreen extends StatelessWidget {
            key: _formKey, // Associate the form key here
            child: OrientationBuilder(
             builder: (context, orientation) {
-//                controller.currentDate.value =   DateFormat('yyyy-MM-dd').format(DateTime.now());
-//  controller.currentTime.value =   DateFormat('HH:mm').format(DateTime.now());
+           
               final isPortrait = orientation == Orientation.portrait;
               final double padding = Get.width * 0.04;
            
               return Obx(() {
+                 // controller.currentDate.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                  // controller.currentTime.value=   DateFormat('HH:mm').format(DateTime.now());
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 5,horizontal: 14),
                   child: isPortrait
@@ -275,23 +94,27 @@ class TruckArrivalFormScreen extends StatelessWidget {
                  controller:
                      TextEditingController(text: controller.timeShift.value.toString()),
                )),
-        SizedBox(height: Get.height * 0.04),
-        ElevatedButton(
-          onPressed: () {
-            // if (controller.selectedDockNo.value.isNotEmpty &&
-            //     controller.currentDate.value.isNotEmpty &&
-            //     controller.timeShift.value.isNotEmpty) {
-            //   controller.isForm1Visible.value = false; // Switch to Form 2
+        SizedBox(height: Get.height * 0.02),
 
+ ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            padding: EdgeInsets.symmetric(horizontal: Get.width * 0.07, vertical: Get.height * 0.01),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            backgroundColor: CustomColors.appGreenButtomColor,
+          ),
+         onPressed: () {
+          
 if (_formKey.currentState!.validate()) {
-controller.isForm1Visible.value = false;
+      controller.isForm1Visible.value = false;
             } else {
               Get.snackbar('Error', 'Please select all fields',
                   snackPosition: SnackPosition.BOTTOM);
             }
           },
-          child: const Text('Go'),
+        
+          child: Text('Go', style: TextStyle(fontSize: 20, color: CustomColors.bgColor)),
         ),
+ SizedBox(height: Get.height * 0.02),
       ],
     );
   }
@@ -358,7 +181,7 @@ controller.isForm1Visible.value = false;
     return SingleChildScrollView(
       child: Column(
         children: [
-      controller.isForm1Visible.value ? buildFirstForm() :buildSecondForm(), 
+      controller.isForm1Visible.value ? buildFirstForm() : buildSecondForm(), 
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: SingleChildScrollView(
@@ -377,19 +200,19 @@ Widget _buildLandscapeLayout(double padding) {
   return SingleChildScrollView(
     child: Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Obx(() => Text(
-                  controller.currentDate.value,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
-                )),
-            Obx(() => Text(
-                  controller.timeShift.value,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
-                )),
-          ],
-        ),
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //   children: [
+        //     Obx(() => Text(
+        //           controller.currentDate.value,
+        //           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+        //         )),
+        //     Obx(() => Text(
+        //           controller.timeShift.value,
+        //           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+        //         )),
+        //   ],
+        // ),
 
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -401,13 +224,13 @@ Widget _buildLandscapeLayout(double padding) {
                width: Get.width*.4,
                 child: Column(
                   children: [
-                   
-                        SizedBox(height: Get.width * 0.01),    
+                     controller.isForm1Visible.value ? buildFirstForm() : buildSecondForm(), 
+                        // SizedBox(height: Get.width * 0.01),    
                        
-                        SizedBox(height: Get.width * 0.01),   
+                        // SizedBox(height: Get.width * 0.01),   
                     
                         SizedBox(height: Get.width * 0.01),
-                        _buildButtons(),
+                       // _buildButtons(),
                         SizedBox(height: padding),
                   ],
                 ),
@@ -458,19 +281,7 @@ Widget _buildLandscapeLayout(double padding) {
     Future.wait([
         controller.saveEntry()
     ]).then((_) {
-          controller.selectedDockNo.value =  "";
-          controller.currentDate.value = "";
-          controller.currentTime.value = "";
-             controller.selectedRoute.value =  "";
-          controller.arrival.value = "";
-          controller.truckNumber.value = "";
-
-          
-          controller.clearCollections();
-            _formKey.currentState!.reset(); // Reset form validation state
-           controller.clearCollections();
-         
-           //controller2.selectedMilkType.value = ""; // Clear all data
+           _formKey.currentState!.reset(); 
     });
             }
 
@@ -520,7 +331,7 @@ Widget _buildLandscapeLayout(double padding) {
 DataCell(Center(child: Text("${data['dumpDate']}"))),
 DataCell(Center(child: Text("${data['shift']}"))),
 DataCell(Center(child: Text("${data['truckNo']}"))),
-DataCell(Center(child: Text((double.tryParse(data['arrivalTime'].toString())?.toStringAsFixed(2)) ?? "0.00"))),
+DataCell(Center(child: Text((data['arrivalTime'].toString())))),
 
     
           ],

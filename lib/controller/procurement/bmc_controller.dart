@@ -254,6 +254,15 @@ void clearCollections() {
 Future<void> saveEntry() async {
   milkType.value = await controller2.updateSelectedMilkType(milkType.value);
 
+
+
+    DateTime now = await DateTime.now();
+    int currentHour = now.hour;
+    timeShift.value = currentHour < 12 ? 'Morning' : 'Evening';
+
+currentDate.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
+currentTime.value=   DateFormat('HH:mm:ss').format(DateTime.now());
+
   final entry = {   
     "dumpDate" :currentDate.value.toString(), // current date 
     "shift": timeShift.value == "Morning" ? "M" : "E",// morning

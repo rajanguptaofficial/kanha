@@ -14,11 +14,10 @@ class TruckArrivalController extends GetxController {
   var arrival = ''.obs;
   var truckNumber = ''.obs;
 
-
 // Perform the multiplication
 // Corrected and added an observable for the calculated amountValue
-var currentDate =   DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
-var currentTime =   DateFormat('HH:mm').format(DateTime.now()).obs;
+var currentDate =   "".obs;
+var currentTime =   "".obs;
 var timeShift = ''.obs;
 var companyCode = ''.obs;
 var routeData = <String>{}.obs; // Observable list for route dropdown
@@ -41,13 +40,14 @@ var selectedDockNo = ''.obs;
   }
 
 
-
 Future<void> fetchDockData() async {
+ currentDate.value = DateFormat('dd-MM-yyyy').format(DateTime.now());
+ currentTime.value=   DateFormat('HH:mm').format(DateTime.now());
   final db = await _kanhaDBHelper.database;
   final List<Map<String, dynamic>> result =
       // await db.rawQuery('SELECT DISTINCT cntDocks FROM ruteMaster');
       await db.rawQuery('SELECT DISTINCT dockNo FROM bmcCollection WHERE dockNo IS NOT NULL');
-
+ 
   // Convert to unique list and update observable
   dockCollData.assignAll(result.map((row) => row['dockNo'].toString()).toSet());
 }
@@ -56,6 +56,8 @@ Future<void> fetchDockData() async {
     final db = await _kanhaDBHelper.database;
     final List<Map<String, dynamic>> result =
         await db.rawQuery('SELECT routecode, rtName FROM ruteMaster');
+
+  
     // Convert result into "routecode/rtName" format
         routeData.assignAll(result.map((row) => "${row['routecode']}/${row['rtName']}").toSet());
   }
@@ -158,13 +160,29 @@ Future<void> fetchCompnyCodeByRuteCodeName(String ruteCodeName) async {
 
 
 void clearCollections() {
-
+selectedDockNo.value = "";
+currentDate.value = "";
+currentTime.value = "";
+timeShift.value = "";
+selectedRoute.value = "";
+selectedDockNo.value = "";
+selectedDockNo.value = "";
+truckNumber.value = "";
+routeData.clear();
+dockCollData.clear();
 }
 
 
 Future<void> saveEntry() async {
   final pref = await SharedPreferences.getInstance();
     var userCode = pref.getString('userCode');
+
+    DateTime now = await DateTime.now();
+    int currentHour = now.hour;
+    timeShift.value = currentHour < 12 ? 'Morning' : 'Evening';
+
+currentDate.value = DateFormat('dd-MM-yyyy').format(DateTime.now());
+currentTime.value=   DateFormat('HH:mm:ss').format(DateTime.now());
 
 final entry = {   
   "rtcode": selectedRoute.value.toString(),
@@ -237,16 +255,31 @@ Future<void> insertData(List<Map<String, dynamic>> entries) async {
     print('Error inserting data: $e');
     rethrow;
   }
- currentDate.value =   DateFormat('yyyy-MM-dd').format(DateTime.now());
- currentTime.value =   DateFormat('HH:mm').format(DateTime.now());
-   fetchDockData();
-   fetchRoutes();
-    _initializeDateAndTimeShift();
+  clearCollections(); 
+
+Future.wait([
+       
+        fetchDockData(),
+        fetchRoutes(),
+        _initializeDateAndTimeShift(),
+    ]).then((_) {
+      // Call afterSyncing to handle post-sync actions after both fetches complete
+       initializeMemberCollData();
+    });
+
+// Clear the form fields after saving
+
+
+//  currentDate.value =   DateFormat('yyyy-MM-dd').format(DateTime.now());
+//  currentTime.value =   DateFormat('HH:mm').format(DateTime.now());
+//    fetchDockData();
+//    fetchRoutes();
+//     _initializeDateAndTimeShift();
  
-   clearCollections(); // Clear the form fields after saving
+ 
 
   // Refresh truckArrivalDBData after saving
-  await initializeMemberCollData();
+ // await initializeMemberCollData();
 }
 
 }
