@@ -26,19 +26,18 @@ class DataSyncingHomepageScreenController extends GetxController {
 
   @override
   void onInit() {
-    super.onInit();
-
-    // Perform data fetch for both controllers
+   super.onInit();
+   // Perform data fetch for both controllers
     Future.wait([
         bmcMasterController.fetchData(),
-       memberMasterController.fetchData(),
-      mppMasterController.fetchData(),
+        memberMasterController.fetchData(),
+        mppMasterController.fetchData(),
         rateCheckMasterController.fetchData(),
-       rateMasterController.fetchData(),
-      ruteController.fetchData()
+        rateMasterController.fetchData(),
+        ruteController.fetchData()
     ]).then((_) {
       // Call afterSyncing to handle post-sync actions after both fetches complete
-      afterSyncing();
+     afterSyncing();
     });
   }
 }

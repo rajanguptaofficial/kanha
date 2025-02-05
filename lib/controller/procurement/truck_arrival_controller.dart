@@ -8,7 +8,6 @@ import '../masters/rate_check_controller.dart';
 class TruckArrivalController extends GetxController {
    final controller2 = Get.put(RateCheckMasterController());
  final KanhaDBHelper _kanhaDBHelper = KanhaDBHelper.instance;
- 
   var isForm1Visible = true.obs;
   var truckArrivalDBData = <Map<String, dynamic>>[].obs;
   var arrival = ''.obs;
@@ -25,7 +24,6 @@ var selectedRoute = ''.obs; // Selected route value
 var dockCollData = <String>{}.obs; // Use Set to prevent duplicates
 var selectedDockNo = ''.obs;
 
-
   @override
   void onInit() {
     super.onInit();
@@ -38,6 +36,45 @@ var selectedDockNo = ''.obs;
        initializeMemberCollData();
     });
   }
+ var selectedDate = DateTime.now().obs; // Observable date
+
+  void pickDate(BuildContext context) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: selectedDate.value,
+      firstDate: DateTime(2000), // Restrict past dates
+      lastDate: DateTime.now(),  // Only allow past dates
+    );
+
+    if (pickedDate != null) {
+      selectedDate.value = pickedDate; // Update the selected date
+    }
+  }
+
+ Future<void> selectTime(BuildContext context) async {
+    TimeOfDay currentTime = TimeOfDay.now();
+    TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: currentTime,
+    );
+
+    if (pickedTime != null) {
+      updateTime(pickedTime);
+    }
+  }
+
+
+
+
+  void updateTime(TimeOfDay time) {
+    final now = DateTime.now();
+    // final formattedTime = DateFormat('hh:mm a').format(
+        final formattedTime = DateFormat('hh:mm').format(
+      DateTime(now.year, now.month, now.day, time.hour, time.minute),
+    );
+     currentDate.value = "";
+    currentTime.value = formattedTime;
+  }
 
 
 Future<void> fetchDockData() async {
@@ -46,10 +83,10 @@ Future<void> fetchDockData() async {
   final db = await _kanhaDBHelper.database;
   final List<Map<String, dynamic>> result =
       // await db.rawQuery('SELECT DISTINCT cntDocks FROM ruteMaster');
-      await db.rawQuery('SELECT DISTINCT dockNo FROM bmcCollection WHERE dockNo IS NOT NULL');
+      await db.rawQuery('SELECT DISTINCT cntDocks FROM bmcMaster WHERE cntDocks IS NOT NULL');
  
   // Convert to unique list and update observable
-  dockCollData.assignAll(result.map((row) => row['dockNo'].toString()).toSet());
+  dockCollData.assignAll(result.map((row) => row['cntDocks'].toString()).toSet());
 }
 
  Future<void> fetchRoutes() async {
@@ -60,6 +97,31 @@ Future<void> fetchDockData() async {
   
     // Convert result into "routecode/rtName" format
         routeData.assignAll(result.map((row) => "${row['routecode']}/${row['rtName']}").toSet());
+  }
+
+
+  void updateShift(String shift) {
+    timeShift.value = shift;
+  }
+
+void selectShift(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: ["Morning", "Evening"].map((shift) {
+            return ListTile(
+              title: Text(shift),
+              onTap: () {
+                updateShift(shift);
+                Navigator.pop(context);
+              },
+            );
+          }).toList(),
+        );
+      },
+    );
   }
 
 
@@ -177,12 +239,12 @@ Future<void> saveEntry() async {
   final pref = await SharedPreferences.getInstance();
     var userCode = pref.getString('userCode');
 
-    DateTime now = await DateTime.now();
-    int currentHour = now.hour;
-    timeShift.value = currentHour < 12 ? 'Morning' : 'Evening';
+//     DateTime now = await DateTime.now();
+//     int currentHour = now.hour;
+//     timeShift.value = currentHour < 12 ? 'Morning' : 'Evening';
 
-currentDate.value = DateFormat('dd-MM-yyyy').format(DateTime.now());
-currentTime.value=   DateFormat('HH:mm:ss').format(DateTime.now());
+// currentDate.value = DateFormat('dd-MM-yyyy').format(DateTime.now());
+// currentTime.value=   DateFormat('HH:mm:ss').format(DateTime.now());
 
 final entry = {   
   "rtcode": selectedRoute.value.toString(),

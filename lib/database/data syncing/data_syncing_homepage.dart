@@ -162,7 +162,7 @@ class _DataSyncingHomepageScreenState extends State<DataSyncingHomepageScreen> {
         bottomNavigationBar: Padding(
           padding: EdgeInsets.all(Get.width * 0.02),
           child: const Text(
-            '© KMTEPL | App Version-1.0 | 17 Dec 2024',
+            '© KMTEPL | App Version-1.0 | 5 Feb 2025',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 12, color: Colors.black),
           ),

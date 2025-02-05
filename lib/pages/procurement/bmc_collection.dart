@@ -5,12 +5,27 @@ import 'package:kanha_bmc/common/custom_app_bar.dart';
 import 'package:kanha_bmc/controller/masters/rate_check_controller.dart';
 import 'package:kanha_bmc/controller/procurement/bmc_controller.dart';
 
-class BMCCollectionScreen extends StatelessWidget {
-final controller = Get.put(BMCCollectionController());
-  final controller2 = Get.put(RateCheckMasterController());
-  final _formKey = GlobalKey<FormState>(); // Global key for form validation
+class BMCCollectionScreen extends StatefulWidget {
+
   BMCCollectionScreen({super.key});
 
+  @override
+  State<BMCCollectionScreen> createState() => _BMCCollectionScreenState();
+}
+
+class _BMCCollectionScreenState extends State<BMCCollectionScreen> {
+final controller = Get.put(BMCCollectionController());
+
+  final controller2 = Get.put(RateCheckMasterController());
+
+final TextEditingController qtyController = TextEditingController(); 
+ final TextEditingController mppCodeController = TextEditingController();
+ final TextEditingController mppNameController = TextEditingController();
+
+ 
+
+
+  final _formKey = GlobalKey<FormState>(); 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -25,6 +40,33 @@ final controller = Get.put(BMCCollectionController());
               final double padding = Get.width * 0.04;
            
               return Obx(() {
+
+
+    // Listen for changes in qty.value and update the text field
+    ever(controller.qty, (value) {
+      qtyController.text = value;
+      qtyController.selection = TextSelection.fromPosition(
+        TextPosition(offset: qtyController.text.length),
+      );
+    });
+
+
+  ever(controller.mppCode, (value) {
+      mppCodeController.text = value;
+      mppCodeController.selection = TextSelection.fromPosition(
+        TextPosition(offset: mppCodeController.text.length),
+      );
+    });
+    
+  ever(controller.mppName, (value) {
+      mppNameController.text = value;
+      mppNameController.selection = TextSelection.fromPosition(
+        TextPosition(offset: mppNameController.text.length),
+      );
+    });
+
+
+
                 // Update calculated values based on inputs
                 controller.rate.value = controller2.rtpl.value;
                 double rateValue = double.tryParse(controller.rate.value) ?? 0.0;
@@ -46,7 +88,6 @@ final controller = Get.put(BMCCollectionController());
       ),
     );
   }
-
 
   Widget _buildPortraitLayout(double padding) {
     return Column(
@@ -134,27 +175,24 @@ Widget _buildLandscapeLayout(double padding) {
              Expanded(
           child:
 
-SizedBox(
- height: 50, // Adjust height as needed
-  child: TextFormField(
-    keyboardType: TextInputType.number,
-    decoration: InputDecoration(
-      labelText: 'Society Code',
-      border: OutlineInputBorder(),
-      contentPadding: EdgeInsets.symmetric(vertical: 6, horizontal: 10), // Reduce padding
-    ),
-    style: TextStyle(fontSize: 14),
-    onChanged: (value) {
-      controller.mppCode.value = value;
-      controller.fetchMemberNameDetails(value);
-    },
-    validator: (value) => value!.isEmpty ? 'Please enter Society Code' : null,
+TextFormField(
+  keyboardType: TextInputType.number,
+  decoration: InputDecoration(
+    labelText: 'Society Code',
+    border: OutlineInputBorder(),
+    
   ),
+  style: TextStyle(fontSize: 14),
+  onChanged: (value) {
+    controller.mppCode.value = value;
+    controller.fetchMemberNameDetails(value);
+  },
+  validator: (value) => value!.isEmpty ? 'Please enter Society Code' : null,
 ), ),
         
         SizedBox(width: padding),
         Expanded(
-          child: SizedBox( height: 50,
+       
             child: TextFormField(
                keyboardType: TextInputType.text,
               decoration: InputDecoration(
@@ -165,13 +203,12 @@ SizedBox(
                 controller.mppName.value = value;
                 controller.fetchOtherCodeByFirstName(value);
               },
-              controller:
-                  TextEditingController(text: controller.mppName.value),
+             controller:mppNameController,
               validator: (value) =>
                   value!.isEmpty ? 'Please enter Society Name' : null,
             ),
           ),
-        ),
+      
     
        SizedBox(width: padding),
     ],
@@ -243,12 +280,12 @@ SizedBox(
                            SizedBox(height: Get.width * 0.01),
                            
          Expanded(
-          child: SizedBox( height: 50,
+        
             child: TextFormField(
               decoration: InputDecoration(
                 labelText: 'QTY (L)',
                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(vertical: 6, horizontal: 10), // Reduce padding
+                  
               ),
               keyboardType: TextInputType.number,
               
@@ -256,20 +293,20 @@ SizedBox(
                 controller.qty.value = value;
                 controller.calculateAmountValue();
               },
-              controller: TextEditingController(text: controller.qty.value),
+              controller: qtyController,
               validator: (value) =>
                   value!.isEmpty ? 'Please enter Quantity' : null,
             ),
-          ),
+       
         ),
           SizedBox(width: padding),
         Expanded(
-          child: SizedBox( height: 50,
+        
             child: TextFormField(
               decoration: InputDecoration(
                 labelText: 'Fat',
                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(vertical: 6, horizontal: 10), // Reduce padding
+                  
               ),
               keyboardType: TextInputType.number,
               onChanged: (value) {
@@ -281,15 +318,15 @@ SizedBox(
               validator: (value) => value!.isEmpty ? 'Please enter Fat' : null,
             ),
           ),
-        ),
+    
         SizedBox(width: padding),
         Expanded(
-          child: SizedBox( height: 50,
-            child: TextFormField(
+          child:
+          TextFormField(
               decoration: InputDecoration(
                 labelText: 'SNF',
                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(vertical: 6, horizontal: 10), // Reduce padding
+                  
               ),
               keyboardType: TextInputType.number,
               onChanged: (value) {
@@ -301,7 +338,7 @@ SizedBox(
               validator: (value) => value!.isEmpty ? 'Please enter SNF' : null,
             ),
           ),
-        ),
+    
            
                          ],
                        ),
@@ -341,49 +378,47 @@ SizedBox(
   );
 }
 
-
-
   Widget _buildMemberDetailsRow(double padding) {
     return Row(
       children: [
         Expanded(
-          child: SizedBox( height: 50,
+   
             child: TextFormField( keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 labelText: 'Society Code',
                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(vertical: 6, horizontal: 10), // Reduce padding
+                  
               ),
               onChanged: (value) {
                 controller.mppCode.value = value;
                 controller.fetchMemberNameDetails(value);
               },
               
-              controller: TextEditingController(text: controller.mppCode.value),
+              controller: mppCodeController,
               validator: (value) =>
                   value!.isEmpty ? 'Please enter Society Code' : null,
             ),
           ),
-        ),
+       
         SizedBox(width: padding),
         Expanded(
-          child: SizedBox( height: 50,
+        
             child: TextFormField( keyboardType: TextInputType.text,
               decoration: InputDecoration(
                 labelText: 'Society Name',
                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(vertical: 6, horizontal: 10), // Reduce padding
+                  
               ),
               onChanged: (value) {
                 controller.mppName.value = value;
                 controller.fetchOtherCodeByFirstName(value);
               },
-              controller:
-                  TextEditingController(text: controller.mppName.value),
+              controller:mppNameController,
+                  
               validator: (value) =>
                   value!.isEmpty ? 'Please enter Society Name' : null,
             ),
-          ),
+        
         ),
       ],
     );
@@ -393,32 +428,32 @@ SizedBox(
     return Row(
       children: [
         Expanded(
-          child: SizedBox( height: 50,
+       
             child: TextFormField(
               decoration: InputDecoration(
                 labelText: 'QTY (L)',
                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(vertical: 6, horizontal: 10), // Reduce padding
+                  
               ),
               keyboardType: TextInputType.number,
               onChanged: (value) {
                 controller.qty.value = value;
                 controller.calculateAmountValue();
               },
-              controller: TextEditingController(text: controller.qty.value),
+              controller: qtyController,
               validator: (value) =>
                   value!.isEmpty ? 'Please enter Quantity' : null,
             ),
           ),
-        ),
+      
           SizedBox(width: padding),
         Expanded(
-          child: SizedBox( height: 50,
+        
             child: TextFormField(
               decoration: InputDecoration(
                 labelText: 'Fat',
                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(vertical: 6, horizontal: 10), // Reduce padding
+                  
               ),
               keyboardType: TextInputType.number,
               onChanged: (value) {
@@ -429,16 +464,16 @@ SizedBox(
               },
               validator: (value) => value!.isEmpty ? 'Please enter Fat' : null,
             ),
-          ),
+     
         ),
         SizedBox(width: padding),
         Expanded(
-          child: SizedBox( height: 50,
+       
             child: TextFormField(
               decoration: InputDecoration(
                 labelText: 'SNF',
                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(vertical: 6, horizontal: 10), // Reduce padding
+                  
               ),
               keyboardType: TextInputType.number,
               onChanged: (value) {
@@ -450,7 +485,7 @@ SizedBox(
               validator: (value) => value!.isEmpty ? 'Please enter SNF' : null,
             ),
           ),
-        ),
+      
       ],
     );
   }
@@ -526,38 +561,33 @@ SizedBox(
     return Row(
       children: [
         Expanded(
-          child: Obx(() => SizedBox( height: 30,
-            child: TextFormField(
-                  readOnly: true,
-                  decoration: InputDecoration(
-                    labelText: 'Rate',
-                     border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(vertical: 6, horizontal: 10), // Reduce padding
-                  ),
-                  controller: TextEditingController(text: controller.rate.value),
+          child: Obx(() => TextFormField(
+                readOnly: true,
+                decoration: InputDecoration(
+                  labelText: 'Rate',
+                   border: OutlineInputBorder(),
+          
                 ),
-          )),
+                controller: TextEditingController(text: controller.rate.value),
+              )),
         ),
         SizedBox(width: padding),
         Expanded(
-          child: Obx(() => SizedBox(
-           height: 30,
-            child: TextFormField(
-                  readOnly: true,
-                  decoration: InputDecoration(
-                    labelText: 'Amount',
-                     border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(vertical: 6, horizontal: 10), // Reduce padding
-                  ),
-                  controller:
-                      TextEditingController(text: controller.amountValue.value.toString()),
+          child: Obx(() => TextFormField(
+                readOnly: true,
+                decoration: InputDecoration(
+                  labelText: 'Amount',
+                   border: OutlineInputBorder(),
+                
                 ),
-          )),
+                controller:
+                    TextEditingController(text: controller.amountValue.value.toString()),
+              )),
         ),
       ],
     );
   }
- 
+
  Widget _buildButtons() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -604,8 +634,7 @@ SizedBox(
       ],
     );
   }
- 
- 
+
   Widget buildDataTable() {
     return Obx(() => SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -652,7 +681,7 @@ DataCell(Center(child: Text((double.tryParse(data["amount"].toString())?.toStrin
         );
       }),
     )));}
-  }
+}
 
 
 

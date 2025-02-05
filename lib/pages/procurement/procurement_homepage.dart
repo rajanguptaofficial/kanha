@@ -8,9 +8,14 @@ import '../../controller/procurement/procurement_homepage_controller.dart';
 import 'dock_collection.dart';
 import 'lab_fat_snf.dart';
 
-class ProcurementHomepageScreen extends StatelessWidget {
+class ProcurementHomepageScreen extends StatefulWidget {
   ProcurementHomepageScreen({super.key});
 
+  @override
+  State<ProcurementHomepageScreen> createState() => _ProcurementHomepageScreenState();
+}
+
+class _ProcurementHomepageScreenState extends State<ProcurementHomepageScreen> {
   // Instance of GetX controller
   final ProcurementHomepageController controller =
       Get.put(ProcurementHomepageController());

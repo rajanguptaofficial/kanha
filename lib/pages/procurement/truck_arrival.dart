@@ -1,15 +1,26 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:kanha_bmc/common/colors.dart';
 import 'package:kanha_bmc/common/custom_app_bar.dart';
 import 'package:kanha_bmc/controller/procurement/truck_arrival_controller.dart';
 
-class TruckArrivalFormScreen extends StatelessWidget {
+class TruckArrivalFormScreen extends StatefulWidget {
+
+  const TruckArrivalFormScreen({super.key});
+
+  @override
+  State<TruckArrivalFormScreen> createState() => _TruckArrivalFormScreenState();
+}
+
+
+class _TruckArrivalFormScreenState extends State<TruckArrivalFormScreen> {
   final TruckArrivalController controller = Get.put(TruckArrivalController());
 
-  final _formKey = GlobalKey<FormState>(); // Global key for form validation
-  TruckArrivalFormScreen({super.key});
+  final _formKey = GlobalKey<FormState>(); 
+ 
+ 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -40,6 +51,7 @@ class TruckArrivalFormScreen extends StatelessWidget {
       ),
     );
   }
+
  // First Form Widget
   Widget buildFirstForm() {
     return Column(
@@ -68,33 +80,66 @@ class TruckArrivalFormScreen extends StatelessWidget {
         
         
         
-        SizedBox(height: Get.height * 0.02),
-         Obx(() => TextFormField(
-                 readOnly: true,
-                 decoration: InputDecoration(
-                   labelText: 'Date',
-                    border: OutlineInputBorder(),
-                 //contentPadding: EdgeInsets.symmetric(vertical: 6, horizontal: 10), // Reduce padding
-                 ),
-                 controller:
-                     TextEditingController(text: controller.currentDate.value.toString()),
-                        validator: (value) => value!.isEmpty ? 'Please enter Date' : null,
-               )),
-      
-        SizedBox(height: Get.height * 0.02),
+        //SizedBox(height: Get.height * 0.02),
+        //  Obx(() => TextFormField(
+        //          readOnly: true,
+        //          decoration: InputDecoration(
+        //            labelText: 'Date',
+        //             border: OutlineInputBorder(),
+               
+        //          ),
+        //          controller:
+        //              TextEditingController(text: controller.currentDate.value.toString()),
+        //                 validator: (value) => value!.isEmpty ? 'Please enter Date' : null,
+        //        )),
+       SizedBox(height: Get.height * 0.02),
+Obx(() => TextFormField(
+          readOnly: true,
+          controller: TextEditingController(
+            text: DateFormat('yyyy-MM-dd').format(controller.selectedDate.value),
+          ),
+          decoration: InputDecoration(
+            labelText: 'Select Date',
+            border: OutlineInputBorder(),
+            suffixIcon: IconButton(
+              icon: Icon(Icons.calendar_today),
+              onPressed: () => controller.pickDate(context),
+            ),
+          ),
+          validator: (value) => value!.isEmpty ? 'Please select a date' : null,
+        )),
+
+
+       // SizedBox(height: Get.height * 0.02),
        
-           Obx(() => TextFormField(
-                 readOnly: true,
-                 decoration: InputDecoration(
-                   labelText: 'Shift',
-                    border: OutlineInputBorder(),
-                 //contentPadding: EdgeInsets.symmetric(vertical: 6, horizontal: 10), // Reduce padding
-                 ),
-                       validator: (value) => value!.isEmpty ? 'Please enter Shift' : null,
-                 controller:
-                     TextEditingController(text: controller.timeShift.value.toString()),
-               )),
+          //  Obx(() => TextFormField(
+          //        readOnly: true,
+          //        decoration: InputDecoration(
+          //          labelText: 'Shift',
+          //           border: OutlineInputBorder(),
+               
+          //        ),
+          //              validator: (value) => value!.isEmpty ? 'Please enter Shift' : null,
+          //        controller:
+          //            TextEditingController(text: controller.currentShift.value.toString()),
+          //      )),
         SizedBox(height: Get.height * 0.02),
+      
+        Obx(
+      () => TextFormField(
+        readOnly: true,
+        controller: TextEditingController(text: controller.timeShift.value),
+        decoration: InputDecoration(
+          labelText: 'Shift',
+          border: OutlineInputBorder(),
+          suffixIcon: Icon(Icons.arrow_drop_down),
+        ),
+        onTap: () => controller.selectShift(context),
+        validator: (value) => value!.isEmpty ? 'Please select a shift' : null,
+      ),
+    ),
+
+ SizedBox(height: Get.height * 0.02),
 
  ElevatedButton(
           style: ElevatedButton.styleFrom(
@@ -149,18 +194,36 @@ if (_formKey.currentState!.validate()) {
         
          SizedBox(height: Get.height * 0.02),
       
-         Obx(() => TextFormField(
-                 readOnly: true,
-                 decoration: InputDecoration(
-                    labelText: 'Arrival Time',
-                    border: OutlineInputBorder(),
-                 //contentPadding: EdgeInsets.symmetric(vertical: 6, horizontal: 10), // Reduce padding
-                 ),
-                    validator: (value) => value!.isEmpty ? 'Please enter Arrival Time' : null,
-                 controller:
-                     TextEditingController(text: controller.currentTime.value.toString()),
-               )),
+        //  Obx(() => TextFormField(
+        //          readOnly: true,
+        //          decoration: InputDecoration(
+        //             labelText: 'Arrival Time',
+        //             border: OutlineInputBorder(),
+               
+        //          ),
+        //             validator: (value) => value!.isEmpty ? 'Please enter Arrival Time' : null,
+        //          controller:
+        //              TextEditingController(text: controller.currentTime.value.toString()),
+        //        )),
       
+
+ Obx(() => TextFormField(
+          readOnly: true,
+          controller:   TextEditingController(text: controller.currentTime.value.toString()),
+          decoration: InputDecoration(
+            labelText: 'Time',
+            border: OutlineInputBorder(),
+            suffixIcon: IconButton(
+              icon: Icon(Icons.access_time),
+              onPressed: () => controller.selectTime(context),
+            ),
+          ),
+          validator: (value) => value!.isEmpty ? 'Please select a time' : null,
+        )),
+  
+
+
+
         SizedBox(height: Get.height * 0.02),
         TextField(
           decoration: const InputDecoration(labelText: 'Enter Truck No.'),
@@ -174,8 +237,6 @@ if (_formKey.currentState!.validate()) {
        ],
     );
   }
-
-
 
   Widget _buildPortraitLayout(double padding) {
     return SingleChildScrollView(
@@ -194,7 +255,6 @@ if (_formKey.currentState!.validate()) {
     );
   
   }
-    
 
 Widget _buildLandscapeLayout(double padding) {
   return SingleChildScrollView(
@@ -263,7 +323,6 @@ Widget _buildLandscapeLayout(double padding) {
   );
 }
 
-
  Widget _buildButtons() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -292,8 +351,7 @@ Widget _buildLandscapeLayout(double padding) {
       ],
     );
   }
- 
- 
+
   Widget buildDataTable() {
     return Obx(() => SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -338,7 +396,7 @@ DataCell(Center(child: Text((data['arrivalTime'].toString())))),
         );
       }),
     )));}
-  }
+}
 
 
 

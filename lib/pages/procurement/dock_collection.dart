@@ -4,10 +4,16 @@ import 'package:kanha_bmc/common/colors.dart';
 import '../../common/custom_app_bar.dart';
 import '../../controller/procurement/dock_collection_controller.dart';
 
-class DockCollectionScreen extends StatelessWidget {
-  final controller = Get.put(DockCollectionController());
+class DockCollectionScreen extends StatefulWidget {
 
   DockCollectionScreen({super.key});
+
+  @override
+  State<DockCollectionScreen> createState() => _DockCollectionScreenState();
+}
+
+class _DockCollectionScreenState extends State<DockCollectionScreen> {
+  final controller = Get.put(DockCollectionController());
 
   @override
   Widget build(BuildContext context) {

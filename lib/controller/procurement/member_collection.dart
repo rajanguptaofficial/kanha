@@ -40,9 +40,6 @@ var amountValue = 0.0.obs; // Observable to hold the calculated amount value
       // Call afterSyncing to handle post-sync actions after both fetches complete
        initializeMemberCollData();
     });
-
-
-
   }
 
 Future<void> initializeMemberCollData() async {
@@ -226,12 +223,12 @@ void clearCollections() {
 Future<void> saveEntry() async {
   milkType.value = await controller2.updateSelectedMilkType(milkType.value);
 
-    DateTime now = await DateTime.now();
-    int currentHour = now.hour;
-    timeShift.value = currentHour < 12 ? 'Morning' : 'Evening';
+//     DateTime now = await DateTime.now();
+//     int currentHour = now.hour;
+//     timeShift.value = currentHour < 12 ? 'Morning' : 'Evening';
 
-currentDate.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
-currentTime.value=   DateFormat('HH:mm:ss').format(DateTime.now());
+// currentDate.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
+// currentTime.value=   DateFormat('HH:mm:ss').format(DateTime.now());
 
   final entry = {
     'farmer_collection_main_id' : "",   
