@@ -174,8 +174,17 @@ TextFormField(
     decoration: InputDecoration(
       labelText: 'Member Code',
       border: OutlineInputBorder(),
-     
+      labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
     ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),// Default border
+    ),
+  
+
+
     style: TextStyle(fontSize: 14),
     onChanged: (value) {
       controller.membercode.value = value;
@@ -191,7 +200,15 @@ TextFormField(
              keyboardType: TextInputType.text,
             decoration: InputDecoration(
               labelText: 'Member Name',
-              border: OutlineInputBorder(),
+              border: OutlineInputBorder(),  
+                labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),// Default border
+    
             ),
             onChanged: (value) {
               controller.memberName.value = value;
@@ -207,7 +224,7 @@ TextFormField(
     ],
          ),
          
-                                
+                       SizedBox(height: Get.width * 0.01),                
                         Row(
         children: [
            Padding(
@@ -215,301 +232,22 @@ TextFormField(
              child: Text("Milk Type :", style: TextStyle(fontWeight: FontWeight.bold),         ),
            ),
           SizedBox(width: padding),
-          Expanded(
+       Expanded(
             child: Obx(() => DropdownButtonFormField<String>(
                   value: controller2.selectedMilkType.value.isEmpty
                       ? null
                       : controller2.selectedMilkType.value,
-                  hint: Text('Select Milk Type'),
-                  isExpanded: true,
-                  items: [
-                    DropdownMenuItem(
-                      value: 'Cow',
-                      child: Row(
-                        children: [
-                          Image.asset("assets/icons/cow.png", width: 24, height: 24),
-                          SizedBox(width: 8),
-                          Text('Cow'),
-                        ],
-                      ),
-                    ),
-                    DropdownMenuItem(
-                      value: 'Buff',
-                      child: Row(
-                        children: [
-                          Image.asset("assets/icons/buff.png", width: 24, height: 24),
-                          SizedBox(width: 8),
-                          Text('Buff'),
-                        ],
-                      ),
-                    ),
-                    DropdownMenuItem(
-                      value: 'Mixed',
-                      child: Row(
-                        children: [
-                          Image.asset("assets/icons/mix.png", width: 24, height: 24),
-                          SizedBox(width: 8),
-                          Text('Mixed'),
-                        ],
-                      ),
-                    ),
-                  ],
-                  onChanged: (value) {
-                    controller2.selectedMilkType.value = value ?? '';
-                    controller2.filterData();
-                    controller.calculateAmountValue();
-                    controller.milkType.value = controller2.selectedMilkType.value;
-               
-                  },
-                  validator: (value) =>
-                      value == null || value.isEmpty ? 'Please select Milk Type' : null,
-                )),
-          ),
-        ],
-      ),
-                       SizedBox(height: Get.width * 0.01),    
-                       Row(
-                         children: [
-                           SizedBox(height: Get.width * 0.01),
-                           
-         Expanded(
-          child: TextFormField(
-            decoration: InputDecoration(
-              labelText: 'QTY (L)',
-               border: OutlineInputBorder(),
-               
-            ),
-            keyboardType: TextInputType.number,
-            
-            onChanged: (value) {
-              controller.qty.value = value;
-              controller.calculateAmountValue();
-            },
-            controller: qtyController,
-            validator: (value) =>
-                value!.isEmpty ? 'Please enter Quantity' : null,
-          ),
-        ),
-          SizedBox(width: padding),
-        Expanded(
-          child: TextFormField(
-            decoration: InputDecoration(
-              labelText: 'Fat',
-               border: OutlineInputBorder(),
-               
-            ),
-            keyboardType: TextInputType.number,
-            onChanged: (value) {
-              controller2.fat.value = value;
-              controller2.filterData();
-              controller.calculateAmountValue();
-              controller.fat.value = controller2.fat.value;
-            },
-            validator: (value) => value!.isEmpty ? 'Please enter Fat' : null,
-          ),
-        ),
-        SizedBox(width: padding),
-        Expanded(
-          child: TextFormField(
-            decoration: InputDecoration(
-              labelText: 'SNF',
-               border: OutlineInputBorder(),
-               
-            ),
-            keyboardType: TextInputType.number,
-            onChanged: (value) {
-              controller2.snf.value = value;
-              controller2.filterData();
-              controller.calculateAmountValue();
-              controller.snf.value = controller2.snf.value;
-            },
-            validator: (value) => value!.isEmpty ? 'Please enter SNF' : null,
-          ),
-        ),
-           
-                         ],
-                       ),
-                        SizedBox(height: Get.width * 0.01),   
-                        _buildRateAmountRow(padding),
-                        SizedBox(height: Get.width * 0.01),
-                        _buildButtons(),
-                        SizedBox(height: padding),
-                  ],
-                ),
-              ),
-            ),
-              Expanded(
-                child: Container(
-              // color:Colors.green,
-                 child: Padding(
-                   padding: const EdgeInsets.all(8.0),
-                   child: Column(
-                     children: [
-                       SingleChildScrollView(
-                         scrollDirection: Axis.horizontal,
-                         child: buildDataTable(),
-                       ),
-                     ],
-                   ),
-                 ),
-                             ),
-              ),
-          ],
-        ),
-    
-    
-        // Making Data Table more adaptable in Landscape
-       
-      ],
+                     decoration: const InputDecoration(
+                      labelText:'Milk Type',
+                      border: OutlineInputBorder(),
+    labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
     ),
-  );
-}
-
-  Widget _buildMemberDetailsRow(double padding) {
-    return Row(
-      children: [
-        Expanded(
-        
-            child: TextFormField( keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: 'Member Code',
-                 border: OutlineInputBorder(),
-                 
-              ),
-              onChanged: (value) {
-                controller.membercode.value = value;
-                controller.fetchMemberNameDetails(value);
-              },
-              
-              //controller: TextEditingController(text: controller.code.value),
-              validator: (value) =>
-                  value!.isEmpty ? 'Please enter Member Code' : null,
-            ),
-        
-        ),
-        SizedBox(width: padding),
-        Expanded(
-          child: TextFormField( keyboardType: TextInputType.text,
-            decoration: InputDecoration(
-              labelText: 'Member Name',
-               border: OutlineInputBorder(),
-               
-            ),
-            onChanged: (value) {
-              controller.memberName.value = value;
-              controller.fetchOtherCodeByFirstName(value);
-            },
-            controller:memberController,                
-            validator: (value) =>
-                value!.isEmpty ? 'Please enter Member Name' : null,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildFatSnfRow(double padding) {
-    return Row(
-      children: [
-
-Expanded(
-  child: TextFormField(
-              controller: qtyController,
-              decoration: InputDecoration(
-                labelText: 'QTY (L)',
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(vertical: 6, horizontal: 10),
-              ),
-              keyboardType: TextInputType.number,
-              onChanged: (value) {
-                controller.qty.value = value;
-                controller.calculateAmountValue();
-              },
-              validator: (value) => value!.isEmpty ? 'Please enter Quantity' : null,
-            ),
-),
-
-
-
-        // Expanded(
-        //   child: SizedBox( height: 50,
-        //     child: TextFormField(
-        //       decoration: InputDecoration(
-        //         labelText: 'QTY (L)',
-        //          border: OutlineInputBorder(),
-        //          
-        //       ),
-        //       keyboardType: TextInputType.number,
-        //       onChanged: (value) {
-        //         controller.qty.value = value;
-        //         controller.calculateAmountValue();
-        //       },
-        //       controller: qtyController,
-        //       validator: (value) =>
-        //           value!.isEmpty ? 'Please enter Quantity' : null,
-        //     ),
-        //   ),
-        // ),
-         
-         
-         
-          SizedBox(width: padding),
-        Expanded(
-          child: TextFormField(
-            decoration: InputDecoration(
-              labelText: 'Fat',
-               border: OutlineInputBorder(),
-               
-            ),
-            keyboardType: TextInputType.number,
-            onChanged: (value) {
-              controller2.fat.value = value;
-              controller2.filterData();
-              controller.calculateAmountValue();
-              controller.fat.value = controller2.fat.value;
-            },
-            validator: (value) => value!.isEmpty ? 'Please enter Fat' : null,
-          ),
-        ),
-        SizedBox(width: padding),
-        Expanded(
-          child: TextFormField(
-            decoration: InputDecoration(
-              labelText: 'SNF',
-               border: OutlineInputBorder(),
-               
-            ),
-            keyboardType: TextInputType.number,
-            onChanged: (value) {
-              controller2.snf.value = value;
-              controller2.filterData();
-              controller.calculateAmountValue();
-              controller.snf.value = controller2.snf.value;
-            },
-            validator: (value) => value!.isEmpty ? 'Please enter SNF' : null,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildQtyMilkTypeRow(double padding) {
-    return Padding(
-      padding:  EdgeInsets.symmetric(horizontal: Get.width * 0.11),
-      child: 
-      Row(
-        children: [
-           Padding(
-                 padding:  EdgeInsets.symmetric(horizontal: Get.width * 0.061),
-             child: Text("Milk Type", style: TextStyle(fontWeight: FontWeight.bold),         ),
-           ),
-          SizedBox(width: padding),
-          Expanded(
-            child: Obx(() => DropdownButtonFormField<String>(
-                  value: controller2.selectedMilkType.value.isEmpty
-                      ? null
-                      : controller2.selectedMilkType.value,
-                  hint: Text('Select Milk Type'),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    )
+                    ),
                   isExpanded: true,
                   items: [
                     DropdownMenuItem(
@@ -555,7 +293,368 @@ Expanded(
                       value == null || value.isEmpty ? 'Please select Milk Type' : null,
                 )),
           ),
-        ],
+        
+
+
+   
+   ],
+      ),
+                       SizedBox(height: Get.width * 0.01),    
+                       Row(
+                         children: [
+                           SizedBox(height: Get.width * 0.01),
+                           
+         Expanded(
+          child: TextFormField(
+            decoration: InputDecoration(
+              labelText: 'QTY (L)',
+               border: OutlineInputBorder(),
+              labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),// Default border  
+            ),
+            keyboardType: TextInputType.number,
+            
+            onChanged: (value) {
+              controller.qty.value = value;
+              controller.calculateAmountValue();
+            },
+            controller: qtyController,
+            validator: (value) =>
+                value!.isEmpty ? 'Please enter Quantity' : null,
+          ),
+        ),
+          SizedBox(width: padding),
+        Expanded(
+          child: TextFormField(
+            decoration: InputDecoration(
+              labelText: 'Fat',
+               border: OutlineInputBorder(),
+                labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),// Default border
+            ),
+            keyboardType: TextInputType.number,
+            onChanged: (value) {
+              controller2.fat.value = value;
+              controller2.filterData();
+              controller.calculateAmountValue();
+              controller.fat.value = controller2.fat.value;
+            },
+            validator: (value) => value!.isEmpty ? 'Please enter Fat' : null,
+          ),
+        ),
+        SizedBox(width: padding),
+        Expanded(
+          child: TextFormField(
+            decoration: InputDecoration(
+              labelText: 'SNF',
+               border: OutlineInputBorder(),
+                labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),// Default border
+            ),
+            keyboardType: TextInputType.number,
+            onChanged: (value) {
+              controller2.snf.value = value;
+              controller2.filterData();
+              controller.calculateAmountValue();
+              controller.snf.value = controller2.snf.value;
+            },
+            validator: (value) => value!.isEmpty ? 'Please enter SNF' : null,
+          ),
+        ),
+           
+                         ],
+                       ),
+                        SizedBox(height: Get.width * 0.01),   
+                        _buildRateAmountRow(padding),
+                        SizedBox(height: Get.width * 0.01),
+                        _buildButtons(),
+                        SizedBox(height: Get.width * 0.01),    
+                         SingleChildScrollView(
+                         scrollDirection: Axis.horizontal,
+                         child: buildDataTable(),
+                       ),
+              //            Expanded(
+              //   child: Container(
+              // // color:Colors.green,
+              //    child: Padding(
+              //      padding: const EdgeInsets.all(8.0),
+              //      child: Column(
+              //        children: [
+              //          SingleChildScrollView(
+              //            scrollDirection: Axis.horizontal,
+              //            child: buildDataTable(),
+              //          ),
+              //        ],
+              //      ),
+              //    ),
+              //                ),
+              // ),
+          
+                  ],
+                ),
+              ),
+            ),
+             ],
+        ),
+    
+    
+        // Making Data Table more adaptable in Landscape
+       
+      ],
+    ),
+  );
+}
+
+  Widget _buildMemberDetailsRow(double padding) {
+    return Row(
+      children: [
+        Expanded(
+        
+            child: TextFormField( keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: 'Member Code',
+                 border: OutlineInputBorder(),
+                  labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),// Default border
+              ),
+              onChanged: (value) {
+                controller.membercode.value = value;
+                controller.fetchMemberNameDetails(value);
+              },
+              
+              //controller: TextEditingController(text: controller.code.value),
+              validator: (value) =>
+                  value!.isEmpty ? 'Please enter Member Code' : null,
+            ),
+        
+        ),
+        SizedBox(width: padding),
+        Expanded(
+          child: TextFormField( keyboardType: TextInputType.text,
+            decoration: InputDecoration(
+              labelText: 'Member Name',
+               border: OutlineInputBorder(),
+                labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),// Default border
+            ),
+            onChanged: (value) {
+              controller.memberName.value = value;
+              controller.fetchOtherCodeByFirstName(value);
+            },
+            controller:memberController,                
+            validator: (value) =>
+                value!.isEmpty ? 'Please enter Member Name' : null,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFatSnfRow(double padding) {
+    return Row(
+      children: [
+
+Expanded(
+  child: TextFormField(
+              controller: qtyController,
+              decoration: InputDecoration(
+                labelText: 'QTY (L)',
+                border: OutlineInputBorder(),
+                contentPadding: EdgeInsets.symmetric(vertical: 6, horizontal: 10),
+                 labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),// Default border
+              ),
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                controller.qty.value = value;
+                controller.calculateAmountValue();
+              },
+              validator: (value) => value!.isEmpty ? 'Please enter Quantity' : null,
+            ),
+),
+
+
+
+        // Expanded(
+        //   child: SizedBox( height: 50,
+        //     child: TextFormField(
+        //       decoration: InputDecoration(
+        //         labelText: 'QTY (L)',
+        //          border: OutlineInputBorder(),
+        //          
+        //       ),
+        //       keyboardType: TextInputType.number,
+        //       onChanged: (value) {
+        //         controller.qty.value = value;
+        //         controller.calculateAmountValue();
+        //       },
+        //       controller: qtyController,
+        //       validator: (value) =>
+        //           value!.isEmpty ? 'Please enter Quantity' : null,
+        //     ),
+        //   ),
+        // ),
+         
+         
+         
+          SizedBox(width: padding),
+        Expanded(
+          child: TextFormField(
+            decoration: InputDecoration(
+              labelText: 'Fat',
+               border: OutlineInputBorder(),
+                labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),// Default border
+            ),
+            keyboardType: TextInputType.number,
+            onChanged: (value) {
+              controller2.fat.value = value;
+              controller2.filterData();
+              controller.calculateAmountValue();
+              controller.fat.value = controller2.fat.value;
+            },
+            validator: (value) => value!.isEmpty ? 'Please enter Fat' : null,
+          ),
+        ),
+        SizedBox(width: padding),
+        Expanded(
+          child: TextFormField(
+            decoration: InputDecoration(
+              labelText: 'SNF',
+               border: OutlineInputBorder(),
+                labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),// Default border
+            ),
+            keyboardType: TextInputType.number,
+            onChanged: (value) {
+              controller2.snf.value = value;
+              controller2.filterData();
+              controller.calculateAmountValue();
+              controller.snf.value = controller2.snf.value;
+            },
+            validator: (value) => value!.isEmpty ? 'Please enter SNF' : null,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildQtyMilkTypeRow(double padding) {
+    return Padding(
+      padding:  EdgeInsets.symmetric(horizontal: Get.width * 0.11),
+      child: 
+      Row(
+        children: [
+           Padding(
+                 padding:  EdgeInsets.symmetric(horizontal: Get.width * 0.061),
+             child: Text("Milk Type", style: TextStyle(fontWeight: FontWeight.bold),         ),
+           ),
+          SizedBox(width: padding),
+        Expanded(
+            child: Obx(() => DropdownButtonFormField<String>(
+                  value: controller2.selectedMilkType.value.isEmpty
+                      ? null
+                      : controller2.selectedMilkType.value,
+                     decoration: const InputDecoration(
+                      labelText:'Milk Type',
+                      border: OutlineInputBorder(),
+    labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    )
+                    ),
+                  isExpanded: true,
+                  items: [
+                    DropdownMenuItem(
+                      value: 'Cow',
+                      child: Row(
+                        children: [
+                          Image.asset("assets/icons/cow.png", width: 24, height: 24),
+                          SizedBox(width: 8),
+                          Text('Cow'),
+                        ],
+                      ),
+                    ),
+                    
+                    DropdownMenuItem(
+                      value: 'Buff',
+                      child: Row(
+                        children: [
+                          Image.asset("assets/icons/buff.png", width: 24, height: 24),
+                          SizedBox(width: 8),
+                          Text('Buff'),
+                        ],
+                      ),
+                    ),
+                    DropdownMenuItem(
+                      value: 'Mixed',
+                      child: Row(
+                        children: [
+                          Image.asset("assets/icons/mix.png", width: 24, height: 24),
+                          SizedBox(width: 8),
+                          Text('Mixed'),
+                        ],
+                      ),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    controller2.selectedMilkType.value = value ?? '';
+                    controller2.filterData();
+                    controller.calculateAmountValue();
+                    controller.milkType.value = controller2.selectedMilkType.value;
+               
+                  },
+                  validator: (value) =>
+                      value == null || value.isEmpty ? 'Please select Milk Type' : null,
+                )),
+          ),
+        
+
+
+   ],
       ),
     );
   }
@@ -569,7 +668,13 @@ Expanded(
                 decoration: InputDecoration(
                   labelText: 'Rate',
                    border: OutlineInputBorder(),
-              // 
+             labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),// Default border
                 ),
                 controller: TextEditingController(text: controller.rate.value),
               )),
@@ -581,7 +686,13 @@ Expanded(
                 decoration: InputDecoration(
                   labelText: 'Amount',
                    border: OutlineInputBorder(),
-               //
+              labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),// Default border
                 ),
                 controller:
                     TextEditingController(text: controller.amountValue.value.toString()),
@@ -644,46 +755,49 @@ Expanded(
           child:
 
 
- DataTable(
-      headingRowColor:
-          WidgetStateProperty.all(CustomColors.appColor),
-      headingTextStyle: const TextStyle(
-          color: Colors.white, fontWeight: FontWeight.bold),
-      columnSpacing: 12,
-      dataRowMinHeight: 20,
-      dataRowMaxHeight: 40,
-      headingRowHeight: 33,
-      columns: const [
-
-                     DataColumn(label: Text('S. No.')),
-    DataColumn(label: Text('Code')),
-    DataColumn(label: Text('Qty')),
-    DataColumn(label: Text('Fat')),
-    DataColumn(label: Text('SNF')),
-    DataColumn(label: Text('Rate')),
-    DataColumn(label: Text('Amount')),
-
-      ],
-      rows: List.generate(controller.memberCollData.length, (index) {
-        final data = controller.memberCollData[index];
-        final isGrey = index % 2 == 0;
-        return DataRow(
-          color: WidgetStateProperty.all(isGrey ? Colors.white : Colors.grey[200]),
-          cells: [
-
-
- DataCell(Center(child: Text("${data["sample_no"]}"))),
-DataCell(Center(child: Text("${data['member_code']}"))),
-DataCell(Center(child: Text("${data['qty']}"))),
-DataCell(Center(child: Text("${data['fat']}"))),
-DataCell(Center(child: Text((double.tryParse(data['snf'].toString())?.toStringAsFixed(2)) ?? "0.00"))),
-DataCell(Center(child: Text((double.tryParse(data['rate'].toString())?.toStringAsFixed(2)) ?? "0.00"))),
-DataCell(Center(child: Text((double.tryParse(data["amount"].toString())?.toStringAsFixed(2)) ?? "0.00"))),
-    
-          ],
-        );
-      }),
-    )));}
+ SizedBox(
+  width: Get.width,
+   child: DataTable(
+        headingRowColor:
+            WidgetStateProperty.all(CustomColors.appColor),
+        headingTextStyle: const TextStyle(
+            color: Colors.white, fontWeight: FontWeight.bold),
+        columnSpacing: 12,
+        dataRowMinHeight: 20,
+        dataRowMaxHeight: 40,
+        headingRowHeight: 33,
+        columns: const [
+   
+     DataColumn(label: Text('S. No.')),
+      DataColumn(label: Text('Code')),
+      DataColumn(label: Text('Qty')),
+      DataColumn(label: Text('Fat')),
+      DataColumn(label: Text('SNF')),
+      DataColumn(label: Text('Rate')),
+      DataColumn(label: Text('Amount')),
+   
+        ],
+        rows: List.generate(controller.memberCollData.length, (index) {
+          final data = controller.memberCollData[index];
+          final isGrey = index % 2 == 0;
+          return DataRow(
+            color: WidgetStateProperty.all(isGrey ? Colors.white : Colors.grey[200]),
+            cells: [
+   
+   
+   DataCell(Center(child: Text("${data["sample_no"]}"))),
+   DataCell(Center(child: Text("${data['member_code']}"))),
+   DataCell(Center(child: Text("${data['qty']}"))),
+   DataCell(Center(child: Text("${data['fat']}"))),
+   DataCell(Center(child: Text((double.tryParse(data['snf'].toString())?.toStringAsFixed(2)) ?? "0.00"))),
+   DataCell(Center(child: Text((double.tryParse(data['rate'].toString())?.toStringAsFixed(2)) ?? "0.00"))),
+   DataCell(Center(child: Text((double.tryParse(data["amount"].toString())?.toStringAsFixed(2)) ?? "0.00"))),
+      
+            ],
+          );
+        }),
+      ),
+ )));}
 }
 
 

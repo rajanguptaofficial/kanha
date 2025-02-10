@@ -253,7 +253,7 @@ void clearCollections() {
 
 Future<void> saveEntry() async {
   milkType.value = await controller2.updateSelectedMilkType(milkType.value);
-
+  
 //     DateTime now = await DateTime.now();
 //     int currentHour = now.hour;
 //     timeShift.value = currentHour < 12 ? 'Morning' : 'Evening';

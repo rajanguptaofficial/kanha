@@ -62,10 +62,23 @@ class DashboardScreen extends StatelessWidget {
                                 //     ? controller.selectedDate.value
                                 //     : "Select Date",
                               ),
+                              
                               decoration: const InputDecoration(
                                 labelText: "Select Date",
                                 border: OutlineInputBorder(),
                                 suffixIcon: Icon(Icons.calendar_month),
+
+    labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),
+  
+
+
+
                               ),
                               onTap: () async {
                                 DateTime? pickedDate = await showDatePicker(
@@ -91,6 +104,13 @@ class DashboardScreen extends StatelessWidget {
                               decoration: const InputDecoration(
                                 labelText: "Select Time",
                                 border: OutlineInputBorder(),
+    labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    )
                               ),
                               value: controller.selectedTime.value,
                               items: ["Morning", "Evening"]

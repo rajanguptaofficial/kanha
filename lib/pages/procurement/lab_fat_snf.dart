@@ -51,11 +51,22 @@ class _LabFatSnfFormScreenState extends State<LabFatSnfFormScreen> {
                         value: dock,
                         child: Text(dock),
                       ))
-                  .toList(),
+                  .toList(),   
+                   decoration: const InputDecoration(
+                      labelText:'Select Dock Type',
+                      border: OutlineInputBorder(),
+    labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    )
+                    ),
               onChanged: (value) {
                 controller.selectedDock.value = value!;
               },
-              decoration: const InputDecoration(labelText: 'Select Dock'),
+              //decoration: const InputDecoration(labelText: 'Select '),
             ),
             SizedBox(height: height * 0.02),
             TextField(
@@ -91,7 +102,17 @@ class _LabFatSnfFormScreenState extends State<LabFatSnfFormScreen> {
               onChanged: (value) {
                 controller.selectedShift.value = value!;
               },
-              decoration: const InputDecoration(labelText: 'Select Shift'),
+           decoration: const InputDecoration(
+                      labelText:'Select Dock Type',
+                      border: OutlineInputBorder(),
+    labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    )
+                    ),
             ),
             SizedBox(height: height * 0.04),
             ElevatedButton(
@@ -148,7 +169,13 @@ SizedBox(
               decoration: InputDecoration(
                 labelText: "User",
                 fillColor: Colors.white,
-                filled: true,
+                filled: true, labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),
                // prefixIcon: const Icon(Icons.person),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
@@ -162,7 +189,13 @@ SizedBox(
            //controller: userNameController,
               decoration: InputDecoration(
                 labelText: "User",
-                fillColor: Colors.white,
+                fillColor: Colors.white, labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),
                 filled: true,
                // prefixIcon: const Icon(Icons.person),
                 border: OutlineInputBorder(
@@ -175,7 +208,13 @@ SizedBox(
            //   controller: userNameController,
               decoration: InputDecoration(
                 labelText: "User",
-                fillColor: Colors.white,
+                fillColor: Colors.white, labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),
                 filled: true,
                // prefixIcon: const Icon(Icons.person),
                 border: OutlineInputBorder(
@@ -212,7 +251,13 @@ SizedBox(
            //   controller: userNameController,
               decoration: InputDecoration(
                 labelText: "User",
-                fillColor: Colors.white,
+                fillColor: Colors.white, labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),
                 filled: true,
                // prefixIcon: const Icon(Icons.person),
                 border: OutlineInputBorder(
@@ -227,7 +272,13 @@ SizedBox(
            //controller: userNameController,
               decoration: InputDecoration(
                 labelText: "User",
-                fillColor: Colors.white,
+                fillColor: Colors.white, labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),
                 filled: true,
                // prefixIcon: const Icon(Icons.person),
                 border: OutlineInputBorder(
@@ -240,7 +291,13 @@ SizedBox(
            //   controller: userNameController,
               decoration: InputDecoration(
                 labelText: "User",
-                fillColor: Colors.white,
+                fillColor: Colors.white, labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),
                 filled: true,
                // prefixIcon: const Icon(Icons.person),
                 border: OutlineInputBorder(

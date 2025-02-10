@@ -61,11 +61,22 @@ class _TruckArrivalFormScreenState extends State<TruckArrivalFormScreen> {
           value: controller.dockCollData.contains(controller.selectedDockNo.value)
         ? controller.selectedDockNo.value
         : null, // Ensure value is in the list
-          decoration: const InputDecoration(labelText: 'Select Dock'),
-          hint: const Text("Select Dock No"),
+          // decoration: const InputDecoration(labelText: 'Select Dock'),
+          // hint: const Text("Select Dock No"),
+          decoration: const InputDecoration(
+                      labelText:'Select Dock No',
+                      border: OutlineInputBorder(),
+    labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    )
+                    ),
           onChanged: (newValue) {
             if (newValue != null) {
-        controller.selectedDockNo.value = newValue;
+         controller.selectedDockNo.value = newValue;
             }
           },
           items: controller.dockCollData.map<DropdownMenuItem<String>>((dockNo) {
@@ -101,6 +112,12 @@ Obx(() => TextFormField(
           decoration: InputDecoration(
             labelText: 'Select Date',
             border: OutlineInputBorder(),
+    labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), ),
             suffixIcon: IconButton(
               icon: Icon(Icons.calendar_today),
               onPressed: () => controller.pickDate(context),
@@ -131,9 +148,15 @@ Obx(() => TextFormField(
         controller: TextEditingController(text: controller.timeShift.value),
         decoration: InputDecoration(
           labelText: 'Shift',
-          border: OutlineInputBorder(),
-          suffixIcon: Icon(Icons.arrow_drop_down),
-        ),
+    border: OutlineInputBorder(),
+    labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    )
+                    ),
         onTap: () => controller.selectShift(context),
         validator: (value) => value!.isEmpty ? 'Please select a shift' : null,
       ),
@@ -174,14 +197,24 @@ if (_formKey.currentState!.validate()) {
     value: controller.routeData.contains(controller.selectedRoute.value)
         ? controller.selectedRoute.value
         : null, // Set to null if not found in list
-    decoration: const InputDecoration(labelText: 'Select Route'),
-    hint: const Text("Select Route"),
+   
+    //hint: const Text("Select Route"),
     onChanged: (newValue) {
       if (newValue != null) {
        controller.selectedRoute.value = newValue;
        controller.fetchCompnyCodeByRuteCodeName(controller.selectedRoute.value);
       }
-    },
+    },  decoration: const InputDecoration(
+                      labelText:'Select Route ',
+                      border: OutlineInputBorder(),
+    labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    )
+                    ),
     validator: (value) =>
                       value == null || value.isEmpty ? 'Please select Route Type' : null,
     items: controller.routeData.toSet().map<DropdownMenuItem<String>>((route) { 
@@ -291,27 +324,30 @@ Widget _buildLandscapeLayout(double padding) {
                     
                         SizedBox(height: Get.width * 0.01),
                        // _buildButtons(),
-                        SizedBox(height: padding),
-                  ],
-                ),
-              ),
-            ),
-              Expanded(
-                child: Container(
-              // color:Colors.green,
-                 child: Padding(
-                   padding: const EdgeInsets.all(8.0),
-                   child: Column(
-                     children: [
                        SingleChildScrollView(
                          scrollDirection: Axis.horizontal,
                          child: buildDataTable(),
                        ),
-                     ],
-                   ),
-                 ),
-                             ),
+                  ],
+                ),
               ),
+            ),
+              // Expanded(
+              //   child: Container(
+              // // color:Colors.green,
+              //    child: Padding(
+              //      padding: const EdgeInsets.all(8.0),
+              //      child: Column(
+              //        children: [
+              //          SingleChildScrollView(
+              //            scrollDirection: Axis.horizontal,
+              //            child: buildDataTable(),
+              //          ),
+              //        ],
+              //      ),
+              //    ),
+              //                ),
+              // ),
           ],
         ),
     
@@ -358,44 +394,46 @@ Widget _buildLandscapeLayout(double padding) {
           child:
 
 
- DataTable(
-      headingRowColor:
-          WidgetStateProperty.all(CustomColors.appColor),
-      headingTextStyle: const TextStyle(
-          color: Colors.white, fontWeight: FontWeight.bold),
-      columnSpacing: 12,
-      dataRowMinHeight: 20,
-      dataRowMaxHeight: 40,
-      headingRowHeight: 33,
-      columns: const [
-
-    DataColumn(label: Text('S. No.')),
-    DataColumn(label: Text('Date')),
-    DataColumn(label: Text('Shift')),
-    DataColumn(label: Text('Truck No')),
-    DataColumn(label: Text('Arrival Time')),
-
-
-      ],
-      rows: List.generate(controller.truckArrivalDBData.length, (index) {
-        final data = controller.truckArrivalDBData[index];
-        final isGrey = index % 2 == 0;
-        return DataRow(
-          color: WidgetStateProperty.all(isGrey ? Colors.white : Colors.grey[200]),
-          cells: [
-
-
- DataCell(Center(child: Text("${data["sampleId"]}"))),
-DataCell(Center(child: Text("${data['dumpDate']}"))),
-DataCell(Center(child: Text("${data['shift']}"))),
-DataCell(Center(child: Text("${data['truckNo']}"))),
-DataCell(Center(child: Text((data['arrivalTime'].toString())))),
-
-    
-          ],
-        );
-      }),
-    )));}
+ SizedBox( width: Get.width,
+   child: DataTable(
+        headingRowColor:
+            WidgetStateProperty.all(CustomColors.appColor),
+        headingTextStyle: const TextStyle(
+            color: Colors.white, fontWeight: FontWeight.bold),
+        columnSpacing: 12,
+        dataRowMinHeight: 20,
+        dataRowMaxHeight: 40,
+        headingRowHeight: 33,
+        columns: const [
+   
+      DataColumn(label: Text('S. No.')),
+      DataColumn(label: Text('Date')),
+      DataColumn(label: Text('Shift')),
+      DataColumn(label: Text('Truck No')),
+      DataColumn(label: Text('Arrival Time')),
+   
+   
+        ],
+        rows: List.generate(controller.truckArrivalDBData.length, (index) {
+          final data = controller.truckArrivalDBData[index];
+          final isGrey = index % 2 == 0;
+          return DataRow(
+            color: WidgetStateProperty.all(isGrey ? Colors.white : Colors.grey[200]),
+            cells: [
+   
+   
+   DataCell(Center(child: Text("${data["sampleId"]}"))),
+   DataCell(Center(child: Text("${data['dumpDate']}"))),
+   DataCell(Center(child: Text("${data['shift']}"))),
+   DataCell(Center(child: Text("${data['truckNo']}"))),
+   DataCell(Center(child: Text((data['arrivalTime'].toString())))),
+   
+      
+            ],
+          );
+        }),
+      ),
+ )));}
 }
 
 

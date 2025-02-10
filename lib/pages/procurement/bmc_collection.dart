@@ -7,7 +7,7 @@ import 'package:kanha_bmc/controller/procurement/bmc_controller.dart';
 
 class BMCCollectionScreen extends StatefulWidget {
 
-  BMCCollectionScreen({super.key});
+  const BMCCollectionScreen({super.key});
 
   @override
   State<BMCCollectionScreen> createState() => _BMCCollectionScreenState();
@@ -118,8 +118,6 @@ final TextEditingController qtyController = TextEditingController();
 
         SizedBox(height: padding),
 
-       
-
         _buildRateAmountRow(padding),
 
         SizedBox(height: padding),
@@ -175,11 +173,17 @@ Widget _buildLandscapeLayout(double padding) {
              Expanded(
           child:
 
-TextFormField(
+        TextFormField(
   keyboardType: TextInputType.number,
   decoration: InputDecoration(
     labelText: 'Society Code',
-    border: OutlineInputBorder(),
+    border: OutlineInputBorder(), labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),
     
   ),
   style: TextStyle(fontSize: 14),
@@ -197,7 +201,13 @@ TextFormField(
                keyboardType: TextInputType.text,
               decoration: InputDecoration(
                 labelText: 'Society Name',
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(), labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),
               ),
               onChanged: (value) {
                 controller.mppName.value = value;
@@ -214,7 +224,7 @@ TextFormField(
     ],
          ),
          
-                                
+                 SizedBox(height: Get.width * 0.01),                      
                         Row(
         children: [
            Padding(
@@ -222,12 +232,22 @@ TextFormField(
              child: Text("Milk Type :", style: TextStyle(fontWeight: FontWeight.bold),         ),
            ),
           SizedBox(width: padding),
-          Expanded(
+  Expanded(
             child: Obx(() => DropdownButtonFormField<String>(
                   value: controller2.selectedMilkType.value.isEmpty
                       ? null
                       : controller2.selectedMilkType.value,
-                  hint: Text('Select Milk Type'),
+                     decoration: const InputDecoration(
+                      labelText:'Milk Type',
+                      border: OutlineInputBorder(),
+    labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    )
+                    ),
                   isExpanded: true,
                   items: [
                     DropdownMenuItem(
@@ -240,6 +260,7 @@ TextFormField(
                         ],
                       ),
                     ),
+                    
                     DropdownMenuItem(
                       value: 'Buff',
                       child: Row(
@@ -272,6 +293,74 @@ TextFormField(
                       value == null || value.isEmpty ? 'Please select Milk Type' : null,
                 )),
           ),
+        
+
+
+    //       Expanded(
+    //         child: Obx(() => DropdownButtonFormField<String>(
+    //               value: controller2.selectedMilkType.value.isEmpty
+    //                   ? null
+    //                   : controller2.selectedMilkType.value,
+    //                     decoration: const InputDecoration(
+    //                   hintText:' Milk Type',
+    //                   border: OutlineInputBorder(),
+    // labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    // enabledBorder: OutlineInputBorder(
+    //   borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    // ),
+    // focusedBorder: OutlineInputBorder(
+    //   borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    // )
+    //                 ),
+                 
+    //               isExpanded: true,
+    //               items: [
+    //                 DropdownMenuItem(
+    //                   value: 'Cow',
+    //                   child: Row(
+    //                     children: [
+    //                       Image.asset("assets/icons/cow.png", width: 24, height: 24),
+    //                       SizedBox(width: 8),
+    //                       Text('Cow'),
+    //                     ],
+    //                   ),
+    //                 ),
+    //                 DropdownMenuItem(
+    //                   value: 'Buff',
+    //                   child: Row(
+    //                     children: [
+    //                       Image.asset("assets/icons/buff.png", width: 24, height: 24),
+    //                       SizedBox(width: 8),
+    //                       Text('Buff'),
+    //                     ],
+    //                   ),
+    //                 ),
+    //                 DropdownMenuItem(
+    //                   value: 'Mixed',
+    //                   child: Row(
+    //                     children: [
+    //                       Image.asset("assets/icons/mix.png", width: 24, height: 24),
+    //                       SizedBox(width: 8),
+    //                       Text('Mixed'),
+    //                     ],
+    //                   ),
+    //                 ),
+    //               ],
+    //               onChanged: (value) {
+    //                 controller2.selectedMilkType.value = value ?? '';
+    //                 controller2.filterData();
+    //                 controller.calculateAmountValue();
+    //                 controller.milkType.value = controller2.selectedMilkType.value;
+               
+    //               },
+    //               validator: (value) =>
+    //                   value == null || value.isEmpty ? 'Please select Milk Type' : null,
+    //             )),
+    //       ),
+        
+        
+        
+        
         ],
       ),
                        SizedBox(height: Get.width * 0.01),    
@@ -284,7 +373,13 @@ TextFormField(
             child: TextFormField(
               decoration: InputDecoration(
                 labelText: 'QTY (L)',
-                 border: OutlineInputBorder(),
+                 border: OutlineInputBorder(), labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),
                   
               ),
               keyboardType: TextInputType.number,
@@ -305,7 +400,13 @@ TextFormField(
             child: TextFormField(
               decoration: InputDecoration(
                 labelText: 'Fat',
-                 border: OutlineInputBorder(),
+                 border: OutlineInputBorder(), labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),
                   
               ),
               keyboardType: TextInputType.number,
@@ -325,7 +426,13 @@ TextFormField(
           TextFormField(
               decoration: InputDecoration(
                 labelText: 'SNF',
-                 border: OutlineInputBorder(),
+                 border: OutlineInputBorder(), labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),
                   
               ),
               keyboardType: TextInputType.number,
@@ -346,27 +453,31 @@ TextFormField(
                         _buildRateAmountRow(padding),
                         SizedBox(height: Get.width * 0.01),
                         _buildButtons(),
-                        SizedBox(height: padding),
+                          SizedBox(height: Get.width * 0.01),    
+                         SingleChildScrollView(
+                         scrollDirection: Axis.horizontal,
+                         child: buildDataTable(),
+                       ),
                   ],
                 ),
               ),
             ),
-              Expanded(
-                child: Container(
-              // color:Colors.green,
-                 child: Padding(
-                   padding: const EdgeInsets.all(8.0),
-                   child: Column(
-                     children: [
-                       SingleChildScrollView(
-                         scrollDirection: Axis.horizontal,
-                         child: buildDataTable(),
-                       ),
-                     ],
-                   ),
-                 ),
-                             ),
-              ),
+              // Expanded(
+              //   child: Container(
+              // // color:Colors.green,
+              //    child: Padding(
+              //      padding: const EdgeInsets.all(8.0),
+              //      child: Column(
+              //        children: [
+              //          SingleChildScrollView(
+              //            scrollDirection: Axis.horizontal,
+              //            child: buildDataTable(),
+              //          ),
+              //        ],
+              //      ),
+              //    ),
+              //                ),
+              // ),
           ],
         ),
     
@@ -386,7 +497,13 @@ TextFormField(
             child: TextFormField( keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 labelText: 'Society Code',
-                 border: OutlineInputBorder(),
+                 border: OutlineInputBorder(), labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),
                   
               ),
               onChanged: (value) {
@@ -406,7 +523,13 @@ TextFormField(
             child: TextFormField( keyboardType: TextInputType.text,
               decoration: InputDecoration(
                 labelText: 'Society Name',
-                 border: OutlineInputBorder(),
+                 border: OutlineInputBorder(), labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),
                   
               ),
               onChanged: (value) {
@@ -432,7 +555,13 @@ TextFormField(
             child: TextFormField(
               decoration: InputDecoration(
                 labelText: 'QTY (L)',
-                 border: OutlineInputBorder(),
+                 border: OutlineInputBorder(), labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),
                   
               ),
               keyboardType: TextInputType.number,
@@ -452,7 +581,13 @@ TextFormField(
             child: TextFormField(
               decoration: InputDecoration(
                 labelText: 'Fat',
-                 border: OutlineInputBorder(),
+                 border: OutlineInputBorder(), labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),
                   
               ),
               keyboardType: TextInputType.number,
@@ -472,7 +607,13 @@ TextFormField(
             child: TextFormField(
               decoration: InputDecoration(
                 labelText: 'SNF',
-                 border: OutlineInputBorder(),
+                 border: OutlineInputBorder(), labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),
                   
               ),
               keyboardType: TextInputType.number,
@@ -506,7 +647,17 @@ TextFormField(
                   value: controller2.selectedMilkType.value.isEmpty
                       ? null
                       : controller2.selectedMilkType.value,
-                  hint: Text('Select Milk Type'),
+                     decoration: const InputDecoration(
+                      labelText:'Milk Type',
+                      border: OutlineInputBorder(),
+    labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    )
+                    ),
                   isExpanded: true,
                   items: [
                     DropdownMenuItem(
@@ -565,7 +716,13 @@ TextFormField(
                 readOnly: true,
                 decoration: InputDecoration(
                   labelText: 'Rate',
-                   border: OutlineInputBorder(),
+                   border: OutlineInputBorder(), labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),
           
                 ),
                 controller: TextEditingController(text: controller.rate.value),
@@ -577,7 +734,13 @@ TextFormField(
                 readOnly: true,
                 decoration: InputDecoration(
                   labelText: 'Amount',
-                   border: OutlineInputBorder(),
+                   border: OutlineInputBorder(), labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),
                 
                 ),
                 controller:
@@ -641,46 +804,48 @@ TextFormField(
           child:
 
 
- DataTable(
-      headingRowColor:
-          WidgetStateProperty.all(CustomColors.appColor),
-      headingTextStyle: const TextStyle(
-          color: Colors.white, fontWeight: FontWeight.bold),
-      columnSpacing: 12,
-      dataRowMinHeight: 20,
-      dataRowMaxHeight: 40,
-      headingRowHeight: 33,
-      columns: const [
-
-                     DataColumn(label: Text('S. No.')),
-    DataColumn(label: Text('Code')),
-    DataColumn(label: Text('Qty')),
-    DataColumn(label: Text('Fat')),
-    DataColumn(label: Text('SNF')),
-    DataColumn(label: Text('Rate')),
-    DataColumn(label: Text('Amount')),
-
-      ],
-      rows: List.generate(controller.mppCollData.length, (index) {
-        final data = controller.mppCollData[index];
-        final isGrey = index % 2 == 0;
-        return DataRow(
-          color: WidgetStateProperty.all(isGrey ? Colors.white : Colors.grey[200]),
-          cells: [
-
-
- DataCell(Center(child: Text("${data["sampleId"]}"))),
-DataCell(Center(child: Text("${data['mppOtherCode']}"))),
-DataCell(Center(child: Text("${data['weight']}"))),
-DataCell(Center(child: Text("${data['fat']}"))),
-DataCell(Center(child: Text((double.tryParse(data['snf'].toString())?.toStringAsFixed(2)) ?? "0.00"))),
-DataCell(Center(child: Text((double.tryParse(data['rate'].toString())?.toStringAsFixed(2)) ?? "0.00"))),
-DataCell(Center(child: Text((double.tryParse(data["amount"].toString())?.toStringAsFixed(2)) ?? "0.00"))),
-    
-          ],
-        );
-      }),
-    )));}
+ SizedBox(width: Get.width,
+   child: DataTable(
+        headingRowColor:
+            WidgetStateProperty.all(CustomColors.appColor),
+        headingTextStyle: const TextStyle(
+            color: Colors.white, fontWeight: FontWeight.bold),
+        columnSpacing: 12,
+        dataRowMinHeight: 20,
+        dataRowMaxHeight: 40,
+        headingRowHeight: 33,
+        columns: const [
+   
+                       DataColumn(label: Text('S. No.')),
+      DataColumn(label: Text('Code')),
+      DataColumn(label: Text('Qty')),
+      DataColumn(label: Text('Fat')),
+      DataColumn(label: Text('SNF')),
+      DataColumn(label: Text('Rate')),
+      DataColumn(label: Text('Amount')),
+   
+        ],
+        rows: List.generate(controller.mppCollData.length, (index) {
+          final data = controller.mppCollData[index];
+          final isGrey = index % 2 == 0;
+          return DataRow(
+            color: WidgetStateProperty.all(isGrey ? Colors.white : Colors.grey[200]),
+            cells: [
+   
+   
+   DataCell(Center(child: Text("${data["sampleId"]}"))),
+   DataCell(Center(child: Text("${data['mppOtherCode']}"))),
+   DataCell(Center(child: Text("${data['weight']}"))),
+   DataCell(Center(child: Text("${data['fat']}"))),
+   DataCell(Center(child: Text((double.tryParse(data['snf'].toString())?.toStringAsFixed(2)) ?? "0.00"))),
+   DataCell(Center(child: Text((double.tryParse(data['rate'].toString())?.toStringAsFixed(2)) ?? "0.00"))),
+   DataCell(Center(child: Text((double.tryParse(data["amount"].toString())?.toStringAsFixed(2)) ?? "0.00"))),
+      
+            ],
+          );
+        }),
+      ),
+ )));}
 }
 
 

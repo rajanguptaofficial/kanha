@@ -1,398 +1,578 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kanha_bmc/common/colors.dart';
-import '../../common/custom_app_bar.dart';
-import '../../controller/procurement/dock_collection_controller.dart';
+import 'package:kanha_bmc/common/custom_app_bar.dart';
+import 'package:kanha_bmc/controller/masters/rate_check_controller.dart';
+import 'package:kanha_bmc/controller/procurement/bmc_controller.dart';
+import 'package:kanha_bmc/controller/procurement/dock_collection_controller.dart';
+
 
 class DockCollectionScreen extends StatefulWidget {
-
-  DockCollectionScreen({super.key});
+  const DockCollectionScreen({super.key});
 
   @override
   State<DockCollectionScreen> createState() => _DockCollectionScreenState();
 }
 
 class _DockCollectionScreenState extends State<DockCollectionScreen> {
-  final controller = Get.put(DockCollectionController());
 
+  // final TruckArrivalController controller = Get.put(TruckArrivalController());
+final controller = Get.put(DockCollectionController());
+final controller3 = Get.put(BMCCollectionController());
+  final controller2 = Get.put(RateCheckMasterController());
+  final _formKey = GlobalKey<FormState>(); 
+
+ final TextEditingController canController = TextEditingController(); 
+  final TextEditingController wiightController = TextEditingController(); 
+  final TextEditingController mppCodeController = TextEditingController();
+ final TextEditingController mppNameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return OrientationBuilder(
-      builder: (context, orientation) {
-        final isPortrait = orientation == Orientation.portrait;
-        final height = MediaQuery.of(context).size.height;
-        final width = MediaQuery.of(context).size.width;
-            double padding = Get.width * 0.04; // Use Get.width for consistent padding
-            double fontSize = Get.width * 0.04; // Font size based on screen width
+    return SafeArea(
+      child: Scaffold(
+        appBar: ProcCustomAppBar(title: 'Dock/Weight Collection'),
+        body:
+         Form(
+           key: _formKey, // Associate the form key here
+           child: OrientationBuilder(
+            builder: (context, orientation) {
+           
+              final isPortrait = orientation == Orientation.portrait;
+              final double padding = Get.width * 0.04;
+           
+              return Obx(() {
+                 // controller.currentDate.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                  // controller.currentTime.value=   DateFormat('HH:mm').format(DateTime.now());
 
-        return Scaffold(
-          appBar: ProcCustomAppBar(title:('Dock/Weight Collection'),
-          ),
-          body: Obx(
-            () => controller.isForm1Visible.value
-                ? Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          DropdownButtonFormField<String>(
-                            value: controller.selectedDock.value.isEmpty ? null : controller.selectedDock.value,
-                            items: ['Dock 1', 'Dock 2', 'Dock 3']
-                                .map((dock) => DropdownMenuItem(
-                                      value: dock,
-                                      child: Text(dock),
-                                    ))
-                                .toList(),
-                            onChanged: (value) {
-                              controller.selectedDock.value = value!;
-                            },
-                            decoration: const InputDecoration(labelText: 'Select Dock'),
-                          ),
-                          SizedBox(height: height * 0.02),
 
-                         DropdownButtonFormField<String>(
-                            value: controller.selectedGrade.value.isEmpty ? null : controller.selectedGrade.value,
-                            items: ['Grade 1', 'Grade 2', 'Grade 3']
-                                .map((dock) => DropdownMenuItem(
-                                      value: dock,
-                                      child: Text(dock),
-                                    ))
-                                .toList(),
-                            onChanged: (value) {
-                              controller.selectedGrade.value = value!;
-                            },
-                            decoration: const InputDecoration(labelText: 'Select Grade'),
-                          ),
-                          SizedBox(height: height * 0.02),
-                          DropdownButtonFormField<String>(
-                            value: controller.selectedShift.value.isEmpty ? null : controller.selectedShift.value,
-                           items: ['Sample 1', 'Sample 2', 'Sample 3']
-                                .map((shift) => DropdownMenuItem(
-                                      value: shift,
-                                      child: Text(shift),
-                                    ))
-                                .toList(),
-                            onChanged: (value) {
-                              controller.selectedShift.value = value!;
-                            },
-                            decoration: const InputDecoration(labelText: 'Select Sample'),
-                          ),
-                          SizedBox(height: height * 0.04),
-                          ElevatedButton(
-                            onPressed: () {
-                              if (controller.selectedDock.value.isNotEmpty &&
-                                  controller.selectedGrade.value.isNotEmpty &&
-                                  controller.selectedShift.value.isNotEmpty) {
-                                controller.isForm1Visible.value = false;
-                              } else {
-                                Get.snackbar('Error', 'Please select all fields',
-                                    snackPosition: SnackPosition.BOTTOM);
-                              }
-                            },
-                            child: const Text('Go'),
-                          ),
-                        ],
-                      ),
+ // Listen for changes in qty.value and update the text field
+   
+
+  ever(controller.mppCode, (value) {
+      mppCodeController.text = value;
+      mppCodeController.selection = TextSelection.fromPosition(
+        TextPosition(offset: mppCodeController.text.length),
+      );
+    });
+    
+  ever(controller.mppName, (value) {
+      mppNameController.text = value;
+      mppNameController.selection = TextSelection.fromPosition(
+        TextPosition(offset: mppNameController.text.length),
+      );
+    });
+
+
+
+                return Padding(
+                  padding: EdgeInsets.symmetric(vertical: 5,horizontal: 14),
+                  child: isPortrait
+                      ? _buildPortraitLayout(padding)
+                      : _buildLandscapeLayout(padding),
+                );
+              });
+            },
+                   ),
+         ),
+      ),
+    );
+  }
+
+ // First Form Widget
+  Widget buildFirstForm() {
+    return Column(
+      children: [
+          SizedBox(height: Get.height * 0.01),        
+      
+        DropdownButtonFormField<String>(
+    value: controller.routeData.contains(controller.selectedRoute.value)
+        ? controller.selectedRoute.value
+        : null, // Set to null if not found in list
+    decoration: const InputDecoration(labelText: 'Select Route',
+     border: OutlineInputBorder(),
+    labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    )
+                    
+    ),
+   
+    onChanged: (newValue) {
+      if (newValue != null) {
+       controller.selectedRoute.value = newValue;
+      // controller.fetchCompnyCodeByRuteCodeName(controller.selectedRoute.value);
+      }
+    },
+    validator: (value) =>
+                      value == null || value.isEmpty ? 'Please select Route Type' : null,
+    items: controller.routeData.toSet().map<DropdownMenuItem<String>>((route) { 
+      return DropdownMenuItem<String>(
+        value: route,
+        child: Text(route),
+      );
+    }).toList(),
+        ),
+        
+           SizedBox(height: Get.height * 0.02),
+        
+        DropdownButtonFormField<String>(
+    value: controller.routeData.contains(controller.selectedGrade.value)
+        ? controller.selectedGrade.value
+        : null, // Set to null if not found in list
+    decoration: const InputDecoration(labelText: 'Select Grade',
+     border: OutlineInputBorder(),
+    labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    )
                     ),
-                  )
-                :    Padding(
-              padding: EdgeInsets.all(8),
-              child: SingleChildScrollView(
+
+    onChanged: (newValue) {
+      if (newValue != null) {
+       controller.selectedGrade.value = newValue;
+     //  controller.fetchCompnyCodeByRuteCodeName(controller.selectedRoute.value);
+      }
+    },
+    validator: (value) =>
+                      value == null || value.isEmpty ? 'Please select Grade Type' : null,
+    items: controller.gradeData.toSet().map<DropdownMenuItem<String>>((grade) { 
+      return DropdownMenuItem<String>(
+        value: grade,
+        child: Text(grade),
+      );
+    }).toList(),
+        ),
+       
+        SizedBox(height: Get.height * 0.02),
+        
+      Obx(() =>   TextFormField(
+               readOnly: true,
+               decoration: InputDecoration(
+                 labelText: 'Sample No.', labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),
+                  border: OutlineInputBorder(),
+              //
+               ),
+               controller:
+                  TextEditingController(text: controller.sampleIdNo.value.toString()),
+             )),
+      
+      
+ SizedBox(height: Get.height * 0.02),
+
+ ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            padding: EdgeInsets.symmetric(horizontal: Get.width * 0.07, vertical: Get.height * 0.01),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            backgroundColor: CustomColors.appGreenButtomColor,
+          ),
+         onPressed: () {
+          
+if (_formKey.currentState!.validate()) {
+      controller.isForm1Visible.value = false;
+            } else {
+              Get.snackbar('Error', 'Please select all fields',
+                  snackPosition: SnackPosition.BOTTOM);
+            }
+          },
+        
+          child: Text('Go', style: TextStyle(fontSize: 20, color: CustomColors.bgColor)),
+        ),
+ SizedBox(height: Get.height * 0.02),
+      ],
+    );
+  }
+
+  // Second Form Widget
+  Widget buildSecondForm() {
+    return Column(
+      children: [
+
+        SizedBox(height: Get.height * 0.02),
+        _buildMemberDetailsRow(),
+        SizedBox(height: Get.height * 0.02),
+        _buildQtyMilkTypeRow(),
+         SizedBox(height: Get.height * 0.02),
+        _buildFatSnfRow(),
+        SizedBox(height: Get.height * 0.02),
+        //SizedBox(height: Get.height * 0.02),
+        _buildButtons(),
+        SizedBox(height: Get.height * 0.02),
+       ],
+    );
+  }
+
+  Widget _buildPortraitLayout(double padding) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+      controller.isForm1Visible.value ? buildFirstForm() : buildSecondForm(), 
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: buildDataTable(),
+          ),
+        ),
+        ],
+      ),
+    );
+  
+  }
+
+Widget _buildLandscapeLayout(double padding) {
+  return SingleChildScrollView(
+    child: Column(
+      children: [
+
+       
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Container(
+                //color:Colors.red,
+               width: Get.width*.4,
                 child: Column(
                   children: [
-                    // Date and time in a row
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                    Obx(() => Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  '${controller.currentDate.value.toLocal()}'.split(' ')[0],
-                  style: TextStyle(fontSize: 16),
-                ),
-              )),
-          Obx(() => Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  controller.timeShift.value,
-                  style: TextStyle(fontSize: 16),
-                ),
-              )),
-                      ],
-                    ),
-
-                    SizedBox(height: 4),
-
-                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                             Text("Total Qty/Can : " , style: TextStyle(fontSize: 18,fontWeight: FontWeight.w600),),
-                              Text("1000/250", style: TextStyle(fontSize: 18,fontWeight: FontWeight.w600),),                                         
-                            ],
-                    ),
-                   SizedBox(height: 4),
-                  
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'Code',
-                              border: OutlineInputBorder(),
-                            ),
-                            onChanged: (value) {
-                              controller.code.value = value;
-                              controller.fetchMemberDetails(value);
-                            },
-                          ),
-                        ),
-                        SizedBox(width: padding),
-                        Expanded(
-                          child: Obx(() => TextFormField(
-                                readOnly: true,
-                                decoration: InputDecoration(
-                                  labelText: 'Society Name',
-                                  border: OutlineInputBorder(),
-                                ),
-                                controller: TextEditingController(
-                                    text: controller.memberName.value),
-                              )),
-                        ),
-                      ],
-                    ),
-
-                    SizedBox(height: padding),
-
-                    // Milk Type dropdown
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(padding * 0.5),
-                          child: Text(
-                            'Milk Type:',
-                            style: TextStyle(fontSize: fontSize),
-                          ),
-                        ),
-                        Expanded(
-                          child: Obx(
-                            () => DropdownButton<String>(
-                              value: controller.milkType.value.isNotEmpty
-                                  ? controller.milkType.value
-                                  : null,
-                              hint: Text('Select Milk Type'),
-                              isExpanded: true,
-                              items: [
-                                DropdownMenuItem(
-                                  value: 'Cow',
-                                  child: Row(
-                                    children: [
-                                      Image.asset(
-                                        "assets/icons/cow.png",
-                                        width: 24,
-                                        height: 24,
-                                      ),
-                                      SizedBox(width: 8),
-                                      Text('Cow'),
-                                    ],
-                                  ),
-                                ),
-                                DropdownMenuItem(
-                                  value: 'Buff',
-                                  child: Row(
-                                    children: [
-                                      Image.asset(
-                                        "assets/icons/buff.png",
-                                        width: 24,
-                                        height: 24,
-                                      ),
-                                      SizedBox(width: 8),
-                                      Text('Buff'),
-                                    ],
-                                  ),
-                                ),
-                                DropdownMenuItem(
-                                  value: 'Mix',
-                                  child: Row(
-                                    children: [
-                                      Image.asset(
-                                        "assets/icons/mix.png",
-                                        width: 24,
-                                        height: 24,
-                                      ),
-                                      SizedBox(width: 8),
-                                      Text('Mix'),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                              onChanged: (value) {
-                                if (value != null) {
-                                  controller.milkType.value = value;
-                                }
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    SizedBox(height: padding),
-
-                  
-                  
-                    if (isPortrait)
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'Can',
-                                border: OutlineInputBorder(),
-                              ),
-                              keyboardType: TextInputType.number,
-                              onChanged: (value) {
-                                controller.qty.value = value;
-                                controller.calculateRateAndAmount();
-                              },
-                            ),
-                          ),
-                          SizedBox(width: padding),
-                          Expanded(
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'Weight',
-                                border: OutlineInputBorder(),
-                              ),
-                              keyboardType: TextInputType.number,
-                              onChanged: (value) {
-                                controller.fat.value = value;
-                                controller.calculateRateAndAmount();
-                              },
-                            ),
-                          ),
-                          SizedBox(width: padding),
-                        
-                        ],
-                      )
-                    else
-                      Column(
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    labelText: 'Can',
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  keyboardType: TextInputType.number,
-                                  onChanged: (value) {
-                                    controller.qty.value = value;
-                                    controller.calculateRateAndAmount();
-                                  },
-                                ),
-                              ),
-                              SizedBox(width: padding),
-                              Expanded(
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    labelText: 'Weight',
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  keyboardType: TextInputType.number,
-                                  onChanged: (value) {
-                                    controller.fat.value = value;
-                                    controller.calculateRateAndAmount();
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                       
-                        ]
-                      ),
-
-                    SizedBox(height: padding),
-
-                    // Save Button
-                    Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.symmetric(
-          horizontal: Get.width * 0.01,
-          vertical: Get.height * 0.01,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        backgroundColor: CustomColors.appGreenButtomColor,
+           children: [
+           
+      
+    ],
+         ),
+         
+                 SizedBox(height: Get.width * 0.01),                      
+                        Row(
+        children: [
+       
+        ],
       ),
-                          onPressed: () {
-                            controller.saveEntry();
-                          },
-                          child: Text('Save', style: TextStyle(fontSize: fontSize,color: CustomColors.bgColor)),
-                        ),
-                          ElevatedButton(style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.symmetric(
-          horizontal: Get.width * 0.01,
-          vertical: Get.height * 0.01,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        backgroundColor: CustomColors.appRedButtomColor,
-      ),
-                      onPressed: () {
-                       // controller.clearCollections();
-                      },
-                      child: Text('Clear Data', style: TextStyle(fontSize: fontSize,color: CustomColors.bgColor)),
-                    ),
-                      ],
-                    ),
-
-                    SizedBox(height: padding),
-
-                    // Saved Entries Table
-                    Obx(() => SingleChildScrollView( 
-                      scrollDirection: Axis.horizontal,
-                      child: SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
-                        child: DataTable(
-                          columnSpacing: Get.width * 0.02, // Use Get.width for consistent spacing
-                          columns: [
-                            DataColumn(label: Text('Sample No')),
-                            DataColumn(label: Text('Code')),
-                            DataColumn(label: Text('QTY')),
-                            DataColumn(label: Text('Fat')),
-                            DataColumn(label: Text('SNF')),
-                            DataColumn(label: Text('Rate')),
-                            DataColumn(label: Text('Amount')),
-                          ],
-                          rows: controller.savedEntries
-                              .map(
-                                (entry) => DataRow(cells: [
-                                  DataCell(Text(entry['sampleNo']!)),
-                                  DataCell(Text(entry['code']!)),
-                                  DataCell(Text(entry['qty']!)),
-                                  DataCell(Text(entry['fat']!)),
-                                  DataCell(Text(entry['snf']!)),
-                                  DataCell(Text(entry['rate']!)),
-                                  DataCell(Text(entry['amount']!)),
-                                ]),
-                              )
-                              .toList(),
-                        ),
-                      ),
-                    )),
+                     
                   ],
                 ),
               ),
-            )
-          
-          ),
-        );
-      },
-    );
-  }
+            ),
+              // Expanded(
+              //   child: Container(
+              // // color:Colors.green,
+              //    child: Padding(
+              //      padding: const EdgeInsets.all(8.0),
+              //      child: Column(
+              //        children: [
+              //          SingleChildScrollView(
+              //            scrollDirection: Axis.horizontal,
+              //            child: buildDataTable(),
+              //          ),
+              //        ],
+              //      ),
+              //    ),
+              //                ),
+              // ),
+          ],
+        ),
+    
+    
+        // Making Data Table more adaptable in Landscape
+       
+      ],
+    ),
+  );
 }
 
+Widget _buildMemberDetailsRow() {
+  return Row(
+    children: [
+      Expanded(
+        child: Obx(
+          () => TextFormField(
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              labelText: 'Society Code',
+              border: OutlineInputBorder(),
+              labelStyle: TextStyle(color: CustomColors.appColor),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: CustomColors.appColor),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: CustomColors.appColor, width: 1),
+              ),
+            ),
+            onChanged: (value) {
+              controller.mppCode.value = value;
+              controller.getMppMasterDetails(value);
+              
+            },
+            controller: TextEditingController(text: controller.mppCode.value)
+              ..selection = TextSelection.fromPosition(
+                TextPosition(offset: controller.mppCode.value.length),
+              ),
+            validator: (value) =>
+                value!.isEmpty ? 'Please enter Society Code' : null,
+          ),
+        ),
+      ),
+      SizedBox(width: Get.width * 0.04),
+      Expanded(
+        child: Obx(
+          () => TextFormField(
+            keyboardType: TextInputType.text,
+            decoration: InputDecoration(
+              labelText: 'Society Name',
+              border: OutlineInputBorder(),
+              labelStyle: TextStyle(color: CustomColors.appColor),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: CustomColors.appColor),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: CustomColors.appColor, width: 1),
+              ),
+            ),
+            onChanged: (value) {
+              controller.mppName.value = value;
+              controller.fetchOtherCodeByFirstName(value);
+            },
+            controller: TextEditingController(text: controller.mppName.value)
+              ..selection = TextSelection.fromPosition(
+                TextPosition(offset: controller.mppName.value.length),
+              ),
+            validator: (value) =>
+                value!.isEmpty ? 'Please enter Society Name' : null,
+          ),
+        ),
+      ),
+    ],
+  );
+}
+
+  Widget _buildFatSnfRow() {
+    return Row(
+      children: [
+        Expanded(
+       
+            child: TextFormField(
+              decoration: InputDecoration(
+                labelText: 'Can',
+                 border: OutlineInputBorder(), labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),
+                  
+              ),
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                controller.can.value = value;
+              },
+              controller: canController,
+              validator: (value) =>
+                  value!.isEmpty ? 'Please enter Can' : null,
+            ),
+          ),
+      
+         SizedBox(width: Get.width * 0.04),
+        Expanded(
+        
+            child: TextFormField(
+              decoration: InputDecoration(
+                labelText: 'Weight',
+                 border: OutlineInputBorder(), labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),
+                  
+              ),
+               controller: wiightController,
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                controller.weight.value = value;           
+              },
+              validator: (value) => value!.isEmpty ? 'Please enter Weight' : null,
+            ),
+     
+        ),
+        // SizedBox(width),
+        
+      
+      ],
+    );
+  }
+
+  Widget _buildQtyMilkTypeRow() {
+    return Padding(
+      padding:  EdgeInsets.symmetric(horizontal: Get.width * 0.11),
+      child: 
+      Row(
+        children: [
+           Padding(
+                 padding:  EdgeInsets.symmetric(horizontal: Get.width * 0.061),
+             child: Text("Milk Type", style: TextStyle(fontWeight: FontWeight.bold),         ),
+           ),
+          // SizedBox(width: ),
+          Expanded(
+            child: Obx(() => DropdownButtonFormField<String>(
+                  value: controller2.selectedMilkType.value.isEmpty
+                      ? null
+                      : controller2.selectedMilkType.value,
+                     decoration: const InputDecoration(
+                      labelText:'Milk Type',
+                      border: OutlineInputBorder(),
+    labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    )
+                    ),
+                  isExpanded: true,
+                  items: [
+                    DropdownMenuItem(
+                      value: 'Cow',
+                      child: Row(
+                        children: [
+                          Image.asset("assets/icons/cow.png", width: 24, height: 24),
+                          SizedBox(width: 8),
+                          Text('Cow'),
+                        ],
+                      ),
+                    ),
+                    
+                    DropdownMenuItem(
+                      value: 'Buff',
+                      child: Row(
+                        children: [
+                          Image.asset("assets/icons/buff.png", width: 24, height: 24),
+                          SizedBox(width: 8),
+                          Text('Buff'),
+                        ],
+                      ),
+                    ),
+                    DropdownMenuItem(
+                      value: 'Mixed',
+                      child: Row(
+                        children: [
+                          Image.asset("assets/icons/mix.png", width: 24, height: 24),
+                          SizedBox(width: 8),
+                          Text('Mixed'),
+                        ],
+                      ),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    controller2.selectedMilkType.value = value ?? '';
+                    controller2.filterData();
+                   // controller.calculateAmountValue();
+                   // controller.milkType.value = controller2.selectedMilkType.value;
+               
+                  },
+                  validator: (value) =>
+                      value == null || value.isEmpty ? 'Please select Milk Type' : null,
+                )),
+          ),
+        ],
+      ),
+    );
+  }
+
+
+ Widget _buildButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            padding: EdgeInsets.symmetric(horizontal: Get.width * 0.07, vertical: Get.height * 0.01),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            backgroundColor: CustomColors.appGreenButtomColor,
+          ),
+         onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              // Process data if form is valid
+           
+    Future.wait([
+        controller.saveEntry()
+    ]).then((_) {
+           _formKey.currentState!.reset(); 
+    });
+            }
+
+          },
+          child: Text('Save', style: TextStyle(fontSize: 20, color: CustomColors.bgColor)),
+        ),
+       
+      ],
+    );
+  }
+
+  Widget buildDataTable() {
+    return Obx(() => SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child:
+
+
+ SizedBox( width: Get.width,
+   child: DataTable(
+        headingRowColor:
+            WidgetStateProperty.all(CustomColors.appColor),
+        headingTextStyle: const TextStyle(
+            color: Colors.white, fontWeight: FontWeight.bold),
+        columnSpacing: 12,
+        dataRowMinHeight: 20,
+        dataRowMaxHeight: 40,
+        headingRowHeight: 33,
+        columns: const [
+   
+      DataColumn(label: Text('S. No.')),
+      DataColumn(label: Text('Code')),
+      DataColumn(label: Text('Name')),
+      DataColumn(label: Text('Type')),
+      DataColumn(label: Text('Qty.')),
+      DataColumn(label: Text('Can')),
+   
+   
+        ],
+        rows: List.generate(controller.docDBCollData.length, (index) {
+          final data = controller.docDBCollData[index];
+          final isGrey = index % 2 == 0;
+          return DataRow(
+            color: WidgetStateProperty.all(isGrey ? Colors.white : Colors.grey[200]),
+            cells: [
+   
+   
+   DataCell(Center(child: Text("${data["sampleId"]}"))),
+   DataCell(Center(child: Text("${data['dumpDate']}"))),
+   DataCell(Center(child: Text("${data['shift']}"))),
+   DataCell(Center(child: Text("${data['truckNo']}"))),
+   DataCell(Center(child: Text("${data['truckNo']}"))),
+   DataCell(Center(child: Text((data['arrivalTime'].toString())))),
+   
+      
+            ],
+          );
+        }),
+      ),
+ )));}
+}
+
+
+
+
+ 

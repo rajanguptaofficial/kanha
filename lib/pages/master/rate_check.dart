@@ -100,6 +100,13 @@ class _RateCheckScreenState extends State<RateCheckScreen> {
               decoration: const InputDecoration(
                 labelText: "Milk Type",
                 border: OutlineInputBorder(),
+    labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    )
               ),
             )),
         const SizedBox(height: 16),
@@ -181,6 +188,13 @@ class _RateCheckScreenState extends State<RateCheckScreen> {
                     decoration: const InputDecoration(
                       labelText: "Milk Type",
                       border: OutlineInputBorder(),
+    labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    )
                     ),
                   )),
               const SizedBox(height: 16),

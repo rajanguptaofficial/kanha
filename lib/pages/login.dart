@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kanha_bmc/common/colors.dart';
 import 'package:kanha_bmc/common/custom_bottom_navigation_bar.dart';
 import 'package:kanha_bmc/controller/login_controller.dart';
 
@@ -90,11 +91,17 @@ class _LoginScreenState extends State<LoginScreen> {
                               labelText: "User ID",
                               fillColor: Colors.white,
                               filled: true,
-                              prefixIcon: const Icon(Icons.person),
+                              prefixIcon: const Icon(Icons.person), labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
+                                 ),
+                            )
                           ),
                           SizedBox(height: Get.height * 0.02),
 
@@ -104,7 +111,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             controller: loginController.passwordController,
                             decoration: InputDecoration(
                               labelText: "Password",
-                              fillColor: Colors.white,
+                              fillColor: Colors.white, 
+                              labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),
                               filled: true,
                               prefixIcon: const Icon(Icons.lock),
                               suffixIcon: IconButton(
