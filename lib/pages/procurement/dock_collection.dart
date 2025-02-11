@@ -35,11 +35,9 @@ final controller3 = Get.put(BMCCollectionController());
          Form(
            key: _formKey, // Associate the form key here
            child: OrientationBuilder(
-            builder: (context, orientation) {
-           
+            builder: (context, orientation) {          
               final isPortrait = orientation == Orientation.portrait;
-              final double padding = Get.width * 0.04;
-           
+              final double padding = Get.width * 0.04;          
               return Obx(() {
                  // controller.currentDate.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
                   // controller.currentTime.value=   DateFormat('HH:mm').format(DateTime.now());
@@ -48,7 +46,8 @@ final controller3 = Get.put(BMCCollectionController());
  // Listen for changes in qty.value and update the text field
    
 
-  ever(controller.mppCode, (value) {
+
+                ever(controller.mppCode, (value) {
       mppCodeController.text = value;
       mppCodeController.selection = TextSelection.fromPosition(
         TextPosition(offset: mppCodeController.text.length),
@@ -61,7 +60,6 @@ final controller3 = Get.put(BMCCollectionController());
         TextPosition(offset: mppNameController.text.length),
       );
     });
-
 
 
                 return Padding(
@@ -193,7 +191,7 @@ if (_formKey.currentState!.validate()) {
       ],
     );
   }
-
+ 
   // Second Form Widget
   Widget buildSecondForm() {
     return Column(
@@ -235,8 +233,6 @@ Widget _buildLandscapeLayout(double padding) {
   return SingleChildScrollView(
     child: Column(
       children: [
-
-       
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -247,40 +243,22 @@ Widget _buildLandscapeLayout(double padding) {
                width: Get.width*.4,
                 child: Column(
                   children: [
-                    Row(
-           children: [
-           
-      
-    ],
-         ),
-         
-                 SizedBox(height: Get.width * 0.01),                      
-                        Row(
-        children: [
-       
-        ],
-      ),
-                     
+                     controller.isForm1Visible.value ? buildFirstForm() : buildSecondForm(), 
+                        // SizedBox(height: Get.width * 0.01),    
+                       
+                        // SizedBox(height: Get.width * 0.01),   
+                    
+                        SizedBox(height: Get.width * 0.01),
+                       // _buildButtons(),
+                       SingleChildScrollView(
+                         scrollDirection: Axis.horizontal,
+                         child: buildDataTable(),
+                       ),
                   ],
                 ),
               ),
             ),
-              // Expanded(
-              //   child: Container(
-              // // color:Colors.green,
-              //    child: Padding(
-              //      padding: const EdgeInsets.all(8.0),
-              //      child: Column(
-              //        children: [
-              //          SingleChildScrollView(
-              //            scrollDirection: Axis.horizontal,
-              //            child: buildDataTable(),
-              //          ),
-              //        ],
-              //      ),
-              //    ),
-              //                ),
-              // ),
+           
           ],
         ),
     
@@ -292,70 +270,63 @@ Widget _buildLandscapeLayout(double padding) {
   );
 }
 
+
 Widget _buildMemberDetailsRow() {
   return Row(
     children: [
       Expanded(
-        child: Obx(
-          () => TextFormField(
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              labelText: 'Society Code',
-              border: OutlineInputBorder(),
-              labelStyle: TextStyle(color: CustomColors.appColor),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: CustomColors.appColor),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: CustomColors.appColor, width: 1),
-              ),
+        child: TextFormField(
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+            labelText: 'Society Code',
+            border: OutlineInputBorder(),
+            labelStyle: TextStyle(color: CustomColors.appColor),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: CustomColors.appColor),
             ),
-            onChanged: (value) {
-              controller.mppCode.value = value;
-              controller.getMppMasterDetails(value);
-              
-            },
-            controller: TextEditingController(text: controller.mppCode.value)
-              ..selection = TextSelection.fromPosition(
-                TextPosition(offset: controller.mppCode.value.length),
-              ),
-            validator: (value) =>
-                value!.isEmpty ? 'Please enter Society Code' : null,
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: CustomColors.appColor, width: 1),
+            ),
           ),
+          onChanged: (value) {
+            controller.mppCode.value = value;
+            controller.getMppMasterDetails(value);
+          },
+          controller: mppCodeController,
+          validator: (value) =>
+              value!.isEmpty ? 'Please enter Society Code' : null,
         ),
       ),
       SizedBox(width: Get.width * 0.04),
       Expanded(
-        child: Obx(
-          () => TextFormField(
-            keyboardType: TextInputType.text,
-            decoration: InputDecoration(
-              labelText: 'Society Name',
-              border: OutlineInputBorder(),
-              labelStyle: TextStyle(color: CustomColors.appColor),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: CustomColors.appColor),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: CustomColors.appColor, width: 1),
-              ),
+        child: TextFormField(
+          keyboardType: TextInputType.text,
+          decoration: InputDecoration(
+            labelText: 'Society Name',
+            border: OutlineInputBorder(),
+            labelStyle: TextStyle(color: CustomColors.appColor),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: CustomColors.appColor),
             ),
-            onChanged: (value) {
-              controller.mppName.value = value;
-              controller.fetchOtherCodeByFirstName(value);
-            },
-            controller: TextEditingController(text: controller.mppName.value)
-              ..selection = TextSelection.fromPosition(
-                TextPosition(offset: controller.mppName.value.length),
-              ),
-            validator: (value) =>
-                value!.isEmpty ? 'Please enter Society Name' : null,
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: CustomColors.appColor, width: 1),
+            ),
           ),
+          onChanged: (value) {
+            controller.mppName.value = value;
+            controller.fetchOtherCodeByFirstName(value);
+          },
+          controller: mppNameController,
+          validator: (value) =>
+              value!.isEmpty ? 'Please enter Society Name' : null,
         ),
       ),
     ],
   );
 }
+
+
+
 
   Widget _buildFatSnfRow() {
     return Row(
@@ -480,7 +451,7 @@ Widget _buildMemberDetailsRow() {
                     controller2.selectedMilkType.value = value ?? '';
                     controller2.filterData();
                    // controller.calculateAmountValue();
-                   // controller.milkType.value = controller2.selectedMilkType.value;
+                    controller.milkType.value = controller2.selectedMilkType.value;
                
                   },
                   validator: (value) =>
@@ -508,9 +479,15 @@ Widget _buildMemberDetailsRow() {
               // Process data if form is valid
            
     Future.wait([
-        controller.saveEntry()
+        controller.saveEntry(),
+      
+        
     ]).then((_) {
            _formKey.currentState!.reset(); 
+            controller.mppCode.value= "";
+            controller.mppName.value= "";
+            mppCodeController.clear();
+  mppNameController.clear();
     });
             }
 
@@ -540,12 +517,12 @@ Widget _buildMemberDetailsRow() {
         headingRowHeight: 33,
         columns: const [
    
-      DataColumn(label: Text('S. No.')),
-      DataColumn(label: Text('Code')),
-      DataColumn(label: Text('Name')),
-      DataColumn(label: Text('Type')),
-      DataColumn(label: Text('Qty.')),
-      DataColumn(label: Text('Can')),
+      DataColumn(label: Center(child: Text('S. No.'))),
+      DataColumn(label: Center(child: Text('Code'))),
+      DataColumn(label: Center(child: Text('Name'))),
+      DataColumn(label: Center(child: Text('Type'))),
+      DataColumn(label: Center(child: Text('Qty.'))),
+      DataColumn(label: Center(child: Text('Can'))),
    
    
         ],
@@ -559,10 +536,10 @@ Widget _buildMemberDetailsRow() {
    
    DataCell(Center(child: Text("${data["sampleId"]}"))),
    DataCell(Center(child: Text("${data['dumpDate']}"))),
-   DataCell(Center(child: Text("${data['shift']}"))),
-   DataCell(Center(child: Text("${data['truckNo']}"))),
-   DataCell(Center(child: Text("${data['truckNo']}"))),
-   DataCell(Center(child: Text((data['arrivalTime'].toString())))),
+   DataCell(Center(child: Text("${data['socname']}"))),
+   DataCell(Center(child: Text("${data['type']}"))),
+   DataCell(Center(child: Text("${data['weight']}"))),
+   DataCell(Center(child: Text((data['rCans'].toString())))),
    
       
             ],

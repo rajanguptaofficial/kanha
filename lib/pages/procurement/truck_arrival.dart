@@ -293,20 +293,6 @@ Widget _buildLandscapeLayout(double padding) {
   return SingleChildScrollView(
     child: Column(
       children: [
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //   children: [
-        //     Obx(() => Text(
-        //           controller.currentDate.value,
-        //           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
-        //         )),
-        //     Obx(() => Text(
-        //           controller.timeShift.value,
-        //           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
-        //         )),
-        //   ],
-        // ),
-
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -420,7 +406,6 @@ Widget _buildLandscapeLayout(double padding) {
           return DataRow(
             color: WidgetStateProperty.all(isGrey ? Colors.white : Colors.grey[200]),
             cells: [
-   
    
    DataCell(Center(child: Text("${data["sampleId"]}"))),
    DataCell(Center(child: Text("${data['dumpDate']}"))),
