@@ -90,19 +90,6 @@ class _TruckArrivalFormScreenState extends State<TruckArrivalFormScreen> {
         ),
         
         
-        
-        //SizedBox(height: Get.height * 0.02),
-        //  Obx(() => TextFormField(
-        //          readOnly: true,
-        //          decoration: InputDecoration(
-        //            labelText: 'Date',
-        //             border: OutlineInputBorder(),
-               
-        //          ),
-        //          controller:
-        //              TextEditingController(text: controller.currentDate.value.toString()),
-        //                 validator: (value) => value!.isEmpty ? 'Please enter Date' : null,
-        //        )),
        SizedBox(height: Get.height * 0.02),
 Obx(() => TextFormField(
           readOnly: true,
@@ -127,19 +114,6 @@ Obx(() => TextFormField(
         )),
 
 
-       // SizedBox(height: Get.height * 0.02),
-       
-          //  Obx(() => TextFormField(
-          //        readOnly: true,
-          //        decoration: InputDecoration(
-          //          labelText: 'Shift',
-          //           border: OutlineInputBorder(),
-               
-          //        ),
-          //              validator: (value) => value!.isEmpty ? 'Please enter Shift' : null,
-          //        controller:
-          //            TextEditingController(text: controller.currentShift.value.toString()),
-          //      )),
         SizedBox(height: Get.height * 0.02),
       
         Obx(
@@ -227,19 +201,7 @@ if (_formKey.currentState!.validate()) {
         
          SizedBox(height: Get.height * 0.02),
       
-        //  Obx(() => TextFormField(
-        //          readOnly: true,
-        //          decoration: InputDecoration(
-        //             labelText: 'Arrival Time',
-        //             border: OutlineInputBorder(),
-               
-        //          ),
-        //             validator: (value) => value!.isEmpty ? 'Please enter Arrival Time' : null,
-        //          controller:
-        //              TextEditingController(text: controller.currentTime.value.toString()),
-        //        )),
-      
-
+  
  Obx(() => TextFormField(
           readOnly: true,
           controller:   TextEditingController(text: controller.currentTime.value.toString()),
@@ -318,22 +280,7 @@ Widget _buildLandscapeLayout(double padding) {
                 ),
               ),
             ),
-              // Expanded(
-              //   child: Container(
-              // // color:Colors.green,
-              //    child: Padding(
-              //      padding: const EdgeInsets.all(8.0),
-              //      child: Column(
-              //        children: [
-              //          SingleChildScrollView(
-              //            scrollDirection: Axis.horizontal,
-              //            child: buildDataTable(),
-              //          ),
-              //        ],
-              //      ),
-              //    ),
-              //                ),
-              // ),
+         
           ],
         ),
     
