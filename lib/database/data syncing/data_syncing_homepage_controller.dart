@@ -9,7 +9,6 @@ import 'package:kanha_bmc/pages/dashboard.dart';
 
 class DataSyncingHomepageScreenController extends GetxController {
   RxBool isLoading = true.obs;
-
   final BmcMasterController bmcMasterController = Get.put(BmcMasterController());
   final MemberMasterController memberMasterController = Get.put(MemberMasterController());
   final MppMasterController mppMasterController = Get.put(MppMasterController());

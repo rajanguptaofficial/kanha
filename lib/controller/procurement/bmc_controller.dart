@@ -297,7 +297,8 @@ Future<void> saveEntry() async {
     "labPublicIp": deviceIpAddress.value.toString(), // device ip address
     "insertMode" :"A",// A
     "mppOtherCode" :mppCode.value.toString(), // mpp code 
-    "isReadyToSync" :"false" // false 
+    "isReadyToSync" :"false", // false 
+    "isTested": ""
   };
 
   // Insert the entry into the database

@@ -733,7 +733,8 @@ class KanhaDBHelper {
         labPublicIp TEXT,
         insertMode TEXT,
         mppOtherCode TEXT,
-        isReadyToSync INTEGER
+        isReadyToSync INTEGER,
+        isTested INTEGER
       )
     ''');
     

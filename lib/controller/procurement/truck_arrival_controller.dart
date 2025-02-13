@@ -6,6 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../masters/rate_check_controller.dart';
 
 class TruckArrivalController extends GetxController {
+ 
+ 
    final controller2 = Get.put(RateCheckMasterController());
  final KanhaDBHelper _kanhaDBHelper = KanhaDBHelper.instance;
   var isForm1Visible = true.obs;

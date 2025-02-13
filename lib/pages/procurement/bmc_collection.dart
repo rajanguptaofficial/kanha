@@ -778,8 +778,7 @@ Widget _buildLandscapeLayout(double padding) {
             }
 
           },
-          child: Text('Save', style: TextStyle(fontSize: 20, color: CustomColors.bgColor)),
-        ),
+          child: Text('Save', style: TextStyle(fontSize: 20, color: CustomColors.bgColor)), ),
         // ElevatedButton(
         //   style: ElevatedButton.styleFrom(
         //     padding: EdgeInsets.symmetric(horizontal: Get.width * 0.01, vertical: Get.height * 0.01),
@@ -831,8 +830,6 @@ Widget _buildLandscapeLayout(double padding) {
           return DataRow(
             color: WidgetStateProperty.all(isGrey ? Colors.white : Colors.grey[200]),
             cells: [
-   
-   
    DataCell(Center(child: Text("${data["sampleId"]}"))),
    DataCell(Center(child: Text("${data['mppOtherCode']}"))),
    DataCell(Center(child: Text("${data['weight']}"))),

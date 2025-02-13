@@ -10,6 +10,7 @@ class DockCollectionController extends GetxController {
   var docDBCollData = <Map<String, dynamic>>[].obs;
   var routeData = <String>{}.obs;
   var selectedRoute = ''.obs;
+ var selectedDate = DateTime.now().obs; // Observable date
   var gradeData = ["Good", "Bad", "Sour"].obs;
   var selectedGrade = ''.obs;
   var currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
@@ -33,11 +34,51 @@ class DockCollectionController extends GetxController {
     Future.wait([
       getSampleNo(),
       fetchRoutes(),
+      getLocalIp(),
       _initializeDateAndTimeShift(),
     ]).then((_) {
       initializeMemberCollData();
     });
   }
+
+
+
+  void pickDate(BuildContext context) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: selectedDate.value,
+      firstDate: DateTime(2000), // Restrict past dates
+      lastDate: DateTime.now(),  // Only allow past dates
+    );
+
+    if (pickedDate != null) {
+      selectedDate.value = pickedDate; // Update the selected date
+    }
+  }
+
+ Future<void> selectTime(BuildContext context) async {
+    TimeOfDay currentTime = TimeOfDay.now();
+    TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: currentTime,
+    );
+
+    if (pickedTime != null) {
+      updateTime(pickedTime);
+    }
+  }
+
+  void updateTime(TimeOfDay time) {
+    final now = DateTime.now();
+    // final formattedTime = DateFormat('hh:mm a').format(
+        final formattedTime = DateFormat('hh:mm').format(
+      DateTime(now.year, now.month, now.day, time.hour, time.minute),
+    );
+     currentDate.value = "";
+    currentTime.value = formattedTime;
+  }
+
+
 
   Future<void> getSampleNo() async {
     final db = await _kanhaDBHelper.database;
@@ -224,7 +265,8 @@ final entry = {
     "labPublicIp": deviceIpAddress.value.toString(), // device ip address
     "insertMode" :"A",// A
     "mppOtherCode" : mppCode.value.toString(), // mpp code 
-    "isReadyToSync" :"false" // false 
+    "isReadyToSync" :"false", // false 
+        "isTested": ""
   };
 
   // Insert the entry into the database

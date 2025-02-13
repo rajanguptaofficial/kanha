@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:kanha_bmc/common/colors.dart';
 import 'package:kanha_bmc/common/custom_app_bar.dart';
 import 'package:kanha_bmc/controller/masters/rate_check_controller.dart';
@@ -81,7 +82,56 @@ final controller3 = Get.put(BMCCollectionController());
     return Column(
       children: [
           SizedBox(height: Get.height * 0.01),        
-      
+         
+        
+       SizedBox(height: Get.height * 0.02),
+Obx(() => TextFormField(
+          readOnly: true,
+          controller: TextEditingController(
+            text: DateFormat('yyyy-MM-dd').format(controller.selectedDate.value),
+          ),
+          decoration: InputDecoration(
+            labelText: 'Select Date',
+            border: OutlineInputBorder(),
+    labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), ),
+            suffixIcon: IconButton(
+              icon: Icon(Icons.calendar_today),
+              onPressed: () => controller.pickDate(context),
+            ),
+          ),
+          validator: (value) => value!.isEmpty ? 'Please select a date' : null,
+        )),
+
+
+        SizedBox(height: Get.height * 0.02),
+ Obx(() => TextFormField(
+          readOnly: true,
+          controller:   TextEditingController(text: controller.currentTime.value.toString()),
+          decoration: InputDecoration(
+            labelText: 'Time',
+             border: OutlineInputBorder(),
+    labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),
+            suffixIcon: IconButton(
+              icon: Icon(Icons.access_time),
+              onPressed: () => controller.selectTime(context),
+            ),
+          ),
+          validator: (value) => value!.isEmpty ? 'Please select a time' : null,
+        )),
+
+  SizedBox(height: Get.height * 0.02),
+
         DropdownButtonFormField<String>(
     value: controller.routeData.contains(controller.selectedRoute.value)
         ? controller.selectedRoute.value
@@ -504,8 +554,7 @@ Widget _buildMemberDetailsRow() {
           scrollDirection: Axis.horizontal,
           child:
 
-
- SizedBox( width: Get.width,
+   SizedBox( width: Get.width,
    child: DataTable(
         headingRowColor:
             WidgetStateProperty.all(CustomColors.appColor),

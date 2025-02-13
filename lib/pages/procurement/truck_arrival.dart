@@ -166,7 +166,7 @@ if (_formKey.currentState!.validate()) {
     return Column(
       children: [
         
-        
+        SizedBox(height: Get.height * 0.02),
         DropdownButtonFormField<String>(
     value: controller.routeData.contains(controller.selectedRoute.value)
         ? controller.selectedRoute.value
@@ -199,15 +199,20 @@ if (_formKey.currentState!.validate()) {
     }).toList(),
         ),
         
-         SizedBox(height: Get.height * 0.02),
-      
-  
+      SizedBox(height: Get.height * 0.02),
  Obx(() => TextFormField(
           readOnly: true,
           controller:   TextEditingController(text: controller.currentTime.value.toString()),
           decoration: InputDecoration(
             labelText: 'Time',
-            border: OutlineInputBorder(),
+             border: OutlineInputBorder(),
+    labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),
             suffixIcon: IconButton(
               icon: Icon(Icons.access_time),
               onPressed: () => controller.selectTime(context),
@@ -215,16 +220,25 @@ if (_formKey.currentState!.validate()) {
           ),
           validator: (value) => value!.isEmpty ? 'Please select a time' : null,
         )),
-  
 
 
 
         SizedBox(height: Get.height * 0.02),
         TextField(
-          decoration: const InputDecoration(labelText: 'Enter Truck No.'),
-          onChanged: (value) {
-            controller.truckNumber.value = value;
-          },
+
+ decoration: InputDecoration(
+            labelText:  'Enter Truck No.',
+             border: OutlineInputBorder(),
+    labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+    ),
+         
+          ),
+         
         ),
         SizedBox(height: Get.height * 0.02),
         _buildButtons(),
@@ -260,7 +274,7 @@ Widget _buildLandscapeLayout(double padding) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: Container(
+              child: SizedBox(
                 //color:Colors.red,
                width: Get.width*.4,
                 child: Column(
