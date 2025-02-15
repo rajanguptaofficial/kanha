@@ -378,8 +378,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kanha_bmc/common/colors.dart';
 import 'package:kanha_bmc/common/custom_app_bar.dart';
-import 'package:kanha_bmc/controller/procurement/truck_arrival_controller.dart';
-
+import 'package:kanha_bmc/controller/procurement/lab_fat_snf_controller.dart';
 class LabFatSnfFormScreen extends StatefulWidget {
 
   const LabFatSnfFormScreen({super.key});
@@ -390,10 +389,9 @@ class LabFatSnfFormScreen extends StatefulWidget {
 
 
 class _TruckArrivalFormScreenState extends State<LabFatSnfFormScreen> {
-  final TruckArrivalController controller = Get.put(TruckArrivalController());
 
   final _formKey = GlobalKey<FormState>(); 
- 
+ final LabFatSnfController controller = Get.put(LabFatSnfController());
  
   @override
   Widget build(BuildContext context) {
@@ -590,10 +588,14 @@ if (_formKey.currentState!.validate()) {
                   padding: const EdgeInsets.all(8.0),
                   child: Text('Sample1',style: TextStyle(fontWeight:  FontWeight.w600,fontSize: 20),),
                 )),   
+                          
+                          
                           SizedBox(
                             width: Get.width *.2,
-                            child:      TextFormField(
-                 //   controller: userNameController,
+                            child:     
+                            
+                             TextFormField(
+                   controller: controller.fatMA1,
                     decoration: InputDecoration(
                       //labelText: "User",
                       fillColor: Colors.white,
@@ -609,12 +611,15 @@ if (_formKey.currentState!.validate()) {
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
+                      // validator: (value) => value!.isEmpty ? 'Please Enter Fat' : null,
                   ),
                           ), 
-                          SizedBox(
+                         
+                         
+                       SizedBox(
                             width: Get.width *.2,
                             child:      TextFormField(
-                 //controller: userNameController,
+                controller: controller.snfMA1,
                     decoration: InputDecoration(
                      // labelText: "User",
                       fillColor: Colors.white, labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
@@ -630,10 +635,15 @@ if (_formKey.currentState!.validate()) {
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
+                    //  validator: (value) => value!.isEmpty ? 'Please Enter SNF' : null,
                   ),
-                          ),   SizedBox( width: Get.width *.2,
+                          ),  
+                          
+                          
+
+                           SizedBox( width: Get.width *.2,
                             child:      TextFormField(
-                 //   controller: userNameController,
+                  controller: controller.clrMA1,
                     decoration: InputDecoration(
                      // labelText: "User",
                       fillColor: Colors.white, labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
@@ -649,8 +659,12 @@ if (_formKey.currentState!.validate()) {
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
+                     //  validator: (value) => value!.isEmpty ? 'Please Enter CLR' : null,
                   ),
                           ),
+
+
+
                  ElevatedButton(style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.symmetric(
                 horizontal: Get.width * 0.01,
@@ -661,9 +675,29 @@ if (_formKey.currentState!.validate()) {
                             ),
                             backgroundColor: CustomColors.appGreenButtomColor,
                           ),
-                                onPressed: () {
-                                //  controller.saveEntry();
-                                },
+          
+
+  onPressed: () {
+
+
+controller.fatMA1.text !="" &&  controller.snfMA1.text !="" && controller.clrMA1.text !="" ? 
+    Future.wait([
+   controller.updateAndMoveToLast(0)
+    ]).then((_) {
+           _formKey.currentState!.reset(); 
+    }):
+  ScaffoldMessenger.of(context).showSnackBar(
+  SnackBar(
+    content: Text("Fill Sample 1  ***  ${controller.fatMA1.text ==""? "Fat"  : controller.snfMA1.text =="" ? "SNF" :controller.clrMA1.text==""? "CLR" : "Form" }  ***",),
+    behavior: SnackBarBehavior.floating, // Optional: Makes it floating
+    duration: Duration(seconds: 2), // Optional: Adjust duration
+    backgroundColor: Colors.red, // Change to any color
+  ),
+);         
+          },
+
+
+          
                                 child: Text('Save (F2)', style: TextStyle(fontSize: 17,color: CustomColors.bgColor)),
                               ),
                 
@@ -681,52 +715,63 @@ if (_formKey.currentState!.validate()) {
                   padding: const EdgeInsets.all(8.0),
                   child: Text('Sample2',style: TextStyle(fontWeight:  FontWeight.w600,fontSize: 20),),
                 )),   
+                                      
                           SizedBox(
                             width: Get.width *.2,
-                            child:      TextFormField(
-                 //   controller: userNameController,
-                    decoration: InputDecoration(
-                     // labelText: "User",
-                      fillColor: Colors.white, labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
-                enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
-                ),
-                focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
-                ),
-                      filled: true,
-                     // prefixIcon: const Icon(Icons.person),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                  ),
-                          ), 
-                          SizedBox(
-                            width: Get.width *.2,
-                            child:      TextFormField(
-                 //controller: userNameController,
-                    decoration: InputDecoration(
-                     // labelText: "User",
-                      fillColor: Colors.white, labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
-                enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
-                ),
-                focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
-                ),
-                      filled: true,
-                     // prefixIcon: const Icon(Icons.person),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                  ),
-                          ),   SizedBox( width: Get.width *.2,
-                            child:      TextFormField(
-                 //   controller: userNameController,
+                            child:     
+                            
+                             TextFormField(
+                  controller: controller.fatMA2,
                     decoration: InputDecoration(
                       //labelText: "User",
+                      fillColor: Colors.white,
+                      filled: true, labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+                enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+                ),
+                focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+                ),
+                     // prefixIcon: const Icon(Icons.person),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    //   validator: (value) => value!.isEmpty ? 'Please Enter  Fat' : null,
+                  ),
+                          ), 
+                         
+                         
+                          SizedBox(
+                            width: Get.width *.2,
+                            child:      TextFormField(
+                controller: controller.snfMA2,
+                    decoration: InputDecoration(
+                     // labelText: "User",
+                      fillColor: Colors.white, labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+                enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+                ),
+                focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+                ),
+                      filled: true,
+                     //prefixIcon: const Icon(Icons.person),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                   //   validator: (value) => value!.isEmpty ? 'Please Enter  SNF' : null,
+                  ),
+                          ),  
+                          
+                          
+
+                           SizedBox( width: Get.width *.2,
+                            child:      TextFormField(
+                  controller: controller.clrMA2,
+                    decoration: InputDecoration(
+                     // labelText: "User",
                       fillColor: Colors.white, labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
                 enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
@@ -740,8 +785,13 @@ if (_formKey.currentState!.validate()) {
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
+                   //    validator: (value) => value!.isEmpty ? 'Please Enter CLR' : null,
                   ),
                           ),
+
+
+
+                          
                            ElevatedButton(style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.symmetric(
                 horizontal: Get.width * 0.01,
@@ -752,9 +802,26 @@ if (_formKey.currentState!.validate()) {
                             ),
                             backgroundColor: CustomColors.appGreenButtomColor,
                           ),
-                                onPressed: () {
-                                //  controller.saveEntry();
-                                },
+
+  onPressed: () {
+
+
+controller.fatMA2.text !="" &&  controller.snfMA2.text !="" && controller.clrMA2.text !="" ? 
+    Future.wait([
+   controller.updateAndMoveToLast(1)
+    ]).then((_) {
+           _formKey.currentState!.reset(); 
+    }):
+  ScaffoldMessenger.of(context).showSnackBar(
+  SnackBar(
+    content: Text("Fill Sample 2  ***  ${controller.fatMA2.text ==""? "Fat"  : controller.snfMA2.text =="" ? "SNF" :controller.clrMA2.text==""? "CLR" : "Form" }  ***",),
+    behavior: SnackBarBehavior.floating, // Optional: Makes it floating
+    duration: Duration(seconds: 2), // Optional: Adjust duration
+    backgroundColor: Colors.red, // Change to any color
+  ),
+);         
+          },
+
                                 child: Text('Save(F8)', style: TextStyle(fontSize: 17,color: CustomColors.bgColor)),
                               ),
                 
@@ -768,91 +835,10 @@ if (_formKey.currentState!.validate()) {
         ],
       ),
     ),
-    
-    
-    
-              
-                
-    
-          // SizedBox(height: height * 0.02),
         ],
       ),
     );
   }
-
-
-//   // Second Form Widget
-//   Widget buildSecondForm() {
-//     return Column(
-//       children: [
-        
-        
-//         DropdownButtonFormField<String>(
-//     value: controller.routeData.contains(controller.selectedRoute.value)
-//         ? controller.selectedRoute.value
-//         : null, // Set to null if not found in list
-   
-//     //hint: const Text("Select Route"),
-//     onChanged: (newValue) {
-//       if (newValue != null) {
-//        controller.selectedRoute.value = newValue;
-//        controller.fetchCompnyCodeByRuteCodeName(controller.selectedRoute.value);
-//       }
-//     },  decoration: const InputDecoration(
-//                       labelText:'Select Route ',
-//                       border: OutlineInputBorder(),
-//     labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
-//     enabledBorder: OutlineInputBorder(
-//       borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
-//     ),
-//     focusedBorder: OutlineInputBorder(
-//       borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
-//     )
-//                     ),
-//     validator: (value) =>
-//                       value == null || value.isEmpty ? 'Please select Route Type' : null,
-//     items: controller.routeData.toSet().map<DropdownMenuItem<String>>((route) { 
-//       return DropdownMenuItem<String>(
-//         value: route,
-//         child: Text(route),
-//       );
-//     }).toList(),
-//         ),
-        
-//          SizedBox(height: Get.height * 0.02),
-      
-  
-//  Obx(() => TextFormField(
-//           readOnly: true,
-//           controller:   TextEditingController(text: controller.currentTime.value.toString()),
-//           decoration: InputDecoration(
-//             labelText: 'Time',
-//             border: OutlineInputBorder(),
-//             suffixIcon: IconButton(
-//               icon: Icon(Icons.access_time),
-//               onPressed: () => controller.selectTime(context),
-//             ),
-//           ),
-//           validator: (value) => value!.isEmpty ? 'Please select a time' : null,
-//         )),
-  
-
-
-
-//         SizedBox(height: Get.height * 0.02),
-//         TextField(
-//           decoration: const InputDecoration(labelText: 'Enter Truck No.'),
-//           onChanged: (value) {
-//             controller.truckNumber.value = value;
-//           },
-//         ),
-//         SizedBox(height: Get.height * 0.02),
-//         _buildButtons(),
-//         SizedBox(height: Get.height * 0.02),
-//        ],
-//     );
-//   }
-
 
   Widget _buildPortraitLayout(double padding) {
     return SingleChildScrollView(
@@ -913,35 +899,36 @@ Widget _buildLandscapeLayout(double padding) {
   );
 }
 
- Widget _buildButtons() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            padding: EdgeInsets.symmetric(horizontal: Get.width * 0.07, vertical: Get.height * 0.01),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            backgroundColor: CustomColors.appGreenButtomColor,
-          ),
-         onPressed: () {
-            if (_formKey.currentState!.validate()) {
-              // Process data if form is valid
+//  Widget _buildButtons() {
+//     return Row(
+//       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//       children: [
+//         ElevatedButton(
+//           style: ElevatedButton.styleFrom(
+//             padding: EdgeInsets.symmetric(horizontal: Get.width * 0.07, vertical: Get.height * 0.01),
+//             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+//             backgroundColor: CustomColors.appGreenButtomColor,
+//           ),
+//          onPressed: () {
+//             if (_formKey.currentState!.validate()) {
+//               // Process data if form is valid
            
-    Future.wait([
-        controller.saveEntry()
-    ]).then((_) {
-           _formKey.currentState!.reset(); 
-    });
-            }
+//     Future.wait([
+//         controller.saveEntry()
+//     ]).then((_) {
+//            _formKey.currentState!.reset(); 
+//     });
+//             }
 
-          },
-          child: Text('Save', style: TextStyle(fontSize: 20, color: CustomColors.bgColor)),
-        ),
+//           },
+//           child: Text('Save', style: TextStyle(fontSize: 20, color: CustomColors.bgColor)),
+//         ),
        
-      ],
-    );
-  }
+//       ],
+//     );
+//   }
 
+  
   Widget buildDataTable() {
     return Obx(() => SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -968,20 +955,17 @@ Widget _buildLandscapeLayout(double padding) {
    
    
         ],
-        rows: List.generate(controller.truckArrivalDBData.length, (index) {
-          final data = controller.truckArrivalDBData[index];
+        rows: List.generate(controller.labFatSnfDBData.length, (index) {
+          final data = controller.labFatSnfDBData[index];
           final isGrey = index % 2 == 0;
           return DataRow(
             color: WidgetStateProperty.all(isGrey ? Colors.white : Colors.grey[200]),
             cells: [
    
    DataCell(Center(child: Text("${data["sampleId"]}"))),
-   DataCell(Center(child: Text("${data['dumpDate']}"))),
-   DataCell(Center(child: Text("${data['shift']}"))),
-   DataCell(Center(child: Text("${data['truckNo']}"))),
-
-   
-      
+   DataCell(Center(child: Text("${data['fat']== "" ? 0.0 : data['fat']}"))),
+   DataCell(Center(child: Text("${data['snf']== "" ? 0.0 : data['snf']}"))),
+   DataCell(Center(child: Text("${data['lr']== "" ? 0.0 : data['lr']}"))),
             ],
           );
         }),

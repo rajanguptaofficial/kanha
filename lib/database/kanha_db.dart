@@ -734,7 +734,8 @@ class KanhaDBHelper {
         insertMode TEXT,
         mppOtherCode TEXT,
         isReadyToSync INTEGER,
-        isTested INTEGER
+        isTested TEXT,
+        collectionType TEXT
       )
     ''');
     
@@ -764,10 +765,6 @@ await db.execute('''
     autoId INTEGER NULL
   )
 ''');
-
-
-
-
 
 
 

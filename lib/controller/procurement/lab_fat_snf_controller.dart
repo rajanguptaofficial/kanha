@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -16,9 +17,9 @@ class LabFatSnfController extends GetxController{
   // var selectedShift = ''.obs;
   // var savedEntries = <Map<String, String>>[].obs;
   // // Saved data for Form 2
-  // var savedData = <Map<String, dynamic>>[].obs;
+  //var savedData = <Map<String, dynamic>>[].obs;
 
-  //  saveData() {
+  //  saveDataMA1() {
   //   int sequenceNo = savedData.length + 1;
   //   savedData.add({
   //     'sequenceNo': sequenceNo,
@@ -30,15 +31,35 @@ class LabFatSnfController extends GetxController{
   //   });
   // }
 
+  // saveDataMA2() {
+  //   int sequenceNo = savedData.length + 1;
+  //   savedData.add({
+  //     'sequenceNo': sequenceNo,
+  //     'date': selectedDate.value,
+  //     'shift': selectedShift.value,
+  //     'truckNumber': truckNumber.value,
+  //     'arrival': arrival.value,
+  //     'time': arrival.value,
+  //   });
+  // }
 
+var clrMA1 = TextEditingController();
+var fatMA1 = TextEditingController();
+var snfMA1 = TextEditingController();
+
+var clrMA2 = TextEditingController();
+var fatMA2 = TextEditingController();
+var snfMA2 = TextEditingController();
 
 final controller2 = Get.put(RateCheckMasterController());
  final KanhaDBHelper _kanhaDBHelper = KanhaDBHelper.instance;
   var isForm1Visible = true.obs;
-  var truckArrivalDBData = <Map<String, dynamic>>[].obs;
+  var labFatSnfDBData = <Map<String, dynamic>>[].obs;
   var arrival = ''.obs;
   var truckNumber = ''.obs;
-
+//  var fat = ''.obs;
+//   var snf = ''.obs;
+  // var clr = ''.obs;
 // Perform the multiplication
 // Corrected and added an observable for the calculated amountValue
 var currentDate =   "".obs;
@@ -157,7 +178,7 @@ Future<void> initializeMemberCollData() async {
     );
 
     // Update truckArrivalDBData with the filtered results
-    truckArrivalDBData.assignAll(data);
+    labFatSnfDBData.assignAll(data);
   } catch (e) {
     print("Error while initializing member collection data: $e");
   } finally {
@@ -173,11 +194,19 @@ Future<List<Map<String, dynamic>>> fetchLocalData({
   final db = await _kanhaDBHelper.database;
 
   // Fetch and filter data using `where` and `whereArgs`
-  final filteredData = await db.query(
-    'bmcCollection', // Table name
-    where: 'DumpDate = ? AND Shift = ?', // Filter condition
-    whereArgs: [date, shift], // Filter values
+  // final filteredData = await db.query(
+  //   'bmcCollection', // Table name
+  //   where: 'DumpDate = ? AND Shift = ? AND collectionType == "rmrd" ', // Filter condition
+  //   whereArgs: [date, shift,], // Filter values
+  // );
+
+final filteredData =  await db.query(
+    'bmcCollection',
+    where: 'collectionType = ? AND dumpDate = ? AND shift = ?',
+    whereArgs: ['rmrd', date, shift],
   );
+
+
  // clearCollections();
 print(filteredData);
   return filteredData;
@@ -203,7 +232,7 @@ Future<String?> getLocalIp() async {
 
   // Initialize the date and time shift
   Future _initializeDateAndTimeShift()async {
-    DateTime now = await DateTime.now();
+    DateTime now = DateTime.now();
     // Determine Morning or Evening based on time
     int currentHour = now.hour;
     timeShift.value = currentHour < 12 ? 'Morning' : 'Evening';
@@ -278,8 +307,93 @@ dockCollData.clear();
   //   routeData.clear();
   // }
 
-  Future<void> saveEntry() async {
-    //updateSelectedMilkType(milkType.value);
+Future<void> updateAndMoveToLast(int index) async {
+  // Fetch the database instance
+  final db = await _kanhaDBHelper.database;
+ var formNumber = index == 1 ? "MA1" : "MA2";
+  // Ensure the index exists
+  if (index >= labFatSnfDBData.length) {
+    print("Index out of range");
+    Get.snackbar(
+      'No RMRD Data Found',
+      'out of range',
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: Colors.red,
+      colorText: Colors.white,
+    );
+    return;
+  }else{
+
+  // Create a mutable copy of the record
+  Map<String, dynamic> record = Map<String, dynamic>.from(labFatSnfDBData[index]);
+  // Check if 'isTested' is true
+  if (record['isTested'] == 'true') {
+    Get.snackbar(
+      'Record at index $index is already tested',
+      'No modification allowed.',
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: Colors.red,
+      colorText: Colors.white,
+    );
+    print("Record at index $index is already tested. No modification allowed.");
+    return;
+  }else{
+log(record.toString());
+  // Get `rawId` for database update
+  int rawId = record['rawId'];
+
+  // Update the database fields
+  await db.update(
+    'bmcCollection',
+    {
+      'fat': formNumber== "MA1" ? int.parse(fatMA1.text.trim()) : fatMA2.text.trim(),
+      'snf':formNumber== "MA1" ? snfMA1.text.trim() : snfMA2.text.trim(),
+      'lr': formNumber== "MA1" ? clrMA1.text.trim() : clrMA2.text.trim(),
+      'sampleId':  labFatSnfDBData.length,
+    },
+    where: 'rawId = ?',
+    whereArgs: [rawId],
+  );
+  log(record.toString());
+labFatSnfDBData.length;
+log(labFatSnfDBData.toString());
+  // Remove the record from the current position in the list
+  labFatSnfDBData.removeAt(index);
+
+log(labFatSnfDBData.toString());
+
+log(record.toString());
+
+labFatSnfDBData.length;
+  // Modify the copied record (since it is now mutable)
+  record['fat'] = formNumber== "MA1" ? int.parse(fatMA1.text.trim()) : fatMA2.text.trim();
+  record['snf'] = formNumber== "MA1" ? snfMA1.text.trim() : snfMA2.text.trim();
+  record['lr'] = formNumber== "MA1" ? clrMA1.text.trim() : clrMA2.text.trim();
+  record['sampleId'] = labFatSnfDBData.length+1;
+
+log(record.toString());
+  // Append the modified record to the end of the list
+ labFatSnfDBData.add(record);
+log(labFatSnfDBData.toString());
+  print("Updated and moved record to last index: ${labFatSnfDBData.last}");
+
+  // Reinitialize data after update
+  // await initializeMemberCollData();
+
+final filteredData =  await db.query(
+    'bmcCollection',
+    where: 'collectionType = ? AND dumpDate = ? AND shift = ?',
+    whereArgs: ['rmrd', currentDate.value.toString(), timeShift.value == "Morning" ? "M" : "E"],
+  );
+
+  labFatSnfDBData.assignAll(filteredData);
+  log(labFatSnfDBData.toString());
+  }}
+}
+
+
+  Future<void> saveEntry(sample) async {
+    labFatSnfDBData.length;
 final entry = {   
     "dumpDate" :   currentDate.value.toString(), // current date 
     "shift":       timeShift.value == "Morning" ? "M" : "E",// morning
@@ -317,7 +431,8 @@ final entry = {
     "insertMode" :"A",// A
     //"mppOtherCode" : mppCode.value.toString(), // mpp code 
     "isReadyToSync" :"false", // false 
-    "isTested": ""
+    "isTested": "",
+    "collectionType":"",
   };
 
   // Insert the entry into the database
@@ -326,8 +441,6 @@ final entry = {
 
   Future<void> insertData(List<Map<String, dynamic>> entries) async {
     final db = await _kanhaDBHelper.database;
-
-
 
  try {
     int? sampleNo;
@@ -352,8 +465,8 @@ final entry = {
 
     await db.transaction((txn) async {
       for (var entry in entries) {
-        entry['sampleId'] = sampleNo.toString(); 
-       await txn.insert('bmcCollection', entry);
+      //  entry['sampleId'] = sampleNo.toString(); 
+      // await txn.insert('bmcCollection', entry);
       }
     });
 

@@ -298,7 +298,8 @@ Future<void> saveEntry() async {
     "insertMode" :"A",// A
     "mppOtherCode" :mppCode.value.toString(), // mpp code 
     "isReadyToSync" :"false", // false 
-    "isTested": ""
+    "isTested": "false",
+    "collectionType":"bmc",
   };
 
   // Insert the entry into the database

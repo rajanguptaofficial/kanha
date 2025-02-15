@@ -36,6 +36,7 @@ var selectedDockNo = ''.obs;
         fetchDockData(),
         fetchRoutes(),
         _initializeDateAndTimeShift(),
+        
     ]).then((_) {
       // Call afterSyncing to handle post-sync actions after both fetches complete
        initializeMemberCollData();
@@ -67,7 +68,6 @@ var selectedDockNo = ''.obs;
       updateTime(pickedTime);
     }
   }
-
 
 
 

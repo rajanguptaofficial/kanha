@@ -13,8 +13,10 @@ class DockCollectionController extends GetxController {
  var selectedDate = DateTime.now().obs; // Observable date
   var gradeData = ["Good", "Bad", "Sour"].obs;
   var selectedGrade = ''.obs;
-  var currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
-  var currentTime = DateFormat('HH:mm').format(DateTime.now()).obs;
+  // var currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
+  // var currentTime = DateFormat('HH:mm').format(DateTime.now()).obs;
+  var currentDate =   "".obs;
+  var currentTime =   "".obs;
   var timeShift = ''.obs;
   var sampleIdNo = ''.obs;
   var mppCode = ''.obs;
@@ -81,6 +83,8 @@ class DockCollectionController extends GetxController {
 
 
   Future<void> getSampleNo() async {
+ currentDate.value = DateFormat('dd-MM-yyyy').format(DateTime.now());
+ currentTime.value=   DateFormat('HH:mm').format(DateTime.now());
     final db = await _kanhaDBHelper.database;
     try {
       final result = await db.rawQuery('''
@@ -149,6 +153,8 @@ Future updateSelectedMilkType(String milk) async {
   }
 
   Future<String?> getLocalIp() async {
+
+
     try {
       for (var interface in await NetworkInterface.list()) {
         for (var addr in interface.addresses) {
@@ -266,7 +272,8 @@ final entry = {
     "insertMode" :"A",// A
     "mppOtherCode" : mppCode.value.toString(), // mpp code 
     "isReadyToSync" :"false", // false 
-        "isTested": ""
+    "isTested": "false",
+    "collectionType":"rmrd",
   };
 
   // Insert the entry into the database
