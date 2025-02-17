@@ -734,7 +734,7 @@ class KanhaDBHelper {
         insertMode TEXT,
         mppOtherCode TEXT,
         isReadyToSync INTEGER,
-        isTested TEXT,
+        isTested INTEGER,
         collectionType TEXT
       )
     ''');

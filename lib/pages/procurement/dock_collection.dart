@@ -584,7 +584,7 @@ Widget _buildMemberDetailsRow() {
    
    
    DataCell(Center(child: Text("${data["sampleId"]}"))),
-   DataCell(Center(child: Text("${data['dumpDate']}"))),
+   DataCell(Center(child: Text("${data['mppOtherCode']}"))),
    DataCell(Center(child: Text("${data['socname']}"))),
    DataCell(Center(child: Text("${data['type']}"))),
    DataCell(Center(child: Text("${data['weight']}"))),

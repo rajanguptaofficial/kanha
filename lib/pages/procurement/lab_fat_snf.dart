@@ -678,7 +678,7 @@ if (_formKey.currentState!.validate()) {
           
 
   onPressed: () {
-
+if(controller.sample1Tested.value== "0"){
 
 controller.fatMA1.text !="" &&  controller.snfMA1.text !="" && controller.clrMA1.text !="" ? 
     Future.wait([
@@ -693,8 +693,18 @@ controller.fatMA1.text !="" &&  controller.snfMA1.text !="" && controller.clrMA1
     duration: Duration(seconds: 2), // Optional: Adjust duration
     backgroundColor: Colors.red, // Change to any color
   ),
-);         
-          },
+);   }   
+else  {
+ScaffoldMessenger.of(context).showSnackBar(
+SnackBar(
+    content: Text("Already Tested",),
+    behavior: SnackBarBehavior.floating, // Optional: Makes it floating
+    duration: Duration(seconds: 2), // Optional: Adjust duration
+    backgroundColor: Colors.green, // Change to any color
+  ));}
+
+
+   },
 
 
           
@@ -804,7 +814,7 @@ controller.fatMA1.text !="" &&  controller.snfMA1.text !="" && controller.clrMA1
                           ),
 
   onPressed: () {
-
+    if(controller.sample2Tested.value=="0"){
 
 controller.fatMA2.text !="" &&  controller.snfMA2.text !="" && controller.clrMA2.text !="" ? 
     Future.wait([
@@ -819,7 +829,17 @@ controller.fatMA2.text !="" &&  controller.snfMA2.text !="" && controller.clrMA2
     duration: Duration(seconds: 2), // Optional: Adjust duration
     backgroundColor: Colors.red, // Change to any color
   ),
-);         
+);    }
+else  {
+ScaffoldMessenger.of(context).showSnackBar(
+SnackBar(
+    content: Text("Already Tested",),
+    behavior: SnackBarBehavior.floating, // Optional: Makes it floating
+    duration: Duration(seconds: 2), // Optional: Adjust duration
+    backgroundColor: Colors.green, // Change to any color
+  ));}
+
+
           },
 
                                 child: Text('Save(F8)', style: TextStyle(fontSize: 17,color: CustomColors.bgColor)),
@@ -948,7 +968,8 @@ Widget _buildLandscapeLayout(double padding) {
         columns: const [
    
       DataColumn(label: Text('Sample No.')),
-      DataColumn(label: Text('Fat %')),
+      DataColumn(label: Text('Tested')),
+        DataColumn(label: Text('Fat %')),
       DataColumn(label: Text('Snf %')),
       DataColumn(label: Text('Clr %')),
       
@@ -963,6 +984,7 @@ Widget _buildLandscapeLayout(double padding) {
             cells: [
    
    DataCell(Center(child: Text("${data["sampleId"]}"))),
+      DataCell(Center(child: Text("${data["isTested"]}"))),
    DataCell(Center(child: Text("${data['fat']== "" ? 0.0 : data['fat']}"))),
    DataCell(Center(child: Text("${data['snf']== "" ? 0.0 : data['snf']}"))),
    DataCell(Center(child: Text("${data['lr']== "" ? 0.0 : data['lr']}"))),

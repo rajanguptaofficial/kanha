@@ -272,7 +272,7 @@ final entry = {
     "insertMode" :"A",// A
     "mppOtherCode" : mppCode.value.toString(), // mpp code 
     "isReadyToSync" :"false", // false 
-    "isTested": "false",
+    "isTested": "0",
     "collectionType":"rmrd",
   };
 

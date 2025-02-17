@@ -10,39 +10,6 @@ import 'package:kanha_bmc/database/kanha_db.dart';
 
 class LabFatSnfController extends GetxController{
 
-
-
-  // // Form 1 fields
-  // var selectedDock = ''.obs;
-  // var selectedShift = ''.obs;
-  // var savedEntries = <Map<String, String>>[].obs;
-  // // Saved data for Form 2
-  //var savedData = <Map<String, dynamic>>[].obs;
-
-  //  saveDataMA1() {
-  //   int sequenceNo = savedData.length + 1;
-  //   savedData.add({
-  //     'sequenceNo': sequenceNo,
-  //     'date': selectedDate.value,
-  //     'shift': selectedShift.value,
-  //     'truckNumber': truckNumber.value,
-  //     'arrival': arrival.value,
-  //     'time': arrival.value,
-  //   });
-  // }
-
-  // saveDataMA2() {
-  //   int sequenceNo = savedData.length + 1;
-  //   savedData.add({
-  //     'sequenceNo': sequenceNo,
-  //     'date': selectedDate.value,
-  //     'shift': selectedShift.value,
-  //     'truckNumber': truckNumber.value,
-  //     'arrival': arrival.value,
-  //     'time': arrival.value,
-  //   });
-  // }
-
 var clrMA1 = TextEditingController();
 var fatMA1 = TextEditingController();
 var snfMA1 = TextEditingController();
@@ -55,13 +22,7 @@ final controller2 = Get.put(RateCheckMasterController());
  final KanhaDBHelper _kanhaDBHelper = KanhaDBHelper.instance;
   var isForm1Visible = true.obs;
   var labFatSnfDBData = <Map<String, dynamic>>[].obs;
-  var arrival = ''.obs;
-  var truckNumber = ''.obs;
-//  var fat = ''.obs;
-//   var snf = ''.obs;
-  // var clr = ''.obs;
-// Perform the multiplication
-// Corrected and added an observable for the calculated amountValue
+
 var currentDate =   "".obs;
 var currentTime =   "".obs;
 var timeShift = ''.obs;
@@ -72,7 +33,8 @@ var dockCollData = <String>{}.obs; // Use Set to prevent duplicates
 var selectedDockNo = ''.obs;
 var deviceIpAddress = ''.obs;
 
-
+var sample1Tested ="".obs;
+var sample2Tested ="".obs;
 
   @override
   void onInit() {
@@ -172,13 +134,13 @@ Future<void> initializeMemberCollData() async {
     final timeShiftFilter = timeShift.value == "Morning" ? "M" : "E";
 
     // Fetch data filtered by the current date and time shift
-    final data = await fetchLocalData(
+    await fetchLocalData(
       date: currentDate.value.toString(),
       shift: timeShiftFilter,
     );
 
     // Update truckArrivalDBData with the filtered results
-    labFatSnfDBData.assignAll(data);
+   // labFatSnfDBData.assignAll(data);
   } catch (e) {
     print("Error while initializing member collection data: $e");
   } finally {
@@ -187,29 +149,52 @@ Future<void> initializeMemberCollData() async {
 }
 
 
+
 Future<List<Map<String, dynamic>>> fetchLocalData({
   required String date,
   required String shift,
 }) async {
   final db = await _kanhaDBHelper.database;
 
-  // Fetch and filter data using `where` and `whereArgs`
-  // final filteredData = await db.query(
-  //   'bmcCollection', // Table name
-  //   where: 'DumpDate = ? AND Shift = ? AND collectionType == "rmrd" ', // Filter condition
-  //   whereArgs: [date, shift,], // Filter values
-  // );
-
-final filteredData =  await db.query(
-    'bmcCollection',
-    where: 'collectionType = ? AND dumpDate = ? AND shift = ?',
-    whereArgs: ['rmrd', date, shift],
-  );
 
 
- // clearCollections();
-print(filteredData);
-  return filteredData;
+final filteredData = await db.query(
+  'bmcCollection',
+  where: 'collectionType = ? AND dumpDate = ? AND shift = ?',
+  whereArgs: ['rmrd', date, shift],
+);
+
+// Debug: Log the 'isTested' values to check if they are what you expect
+filteredData.forEach((row) {
+  log('Row: ${row.toString()}');
+  log('isTested value: ${row['isTested']}');
+});
+
+// Handle potential string or integer 'isTested' value
+final notTested = filteredData.where((row) {
+  return (int.tryParse(row['isTested'].toString()) ?? -1) == 0;  // Handle both String and Integer
+}).toList();
+
+final tested = filteredData.where((row) {
+  return (int.tryParse(row['isTested'].toString()) ?? -1) == 1;
+}).toList();
+
+// Combine the two lists, with 'notTested' first
+final sortedData = [...notTested, ...tested];
+
+// Assign to labFatSnfDBData
+labFatSnfDBData.assignAll(sortedData);
+
+// Log the sorted data
+log(labFatSnfDBData.toString());
+
+  Map<String, dynamic> sample1 = Map<String, dynamic>.from(labFatSnfDBData[0]);
+            sample1Tested.value =     sample1['isTested'].toString();
+  Map<String, dynamic> sample2 = Map<String, dynamic>.from(labFatSnfDBData[1]);
+               sample2Tested.value =   sample2['isTested'].toString();
+
+ print(labFatSnfDBData);
+   return labFatSnfDBData;
  
 }
 
@@ -283,37 +268,15 @@ Future<void> fetchCompnyCodeByRuteCodeName(String ruteCodeName) async {
 }
 
 
-void clearCollections() {
-selectedDockNo.value = "";
-currentDate.value = "";
-currentTime.value = "";
-timeShift.value = "";
-selectedRoute.value = "";
-selectedDockNo.value = "";
-selectedDockNo.value = "";
-truckNumber.value = "";
-routeData.clear();
-dockCollData.clear();
-}
-
-
-  // void clearCollections() {
-  //  // mppCode.value = '';
-  //  // mppName.value = '';
-  //  // can.value = '';
-  //  // weight.value = '';
-  //  // sampleIdNo.value = '';
-  //   selectedRoute.value = "";
-  //   routeData.clear();
-  // }
-
 Future<void> updateAndMoveToLast(int index) async {
+
   // Fetch the database instance
   final db = await _kanhaDBHelper.database;
- var formNumber = index == 1 ? "MA1" : "MA2";
+ var formNumber = index == 0 ? "MA1" : "MA2";
+
   // Ensure the index exists
   if (index >= labFatSnfDBData.length) {
-    print("Index out of range");
+
     Get.snackbar(
       'No RMRD Data Found',
       'out of range',
@@ -327,10 +290,18 @@ Future<void> updateAndMoveToLast(int index) async {
   // Create a mutable copy of the record
   Map<String, dynamic> record = Map<String, dynamic>.from(labFatSnfDBData[index]);
   // Check if 'isTested' is true
-  if (record['isTested'] == 'true') {
+  if (record['isTested'] == 1) {
+    
+ clrMA1.clear();
+ fatMA1.clear(); 
+ snfMA1.clear();
+ clrMA2.clear();
+ fatMA2.clear(); 
+ snfMA2.clear();
+
     Get.snackbar(
-      'Record at index $index is already tested',
-      'No modification allowed.',
+      'Sample ID ${record['sampleId']} is already tested',
+      'No Modification Allowed.',
       snackPosition: SnackPosition.TOP,
       backgroundColor: Colors.red,
       colorText: Colors.white,
@@ -338,47 +309,58 @@ Future<void> updateAndMoveToLast(int index) async {
     print("Record at index $index is already tested. No modification allowed.");
     return;
   }else{
-log(record.toString());
+
+ log(record.toString());
   // Get `rawId` for database update
   int rawId = record['rawId'];
+  
+
+var fat = formNumber== "MA1" ? int.parse(fatMA1.text.trim()) : fatMA2.text.trim() ;
+var snf = formNumber== "MA1" ? snfMA1.text.trim() : snfMA2.text.trim() ;
+var lr  = formNumber== "MA1" ? clrMA1.text.trim() : clrMA2.text.trim() ;
+
+log(record.toString());
 
   // Update the database fields
   await db.update(
     'bmcCollection',
     {
-      'fat': formNumber== "MA1" ? int.parse(fatMA1.text.trim()) : fatMA2.text.trim(),
-      'snf':formNumber== "MA1" ? snfMA1.text.trim() : snfMA2.text.trim(),
-      'lr': formNumber== "MA1" ? clrMA1.text.trim() : clrMA2.text.trim(),
-      'sampleId':  labFatSnfDBData.length,
+      'fat': fat,
+      'snf':snf,
+      'lr': lr,
+      'isTested': "1",
+      //'rawId':     data22
     },
     where: 'rawId = ?',
     whereArgs: [rawId],
   );
   log(record.toString());
-labFatSnfDBData.length;
-log(labFatSnfDBData.toString());
-  // Remove the record from the current position in the list
-  labFatSnfDBData.removeAt(index);
+  List<Map<String, dynamic>> data = await db.query('bmcCollection');
+ log(data.toString());
 
-log(labFatSnfDBData.toString());
 
-log(record.toString());
 
-labFatSnfDBData.length;
-  // Modify the copied record (since it is now mutable)
-  record['fat'] = formNumber== "MA1" ? int.parse(fatMA1.text.trim()) : fatMA2.text.trim();
-  record['snf'] = formNumber== "MA1" ? snfMA1.text.trim() : snfMA2.text.trim();
-  record['lr'] = formNumber== "MA1" ? clrMA1.text.trim() : clrMA2.text.trim();
-  record['sampleId'] = labFatSnfDBData.length+1;
 
-log(record.toString());
-  // Append the modified record to the end of the list
- labFatSnfDBData.add(record);
-log(labFatSnfDBData.toString());
-  print("Updated and moved record to last index: ${labFatSnfDBData.last}");
+// Fetch the row before deleting it
+List<Map<String, dynamic>> existingRows = await db.query(
+  'bmcCollection',
+  where: 'rawId = ?',
+  whereArgs: [rawId],
+);
+log(existingRows.toString());
+// Ensure the row exists before proceeding
+if (existingRows.isNotEmpty) {
+  Map<String, dynamic> rowToInsert = Map.of(existingRows.first);
+  
+  // Remove 'rawId' so it doesn't get inserted again
+  rowToInsert.remove('rawId');
 
-  // Reinitialize data after update
-  // await initializeMemberCollData();
+  // Delete the existing row
+  await db.delete('bmcCollection', where: 'rawId = ?', whereArgs: [rawId]);
+
+  // Insert the row back without 'rawId'
+  await db.insert('bmcCollection', rowToInsert);
+}
 
 final filteredData =  await db.query(
     'bmcCollection',
@@ -386,117 +368,29 @@ final filteredData =  await db.query(
     whereArgs: ['rmrd', currentDate.value.toString(), timeShift.value == "Morning" ? "M" : "E"],
   );
 
-  labFatSnfDBData.assignAll(filteredData);
-  log(labFatSnfDBData.toString());
-  }}
-}
+// Handle potential string or integer 'isTested' value
+final notTested = filteredData.where((row) {
+  return (int.tryParse(row['isTested'].toString()) ?? -1) == 0;  // Handle both String and Integer
+}).toList();
+
+final tested = filteredData.where((row) {
+  return (int.tryParse(row['isTested'].toString()) ?? -1) == 1;
+}).toList();
+
+// Combine the two lists, with 'notTested' first
+final sortedData = [...notTested, ...tested];
+
+// Assign to labFatSnfDBData
+labFatSnfDBData.assignAll(sortedData);
+
+List<Map<String, dynamic>> data3 = await db.query('bmcCollection');
+log(data3.toString());
+  Map<String, dynamic> sample1 = Map<String, dynamic>.from(labFatSnfDBData[0]);
+            sample1Tested.value = sample1['isTested'].toString();
+  Map<String, dynamic> sample2 = Map<String, dynamic>.from(labFatSnfDBData[1]);
+               sample2Tested.value  =   sample2['isTested'].toString();
+}}}
 
 
-  Future<void> saveEntry(sample) async {
-    labFatSnfDBData.length;
-final entry = {   
-    "dumpDate" :   currentDate.value.toString(), // current date 
-    "shift":       timeShift.value == "Morning" ? "M" : "E",// morning
-    "sampleId": "", //  1,2 
-    // "rtCode" :     mppRouteCode.value.toString(), // society code table rute code  ( "routecode": "1") mmp table 
-    // "soccode":     mppSocCode.value.toString(), //  "socCode": 33000002,
-    // "socname" :    mppName.value.toString(), // mpp name
-    // "type" :       milkType.value.toString(), // milk type
-    // "grade" :      selectedGrade.value.toString(), // good  (Dropdown)
-    // "weight":      weight.value.toString(),// qty
-    // "weightltr":   weight.value.toString(),// qty
-    // "rCans" :      can.value.toString(),//  input type 
-    // "aCans" :      can.value.toString(), //input
-    "fat": "", // fat
-    "rate": "", // fat
-    "amount": "", // fat
-    "lr" :"0",// 0
-    "snf" : "",// snf
-    "dockNo": "1", // 1   (Dropdown)
-    "dumpTime": currentTime.value.toString(), // current time
-    "testTime": currentTime.value.toString(), // current time
-    "dId": "", // ""
-    "dDate" :"", // ""
-    "lId": "", // ""
-    "lDate": "",// ""
-    "ismanuallab": "A", // A
-    "ismanualwt":"A", // A
-    "lId1": "", // ""
-    "isUpload": "0", // 0
-    //"cntcode" : mppBmcCode.value.toString(), //   "bmccode": "1", mmp table
-   // "collectionCode":mppBmcCode.value.toString(), // "bmccode": "1", mmp table
-    "companyCode":  "" , // ""
-    "dockPublicIp" :  deviceIpAddress.value.toString(), // device ip address
-    "labPublicIp": deviceIpAddress.value.toString(), // device ip address
-    "insertMode" :"A",// A
-    //"mppOtherCode" : mppCode.value.toString(), // mpp code 
-    "isReadyToSync" :"false", // false 
-    "isTested": "",
-    "collectionType":"",
-  };
 
-  // Insert the entry into the database
-  await insertData([entry]);
-}
-
-  Future<void> insertData(List<Map<String, dynamic>> entries) async {
-    final db = await _kanhaDBHelper.database;
-
- try {
-    int? sampleNo;
-     db.execute;
-    final result = await db.rawQuery('''
-      SELECT sampleId
-      FROM bmcCollection
-      WHERE dumpDate = ? AND shift = ?
-      ORDER BY sampleId DESC
-      LIMIT 1
-    ''', [currentDate.value.toString(), timeShift.value == "Morning" ? "M" : "E"]);
-
-    if (result.isNotEmpty) {
-      sampleNo = (result.first['sampleId'] as int?) ?? 0;
-      sampleNo++;
-    } else {
-      sampleNo = 1;
-    }
-  // Clear existing data before inserting new data
-   // await db.delete('bmcCollection');
-    //await db.execute('DROP TABLE IF EXISTS bmcCollection');
-
-    await db.transaction((txn) async {
-      for (var entry in entries) {
-      //  entry['sampleId'] = sampleNo.toString(); 
-      // await txn.insert('bmcCollection', entry);
-      }
-    });
-
-    // try {
-    //   await db.transaction((txn) async {
-    //     for (var entry in entries) {
-    //       await txn.insert('bmcCollection', entry);
-    //     }
-    //   });
-
-      isForm1Visible.value = true;
-
-      Get.snackbar(
-        'Success',
-        'Data saved successfully!',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
-      print("Data successfully inserted.");
-    } catch (e) {
-      print('Error inserting data: $e');
-      rethrow;
-    }
-
-    clearCollections();
-   Future.wait([
-      _initializeDateAndTimeShift(),
-    ]).then((_) {
-      initializeMemberCollData();
-    });
-  }
 }
