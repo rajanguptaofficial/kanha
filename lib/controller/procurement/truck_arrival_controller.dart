@@ -97,11 +97,11 @@ Future<void> fetchDockData() async {
  Future<void> fetchRoutes() async {
     final db = await _kanhaDBHelper.database;
     final List<Map<String, dynamic>> result =
-        await db.rawQuery('SELECT routecode, rtName FROM ruteMaster');
+        await db.rawQuery('SELECT rtCode, rtName FROM ruteMaster');
 
   
     // Convert result into "routecode/rtName" format
-        routeData.assignAll(result.map((row) => "${row['routecode']}/${row['rtName']}").toSet());
+        routeData.assignAll(result.map((row) => "${row['rtCode']}/${row['rtName']}").toSet());
   }
 
 
@@ -165,7 +165,7 @@ Future<List<Map<String, dynamic>>> fetchLocalData({
     whereArgs: [date, shift], // Filter values
   );
  // clearCollections();
-print(filteredData);
+print("this is filter tata ${filteredData}");
   return filteredData;
  
 }

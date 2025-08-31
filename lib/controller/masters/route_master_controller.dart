@@ -35,11 +35,11 @@ class RuteMasterController extends GetxController {
 
     isLoading.value = true;
 
-    final url = Uri.parse(ApiUrls.profile);
+    final url = Uri.parse(ApiUrls.getMasterData);
     final body = {
       "deviceid": username ?? '',
       "usrcode": userCode ?? '',
-      "requests": "Route"
+      "requests": "RouteDetails"
     };
 
     try {
@@ -54,6 +54,8 @@ class RuteMasterController extends GetxController {
         final tableData = List<Map<String, dynamic>>.from(
           responseData['responseData']['table'],
         );
+
+        print(" Route data hai $tableData");
 
         await insertData(tableData);
 

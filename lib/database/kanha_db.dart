@@ -560,22 +560,60 @@ class KanhaDBHelper {
   }
 
   Future<void> _onCreate(Database db, int version) async {
+    // await db.execute('''
+    //   CREATE TABLE IF NOT EXISTS bmcMaster (
+    //     cntName TEXT,
+    //     bmccode TEXT,
+    //     bmcname TEXT,
+    //     mccCode TEXT,
+    //     mccName TEXT,
+    //     plantCode TEXT,
+    //     plantName TEXT,
+    //     companyCode INTEGER,
+    //     companyName TEXT,
+    //     effectivedate TEXT,
+    //     add1 TEXT,
+    //     cntDocks INTEGER,
+    //     cntCode INTEGER
+    //   )
+    // ''');
+
+    ///bmc master
+
     await db.execute('''
-      CREATE TABLE IF NOT EXISTS bmcMaster (
-        bmccode TEXT,
-        bmcname TEXT,
-        mccCode TEXT,
-        mccName TEXT,
-        plantCode TEXT,
-        plantName TEXT,
-        companyCode INTEGER,
-        companyName TEXT,
-        effectivedate TEXT,
-        add1 TEXT,
-        cntDocks INTEGER,
-        cntCode INTEGER
-      )
-    ''');
+  CREATE TABLE IF NOT EXISTS bmcMaster (
+    cntCode INTEGER,
+    mccCode INTEGER,
+    cntName TEXT,
+    comapnyCode INTEGER,
+    cntDocks INTEGER,
+    contactNo TEXT,
+    add1 TEXT,
+    pinCode INTEGER,
+    city TEXT,
+    state TEXT,
+    country TEXT,
+    isBowl INTEGER,
+    cId INTEGER,
+    cDate TEXT,
+    mId INTEGER,
+    mDate TEXT,
+    isUpload INTEGER,
+    countryCode INTEGER,
+    stateCode INTEGER,
+    is_Active INTEGER,
+    hamletId INTEGER,
+    villageId INTEGER,
+    subDistrictId INTEGER,
+    districtId INTEGER,
+    mccId INTEGER,
+    plantId INTEGER,
+    otherCode INTEGER,
+    isDownload INTEGER,
+    downloadDatetime TEXT,
+    is_route_Arrival_required INTEGER
+  )
+''');
 
     await db.execute('''
       CREATE TABLE IF NOT EXISTS memberMaster (
@@ -604,29 +642,91 @@ class KanhaDBHelper {
       )
     ''');
 
+
+    ///mpp master
+
     await db.execute('''
-      CREATE TABLE IF NOT EXISTS mppMaster (    
-        code TEXT,
-        mppName TEXT,
-        status INTEGER,
-        effectiveDate TEXT,
-        socCode INTEGER,
-        routecode TEXT,
-        rtName TEXT,
-        rtcCode INTEGER,
-        bmccode TEXT,
-        bmcname TEXT,
-        mccCode TEXT,
-        mccName TEXT,
-        plantCode TEXT,
-        plantName TEXT,
-        companyCode INTEGER,
-        companyName TEXT,
-        effectivedate1 TEXT,
-        add1 TEXT,
-        cntDocks INTEGER
-      )
-    ''');
+  CREATE TABLE IF NOT EXISTS mppMaster (
+    socCode INTEGER,
+    socName TEXT,
+    socName2 TEXT,
+    soccodetxt TEXT,
+    companyCode INTEGER,
+    rtCode INTEGER,
+    sapRtCode INTEGER,
+    fsCode TEXT,
+    tlkCode TEXT,
+    cId INTEGER,
+    cDate TEXT,
+    mId INTEGER,
+    mDate TEXT,
+    sadacan TEXT,
+    isUpload INTEGER,
+    cntCode INTEGER,
+    mobileno TEXT,
+    isDemo INTEGER,
+    isLive INTEGER,
+    installtionDate TEXT,
+    startDate TEXT,
+    endDate TEXT,
+    bankCode TEXT,
+    accountNo TEXT,
+    adharNo TEXT,
+    agentName TEXT,
+    sapPlantCode TEXT,
+    dstCode INTEGER,
+    subDistrictId INTEGER,
+    villageId INTEGER,
+    hamletId INTEGER,
+    countryId INTEGER,
+    stateId INTEGER,
+    bankBranchName TEXT,
+    ifsc TEXT,
+    accountName TEXT,
+    exCodeofTahsilCode TEXT,
+    contactPerson TEXT,
+    contactNo TEXT,
+    panNo TEXT,
+    securityAmount REAL,
+    paymentMode TEXT,
+    referenceNo TEXT,
+    aggrementNo TEXT,
+    aggerementExpiryDate TEXT,
+    securityChequeNo_1LakhRs TEXT,
+    securityChequeNo_100Rs TEXT,
+    otherCode TEXT,
+    isdownload INTEGER,
+    downloadDatetime TEXT,
+    isActive INTEGER,
+    effectiveDate TEXT,
+    effectiveShift TEXT,
+    isbmc INTEGER
+  )
+''');
+
+    // await db.execute('''
+    //   CREATE TABLE IF NOT EXISTS mppMaster (
+    //     code TEXT,
+    //     mppName TEXT,
+    //     status INTEGER,
+    //     effectiveDate TEXT,
+    //     socCode INTEGER,
+    //     routecode TEXT,
+    //     rtName TEXT,
+    //     rtcCode INTEGER,
+    //     bmccode TEXT,
+    //     bmcname TEXT,
+    //     mccCode TEXT,
+    //     mccName TEXT,
+    //     plantCode TEXT,
+    //     plantName TEXT,
+    //     companyCode INTEGER,
+    //     companyName TEXT,
+    //     effectivedate1 TEXT,
+    //     add1 TEXT,
+    //     cntDocks INTEGER
+    //   )
+    // ''');
 
     await db.execute('''
       CREATE TABLE IF NOT EXISTS ratesCheckMaster (
@@ -650,24 +750,51 @@ class KanhaDBHelper {
       )
     ''');
 
+    // await db.execute('''
+    //   CREATE TABLE IF NOT EXISTS ruteMaster (
+    //     routecode TEXT,
+    //     rtName TEXT,
+    //     rtcCode INTEGER,
+    //     bmccode TEXT,
+    //     bmcname TEXT,
+    //     mccCode TEXT,
+    //     mccName TEXT,
+    //     plantCode TEXT,
+    //     plantName TEXT,
+    //     companyCode INTEGER,
+    //     companyName TEXT,
+    //     effectivedate TEXT,
+    //     add1 TEXT,
+    //     cntDocks INTEGER
+    //   )
+    // ''');
+
     await db.execute('''
-      CREATE TABLE IF NOT EXISTS ruteMaster (
-        routecode TEXT,
-        rtName TEXT,
-        rtcCode INTEGER,
-        bmccode TEXT,
-        bmcname TEXT,
-        mccCode TEXT,
-        mccName TEXT,
-        plantCode TEXT,
-        plantName TEXT,
-        companyCode INTEGER,
-        companyName TEXT,
-        effectivedate TEXT,
-        add1 TEXT,
-        cntDocks INTEGER
-      )
-    ''');
+  CREATE TABLE IF NOT EXISTS ruteMaster (
+    effCode INTEGER,
+    rtCode INTEGER,
+    rtName TEXT,
+    sapCode INTEGER,
+    rtcCode INTEGER,
+    rtSchTimeM TEXT,
+    rtSchTimeE TEXT,
+    rtKMM REAL,
+    rtKME REAL,
+    rtMixMilk INTEGER,
+    vihicalNo INTEGER,
+    fieldOfficer INTEGER,
+    companyCode INTEGER,
+    cntCode INTEGER,
+    cId INTEGER,
+    cDate TEXT,
+    mId INTEGER,
+    mDate TEXT,
+    isUpload INTEGER,
+    otherCode INTEGER,
+    isdownload INTEGER,
+    downloadDatetime TEXT
+  )
+''');
 
     await db.execute('''
       CREATE TABLE IF NOT EXISTS memberCollection (

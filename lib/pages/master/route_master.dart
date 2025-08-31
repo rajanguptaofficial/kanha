@@ -14,6 +14,7 @@ class RouteMasterScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: CustomColors.appColor,
           title: const Text(
@@ -32,7 +33,7 @@ class RouteMasterScreen extends StatelessWidget {
               }
 
               return Padding(
-                padding: EdgeInsets.all(width * 0.04),
+                padding: EdgeInsets.symmetric(vertical: 1),
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: SingleChildScrollView(
@@ -53,15 +54,19 @@ class RouteMasterScreen extends StatelessWidget {
           WidgetStateProperty.all(CustomColors.appColor),
       headingTextStyle: const TextStyle(
           color: Colors.white, fontWeight: FontWeight.bold),
-      columnSpacing: 12,
-      dataRowMinHeight: 20,
-      dataRowMaxHeight: 40,
-      headingRowHeight: 33,
+      // columnSpacing: 12,
+      // dataRowMinHeight: 20,
+      // dataRowMaxHeight: 40,
+      // headingRowHeight: 33,
       columns: const [
-                               DataColumn(label: Text('Route Name-Code')),
-                              DataColumn(label: Text('MCC Name-Code')),
-                              DataColumn(label: Text('Plant Name-Code')),
-                              DataColumn(label: Text('Company Name-Code')),     
+        DataColumn(label: Text('S. No')),
+        DataColumn(label: Text('Route Name')),
+        DataColumn(label: Text('Route Code')),
+        DataColumn(label: Text('BMC Code')),
+                              //  DataColumn(label: Text('Route Name-Code')),
+                              // DataColumn(label: Text('MCC Name-Code')),
+                              // DataColumn(label: Text('Plant Name-Code')),
+                              // DataColumn(label: Text('Company Name-Code')),
 
 
 
@@ -74,10 +79,16 @@ class RouteMasterScreen extends StatelessWidget {
           color: WidgetStateProperty.all(isGrey ? Colors.white : Colors.grey[200]),
           cells: [
 
-   DataCell(Center(child: Text("${data["rtName"]} - ${data["routecode"]}"))),
-        DataCell(Center(child: Text("${data["mccName"]} - ${data["mccCode"]}"))),
-        DataCell(Center(child: Text("${data["plantName"]} - ${data["plantCode"]}"))),
-        DataCell(Center(child: Text("${data["companyName"]} - ${data["companyCode"]}"))),
+            DataCell(Center(child: Text("${index +1}."))),
+            DataCell(Center(child: Text("${data['rtName']}"))),
+            DataCell(Center(child: Text("${data['rtCode']}"))),
+            DataCell(Center(child: Text("${data['cntCode']}"))),
+
+
+   // DataCell(Center(child: Text("${data["rtName"]} - ${data["routecode"]}"))),
+   //      DataCell(Center(child: Text("${data["mccName"]} - ${data["mccCode"]}"))),
+   //      DataCell(Center(child: Text("${data["plantName"]} - ${data["plantCode"]}"))),
+   //      DataCell(Center(child: Text("${data["companyName"]} - ${data["companyCode"]}"))),
 
                           
           ],

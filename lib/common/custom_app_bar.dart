@@ -15,6 +15,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
             backgroundColor: CustomColors.appColor,
+            iconTheme: IconThemeData(
+              color: Colors.white
+            ),
             title:  Text(
               title,
               style: TextStyle(color: Colors.white, fontSize: 18,  fontWeight: FontWeight.w600,),
@@ -22,6 +25,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             actions: [
               IconButton(
                 icon: const Icon(Icons.wifi),
+                color: Colors.white,
                 onPressed: () {               
                 },
               ),

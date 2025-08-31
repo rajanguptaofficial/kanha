@@ -17,6 +17,7 @@ class TruckArrivalFormScreen extends StatefulWidget {
 
 class _TruckArrivalFormScreenState extends State<TruckArrivalFormScreen> {
   final TruckArrivalController controller = Get.put(TruckArrivalController());
+  TextEditingController truckNo = TextEditingController();
 
   final _formKey = GlobalKey<FormState>(); 
  
@@ -39,7 +40,7 @@ class _TruckArrivalFormScreenState extends State<TruckArrivalFormScreen> {
                  // controller.currentDate.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
                   // controller.currentTime.value=   DateFormat('HH:mm').format(DateTime.now());
                 return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 5,horizontal: 14),
+                  padding: EdgeInsets.symmetric(vertical: 5,horizontal: 0),
                   child: isPortrait
                       ? _buildPortraitLayout(padding)
                       : _buildLandscapeLayout(padding),
@@ -54,196 +55,203 @@ class _TruckArrivalFormScreenState extends State<TruckArrivalFormScreen> {
 
  // First Form Widget
   Widget buildFirstForm() {
-    return Column(
-      children: [
-        
-        DropdownButtonFormField<String>(
-          value: controller.dockCollData.contains(controller.selectedDockNo.value)
-        ? controller.selectedDockNo.value
-        : null, // Ensure value is in the list
-          // decoration: const InputDecoration(labelText: 'Select Dock'),
-          // hint: const Text("Select Dock No"),
-          decoration: const InputDecoration(
-                      labelText:'Select Dock No',
-                      border: OutlineInputBorder(),
-    labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
-    enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
-    )
-                    ),
-          onChanged: (newValue) {
-            if (newValue != null) {
-         controller.selectedDockNo.value = newValue;
-            }
-          },
-          items: controller.dockCollData.map<DropdownMenuItem<String>>((dockNo) {
-            return DropdownMenuItem<String>(
-        value: dockNo.toString(),
-        child: Text(dockNo.toString()),
-            );
-          }).toList(), 
-          validator: (value) =>
-                      value == null || value.isEmpty ? 'Please select Dock Type' : null,
-        ),
-        
-        
-       SizedBox(height: Get.height * 0.02),
-Obx(() => TextFormField(
-          readOnly: true,
-          controller: TextEditingController(
-            text: DateFormat('yyyy-MM-dd').format(controller.selectedDate.value),
-          ),
-          decoration: InputDecoration(
-            labelText: 'Select Date',
-            border: OutlineInputBorder(),
-    labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
-    enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: CustomColors.appColor, width: 1), ),
-            suffixIcon: IconButton(
-              icon: Icon(Icons.calendar_today),
-              onPressed: () => controller.pickDate(context),
-            ),
-          ),
-          validator: (value) => value!.isEmpty ? 'Please select a date' : null,
-        )),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: Get.width * 0.04),
+      child: Column(
+        children: [
 
-
-        SizedBox(height: Get.height * 0.02),
-      
-        Obx(
-      () => TextFormField(
-        readOnly: true,
-        controller: TextEditingController(text: controller.timeShift.value),
-        decoration: InputDecoration(
-          labelText: 'Shift',
-    border: OutlineInputBorder(),
-    labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
-    enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
-    )
-                    ),
-        onTap: () => controller.selectShift(context),
-        validator: (value) => value!.isEmpty ? 'Please select a shift' : null,
+          DropdownButtonFormField<String>(
+            value: controller.dockCollData.contains(controller.selectedDockNo.value)
+          ? controller.selectedDockNo.value
+          : null, // Ensure value is in the list
+            // decoration: const InputDecoration(labelText: 'Select Dock'),
+            // hint: const Text("Select Dock No"),
+            decoration: const InputDecoration(
+                        labelText:'Select Dock No',
+                        border: OutlineInputBorder(),
+      labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
       ),
-    ),
-
- SizedBox(height: Get.height * 0.02),
-
- ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            padding: EdgeInsets.symmetric(horizontal: Get.width * 0.07, vertical: Get.height * 0.01),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            backgroundColor: CustomColors.appGreenButtomColor,
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+      )
+                      ),
+            onChanged: (newValue) {
+              if (newValue != null) {
+           controller.selectedDockNo.value = newValue;
+              }
+            },
+            items: controller.dockCollData.map<DropdownMenuItem<String>>((dockNo) {
+              return DropdownMenuItem<String>(
+          value: dockNo.toString(),
+          child: Text(dockNo.toString()),
+              );
+            }).toList(),
+            validator: (value) =>
+                        value == null || value.isEmpty ? 'Please select Dock Type' : null,
           ),
-         onPressed: () {
-          
-if (_formKey.currentState!.validate()) {
-      controller.isForm1Visible.value = false;
-            } else {
-              Get.snackbar('Error', 'Please select all fields',
-                  snackPosition: SnackPosition.BOTTOM);
-            }
-          },
-        
-          child: Text('Go', style: TextStyle(fontSize: 20, color: CustomColors.bgColor)),
+
+
+         SizedBox(height: Get.height * 0.02),
+      Obx(() => TextFormField(
+            readOnly: true,
+            controller: TextEditingController(
+              text: DateFormat('yyyy-MM-dd').format(controller.selectedDate.value),
+            ),
+            decoration: InputDecoration(
+              labelText: 'Select Date',
+              border: OutlineInputBorder(),
+      labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: CustomColors.appColor, width: 1), ),
+              suffixIcon: IconButton(
+                icon: Icon(Icons.calendar_today),
+                onPressed: () => controller.pickDate(context),
+              ),
+            ),
+            validator: (value) => value!.isEmpty ? 'Please select a date' : null,
+          )),
+
+
+          SizedBox(height: Get.height * 0.02),
+
+          Obx(
+        () => TextFormField(
+          readOnly: true,
+          controller: TextEditingController(text: controller.timeShift.value),
+          decoration: InputDecoration(
+            labelText: 'Shift',
+      border: OutlineInputBorder(),
+      labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+      )
+                      ),
+          onTap: () => controller.selectShift(context),
+          validator: (value) => value!.isEmpty ? 'Please select a shift' : null,
         ),
- SizedBox(height: Get.height * 0.02),
-      ],
+      ),
+
+       SizedBox(height: Get.height * 0.02),
+
+       ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              padding: EdgeInsets.symmetric(horizontal: Get.width * 0.07, vertical: Get.height * 0.01),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              backgroundColor: CustomColors.appGreenButtomColor,
+            ),
+           onPressed: () {
+
+      if (_formKey.currentState!.validate()) {
+        controller.isForm1Visible.value = false;
+              } else {
+                Get.snackbar('Error', 'Please select all fields',
+                    snackPosition: SnackPosition.BOTTOM);
+              }
+            },
+
+            child: Text('Go', style: TextStyle(fontSize: 20, color: CustomColors.bgColor)),
+          ),
+       SizedBox(height: Get.height * 0.02),
+        ],
+      ),
     );
   }
 
   // Second Form Widget
   Widget buildSecondForm() {
-    return Column(
-      children: [
-        
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: Get.width * 0.04),
+      child: Column(
+        children: [
+
+          SizedBox(height: Get.height * 0.02),
+          DropdownButtonFormField<String>(
+      value: controller.routeData.contains(controller.selectedRoute.value)
+          ? controller.selectedRoute.value
+          : null, // Set to null if not found in list
+
+      //hint: const Text("Select Route"),
+      onChanged: (newValue) {
+        if (newValue != null) {
+         controller.selectedRoute.value = newValue;
+         controller.fetchCompnyCodeByRuteCodeName(controller.selectedRoute.value);
+        }
+      },  decoration: const InputDecoration(
+                        labelText:'Select Route ',
+                        border: OutlineInputBorder(),
+      labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+      )
+                      ),
+      validator: (value) =>
+                        value == null || value.isEmpty ? 'Please select Route Type' : null,
+      items: controller.routeData.toSet().map<DropdownMenuItem<String>>((route) {
+        return DropdownMenuItem<String>(
+          value: route,
+          child: Text(route),
+        );
+      }).toList(),
+          ),
+
         SizedBox(height: Get.height * 0.02),
-        DropdownButtonFormField<String>(
-    value: controller.routeData.contains(controller.selectedRoute.value)
-        ? controller.selectedRoute.value
-        : null, // Set to null if not found in list
-   
-    //hint: const Text("Select Route"),
-    onChanged: (newValue) {
-      if (newValue != null) {
-       controller.selectedRoute.value = newValue;
-       controller.fetchCompnyCodeByRuteCodeName(controller.selectedRoute.value);
-      }
-    },  decoration: const InputDecoration(
-                      labelText:'Select Route ',
-                      border: OutlineInputBorder(),
-    labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
-    enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
-    )
-                    ),
-    validator: (value) =>
-                      value == null || value.isEmpty ? 'Please select Route Type' : null,
-    items: controller.routeData.toSet().map<DropdownMenuItem<String>>((route) { 
-      return DropdownMenuItem<String>(
-        value: route,
-        child: Text(route),
-      );
-    }).toList(),
-        ),
-        
-      SizedBox(height: Get.height * 0.02),
- Obx(() => TextFormField(
-          readOnly: true,
-          controller:   TextEditingController(text: controller.currentTime.value.toString()),
-          decoration: InputDecoration(
-            labelText: 'Time',
-             border: OutlineInputBorder(),
-    labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
-    enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
-    ),
-            suffixIcon: IconButton(
-              icon: Icon(Icons.access_time),
-              onPressed: () => controller.selectTime(context),
+       Obx(() => TextFormField(
+            readOnly: true,
+            controller:   TextEditingController(text: controller.currentTime.value.toString()),
+            decoration: InputDecoration(
+              labelText: 'Time',
+               border: OutlineInputBorder(),
+      labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+      ),
+              suffixIcon: IconButton(
+                icon: Icon(Icons.access_time),
+                onPressed: () => controller.selectTime(context),
+              ),
             ),
+            validator: (value) => value!.isEmpty ? 'Please select a time' : null,
+          )),
+
+
+
+          SizedBox(height: Get.height * 0.02),
+          TextField(
+            controller: truckNo,
+
+       decoration: InputDecoration(
+              labelText:  'Enter Truck No.',
+               border: OutlineInputBorder(),
+      labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
+      ),
+
+            ),
+
           ),
-          validator: (value) => value!.isEmpty ? 'Please select a time' : null,
-        )),
-
-
-
-        SizedBox(height: Get.height * 0.02),
-        TextField(
-
- decoration: InputDecoration(
-            labelText:  'Enter Truck No.',
-             border: OutlineInputBorder(),
-    labelStyle: TextStyle(color: CustomColors.appColor), // Label text color
-    enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: CustomColors.appColor), // Border color when not focused
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: CustomColors.appColor, width: 1), // Border color when focused
-    ),
-         
-          ),
-         
-        ),
-        SizedBox(height: Get.height * 0.02),
-        _buildButtons(),
-        SizedBox(height: Get.height * 0.02),
-       ],
+          SizedBox(height: Get.height * 0.02),
+          _buildButtons(),
+          SizedBox(height: Get.height * 0.02),
+         ],
+      ),
     );
   }
 
@@ -317,7 +325,9 @@ Widget _buildLandscapeLayout(double padding) {
             backgroundColor: CustomColors.appGreenButtomColor,
           ),
          onPressed: () {
+
             if (_formKey.currentState!.validate()) {
+              controller.truckNumber.value = truckNo.text;
               // Process data if form is valid
            
     Future.wait([
@@ -336,50 +346,43 @@ Widget _buildLandscapeLayout(double padding) {
   }
 
   Widget buildDataTable() {
-    return Obx(() => SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child:
+    return Obx(() => DataTable(
+         headingRowColor:
+             WidgetStateProperty.all(CustomColors.appColor),
+         headingTextStyle: const TextStyle(
+             color: Colors.white, fontWeight: FontWeight.bold),
+         // columnSpacing: 12,
+         // dataRowMinHeight: 20,
+         // dataRowMaxHeight: 40,
+         // headingRowHeight: 33,
+         columns: const [
+
+       DataColumn(label: Text('S. No.'), headingRowAlignment: MainAxisAlignment.center),
+       DataColumn(label: Text('Date'), headingRowAlignment: MainAxisAlignment.center),
+       DataColumn(label: Text('Shift'), headingRowAlignment: MainAxisAlignment.center),
+       DataColumn(label: Text('Truck No'), headingRowAlignment: MainAxisAlignment.center),
+       DataColumn(label: Text('Arrival Time'), headingRowAlignment: MainAxisAlignment.center),
 
 
- SizedBox( width: Get.width,
-   child: DataTable(
-        headingRowColor:
-            WidgetStateProperty.all(CustomColors.appColor),
-        headingTextStyle: const TextStyle(
-            color: Colors.white, fontWeight: FontWeight.bold),
-        columnSpacing: 12,
-        dataRowMinHeight: 20,
-        dataRowMaxHeight: 40,
-        headingRowHeight: 33,
-        columns: const [
-   
-      DataColumn(label: Text('S. No.')),
-      DataColumn(label: Text('Date')),
-      DataColumn(label: Text('Shift')),
-      DataColumn(label: Text('Truck No')),
-      DataColumn(label: Text('Arrival Time')),
-   
-   
-        ],
-        rows: List.generate(controller.truckArrivalDBData.length, (index) {
-          final data = controller.truckArrivalDBData[index];
-          final isGrey = index % 2 == 0;
-          return DataRow(
-            color: WidgetStateProperty.all(isGrey ? Colors.white : Colors.grey[200]),
-            cells: [
-   
-   DataCell(Center(child: Text("${data["sampleId"]}"))),
-   DataCell(Center(child: Text("${data['dumpDate']}"))),
-   DataCell(Center(child: Text("${data['shift']}"))),
-   DataCell(Center(child: Text("${data['truckNo']}"))),
-   DataCell(Center(child: Text((data['arrivalTime'].toString())))),
-   
-      
-            ],
-          );
-        }),
-      ),
- )));}
+         ],
+         rows: List.generate(controller.truckArrivalDBData.length, (index) {
+           final data = controller.truckArrivalDBData[index];
+           final isGrey = index % 2 == 0;
+           return DataRow(
+             color: WidgetStateProperty.all(isGrey ? Colors.white : Colors.grey[200]),
+             cells: [
+
+    DataCell(Center(child: Text("${data["sampleId"]}"))),
+    DataCell(Center(child: Text("${data['dumpDate']}"))),
+    DataCell(Center(child: Text("${data['shift']}"))),
+    DataCell(Center(child: Text("${data['truckNo']}"))),
+    DataCell(Center(child: Text((data['arrivalTime'].toString())))),
+
+
+             ],
+           );
+         }),
+       ));}
 }
 
 

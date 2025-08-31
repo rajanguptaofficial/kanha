@@ -15,6 +15,7 @@ class MppMasterScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: CustomColors.appColor,
           title: const Text(
@@ -33,7 +34,7 @@ class MppMasterScreen extends StatelessWidget {
               }
 
               return Padding(
-                padding: EdgeInsets.all(width * 0.04),
+                padding: EdgeInsets.symmetric(vertical: 1),
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: SingleChildScrollView(
@@ -54,19 +55,25 @@ class MppMasterScreen extends StatelessWidget {
           WidgetStateProperty.all(CustomColors.appColor),
       headingTextStyle: const TextStyle(
           color: Colors.white, fontWeight: FontWeight.bold),
-      columnSpacing: 12,
-      dataRowMinHeight: 20,
-      dataRowMaxHeight: 40,
-      headingRowHeight: 33,
+      // columnSpacing: 12,
+      // dataRowMinHeight: 20,
+      // dataRowMaxHeight: 40,
+      // headingRowHeight: 33,
       columns: const [
-                              DataColumn(label: Text('Name-Code')),
-                              DataColumn(label: Text('MCC Name-Code')),
-                              DataColumn(label: Text('Plant Name-Code')),
-                              DataColumn(label: Text('Company Name-Code')),
-                              DataColumn(label: Text('Route Name-Code')),
-                              DataColumn(label: Text('Status')),
-                              DataColumn(label: Text('Effective Date')),
-                              DataColumn(label: Text('Address')),
+        DataColumn(label: Text('S. No')),
+        DataColumn(label: Text('MPP Code')),
+        DataColumn(label: Text('MPP Name'), headingRowAlignment: MainAxisAlignment.center),
+        DataColumn(label: Text('Route Code')),
+        DataColumn(label: Text('BMC Code')),
+        DataColumn(label: Text('Is Active')),
+                              // DataColumn(label: Text('Name-Code')),
+                              // DataColumn(label: Text('MCC Name-Code')),
+                              // DataColumn(label: Text('Plant Name-Code')),
+                              // DataColumn(label: Text('Company Name-Code')),
+                              // DataColumn(label: Text('Route Name-Code')),
+                              // DataColumn(label: Text('Status')),
+                              // DataColumn(label: Text('Effective Date')),
+                              // DataColumn(label: Text('Address')),
 
       ],
       rows: List.generate(controller.mppData.length, (index) {
@@ -77,16 +84,21 @@ class MppMasterScreen extends StatelessWidget {
           cells: [
 
 
-      
 
-   DataCell(Center(child: Text("${data['mppName']} - ${data['code']}"))),
-      DataCell(Center(child: Text("${data['mccName']} - ${data['mccCode']}"))),
-         DataCell(Center(child: Text("${data['plantName']} - ${data['plantCode']}"))),
-            DataCell(Center(child: Text("${data['companyName']} - ${data['companyCode']}"))),
-              DataCell(Center(child: Text("${data['rtName']} - ${data['routecode']}"))),
-              DataCell(Center(child: Text(data['effectivedate'].toString()))), 
-               DataCell(Center(child: Text(data['add1'].toString()  ))), 
-                DataCell(Center(child: Text(data['status'].toString()  ))),
+            DataCell(Center(child: Text("${index +1}."))),
+            DataCell(Center(child: Text("${data['socCode']}"))),
+            DataCell(Center(child: Text("${data['socName']}"))),
+            DataCell(Center(child: Text("${data['rtCode']}"))),
+            DataCell(Center(child: Text("${data['cntCode']}"))),
+            DataCell(Center(child: Text( ("${data['is_Active']}" == "0")?"No":"Yes"))),
+   // DataCell(Center(child: Text("${data['mppName']} - ${data['code']}"))),
+   //    DataCell(Center(child: Text("${data['mccName']} - ${data['mccCode']}"))),
+   //       DataCell(Center(child: Text("${data['plantName']} - ${data['plantCode']}"))),
+   //          DataCell(Center(child: Text("${data['companyName']} - ${data['companyCode']}"))),
+   //            DataCell(Center(child: Text("${data['rtName']} - ${data['routecode']}"))),
+   //            DataCell(Center(child: Text(data['effectivedate'].toString()))),
+   //             DataCell(Center(child: Text(data['add1'].toString()  ))),
+   //              DataCell(Center(child: Text(data['status'].toString()  ))),
 
                           
           ],

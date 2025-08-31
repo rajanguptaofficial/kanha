@@ -39,7 +39,7 @@
 //       var user =pref.getString('username');
 //        isLoading.value = true;
 
-//     final url = Uri.parse(ApiUrls.profile);
+//     final url = Uri.parse(ApiUrls.getMasterData);
 //     final body = {
 //       "deviceid": user.toString(),
 //       "usrcode": userCode.toString(),
@@ -108,7 +108,7 @@ class BmcMasterController extends GetxController {
 
     isLoading.value = true;
 
-    final url = Uri.parse(ApiUrls.profile);
+    final url = Uri.parse(ApiUrls.getMasterData);
     final body = {
       "deviceid": username ?? '',
       "usrcode": userCode ?? '',
@@ -128,9 +128,13 @@ class BmcMasterController extends GetxController {
           responseData['responseData']['table'],
         );
 
+        print("BMC DATA Hai ${tableData}");
+
+
         await insertData(tableData);
 
         bmcData.assignAll(await fetchLocalData());
+
       } else {
         Get.snackbar('Error', 'Failed to fetch data');
       }
@@ -152,6 +156,7 @@ class BmcMasterController extends GetxController {
       
       await db.insert('bmcMaster', bmcMasters);
     }
+
   }
 
  Future<List<Map<String, dynamic>>> fetchLocalData() async {

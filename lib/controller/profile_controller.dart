@@ -23,7 +23,7 @@ final pref = await SharedPreferences.getInstance();
 
 
 
-    final url = Uri.parse(ApiUrls.profile);
+    final url = Uri.parse(ApiUrls.getMasterData);
     final body = {
       "deviceid": "0000001111",
       "usrcode": "226",

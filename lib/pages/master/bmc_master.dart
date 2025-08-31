@@ -18,6 +18,7 @@ class BmcMasterScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: CustomColors.appColor,
           title: const Text(
@@ -36,7 +37,7 @@ class BmcMasterScreen extends StatelessWidget {
               }
 
               return Padding(
-                padding: EdgeInsets.all(width * 0.04),
+                padding: EdgeInsets.symmetric(vertical: 1),
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: SingleChildScrollView(
@@ -57,19 +58,20 @@ class BmcMasterScreen extends StatelessWidget {
           WidgetStateProperty.all(CustomColors.appColor),
       headingTextStyle: const TextStyle(
           color: Colors.white, fontWeight: FontWeight.bold),
-      columnSpacing: 12,
-      dataRowMinHeight: 20,
-      dataRowMaxHeight: 40,
-      headingRowHeight: 33,
+      // columnSpacing: 12,
+      // dataRowMinHeight: 20,
+      // dataRowMaxHeight: 40,
+      // headingRowHeight: 33,
       columns: const [
 
-                     DataColumn(label: Text('BMC Name-Code')),
-    DataColumn(label: Text('MCC Name-Code')),
-    DataColumn(label: Text('Plant Name-Code')),
-    DataColumn(label: Text('Company Name-Code')),
-    DataColumn(label: Text('Effective Date')),
-    DataColumn(label: Text('Address')),
-    DataColumn(label: Text('DOCK')),
+    DataColumn(label: Text('S. No')),
+    DataColumn(label: Text('BMC Name')),
+    DataColumn(label: Text('BMC Code')),
+    DataColumn(label: Text('Is Active')),
+    // DataColumn(label: Text('Company Name-Code')),
+    // DataColumn(label: Text('Effective Date')),
+    // DataColumn(label: Text('Address')),
+    // DataColumn(label: Text('DOCK')),
 
       ],
       rows: List.generate(controller.bmcData.length, (index) {
@@ -82,13 +84,13 @@ class BmcMasterScreen extends StatelessWidget {
   
       
 
-   DataCell(Center(child: Text("${data['bmcname']} - ${data['bmccode']}"))),
-      DataCell(Center(child: Text("${data['mccName']} - ${data['mccCode']}"))),
-         DataCell(Center(child: Text("${data['plantName']} - ${data['plantCode']}"))),
-            DataCell(Center(child: Text("${data['companyName']} - ${data['companyCode']}"))),
-              DataCell(Center(child: Text(data['effectivedate'].toString()))), 
-               DataCell(Center(child: Text(data['add1'].toString()  ))), 
-                DataCell(Center(child: Text(data['cntDocks'].toString()  ))),
+   DataCell(Center(child: Text("${index +1}."))),
+      DataCell(Center(child: Text("${data['cntName']}"))),
+         DataCell(Center(child: Text("${data['cntCode']}"))),
+            DataCell(Center(child: Text( ("${data['is_Active']}" == "0")?"No":"Yes"))),
+              // DataCell(Center(child: Text(data['effectivedate'].toString()))),
+              //  DataCell(Center(child: Text(data['add1'].toString()  ))),
+              //   DataCell(Center(child: Text(data['cntDocks'].toString()  ))),
 
                           
           ],

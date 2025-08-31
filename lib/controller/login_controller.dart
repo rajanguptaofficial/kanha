@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:kanha_bmc/common/api_urls.dart';
 import 'package:kanha_bmc/common/shared_preferences.dart';
 import 'package:kanha_bmc/database/data%20syncing/data_syncing_homepage.dart';
+import 'package:kanha_bmc/pages/dashboard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginController extends GetxController {
@@ -89,6 +90,7 @@ class LoginController extends GetxController {
 
           Get.snackbar('Success', data['responseMessage']);
           Get.off(DataSyncingHomepageScreen());
+          //Get.off(DashboardScreen());
         } else {
           Get.snackbar('Error', data['responseMessage']);
         }

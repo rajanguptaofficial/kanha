@@ -41,7 +41,7 @@ Future updateSelectedMilkType(String milkType) async {
     var user = pref.getString('username');
     isLoading.value = true;
 
-    final url = Uri.parse(ApiUrls.profile);
+    final url = Uri.parse(ApiUrls.getMasterData);
     final body = {
       "deviceid": user.toString(),
       "usrcode": userCode.toString(),

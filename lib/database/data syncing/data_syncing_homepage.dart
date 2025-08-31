@@ -90,6 +90,7 @@
   
 
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'data_syncing_homepage_controller.dart';
@@ -124,9 +125,9 @@ class _DataSyncingHomepageScreenState extends State<DataSyncingHomepageScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: const [
-                  CircularProgressIndicator(),
+                  CupertinoActivityIndicator(),
                   SizedBox(height: 22),
-                  Text("          Please Wait... \n\n  Data Syncing Locally ! ",style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text("Data Syncing...",style: TextStyle(fontWeight: FontWeight.bold)),
                 ],
               ),
             );
@@ -135,7 +136,7 @@ class _DataSyncingHomepageScreenState extends State<DataSyncingHomepageScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Data Syncing Locally Completed!",style: TextStyle(fontWeight: FontWeight.bold),),
+                  const Text("Data Syncing Completed!",style: TextStyle(fontWeight: FontWeight.bold),),
                   SizedBox(height: 16),
                   // ElevatedButton(
                   //   style: ElevatedButton.styleFrom(
@@ -162,7 +163,7 @@ class _DataSyncingHomepageScreenState extends State<DataSyncingHomepageScreen> {
         bottomNavigationBar: Padding(
           padding: EdgeInsets.all(Get.width * 0.02),
           child: const Text(
-            '© KMTEPL | App Version-1.0 | 5 Feb 2025',
+            '© KMTEPL | App Version-1.0 | 23 Aug 2025',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 12, color: Colors.black),
           ),

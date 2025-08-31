@@ -37,7 +37,7 @@
 //       var user =pref.getString('username');
 //        isLoading.value = true;
 
-//     final url = Uri.parse(ApiUrls.profile);
+//     final url = Uri.parse(ApiUrls.getMasterData);
 //     final body = {
 //       "deviceid": user.toString(),
 //       "usrcode": userCode.toString(),
@@ -106,7 +106,7 @@ class MppMasterController extends GetxController {
 
     isLoading.value = true;
 
-    final url = Uri.parse(ApiUrls.profile);
+    final url = Uri.parse(ApiUrls.getMasterData);
     final body = {
       "deviceid": username ?? '',
       "usrcode": userCode ?? '',
@@ -126,6 +126,8 @@ class MppMasterController extends GetxController {
           responseData['responseData']['table'],
         );
 
+        print(" MPP data hai $tableData");
+
         await insertData(tableData);
 
         mppData.assignAll(await fetchLocalData());
@@ -133,6 +135,7 @@ class MppMasterController extends GetxController {
         Get.snackbar('Error', 'Failed to fetch data');
       }
     } catch (e) {
+      print("this is e $e");
       Get.snackbar('Error', 'Something went wrong');
     } finally {
       isLoading.value = false;

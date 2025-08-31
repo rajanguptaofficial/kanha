@@ -34,7 +34,7 @@ class MemberMasterController extends GetxController {
 
     isLoading.value = true;
 
-    final url = Uri.parse(ApiUrls.profile);
+    final url = Uri.parse(ApiUrls.getMasterData);
     final body = {
       "deviceid": username ?? '',
       "usrcode": userCode ?? '',

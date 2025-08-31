@@ -22,7 +22,7 @@
 //       var user =pref.getString('username');
 //        isLoading.value = true;
 
-//     final url = Uri.parse(ApiUrls.profile);
+//     final url = Uri.parse(ApiUrls.getMasterData);
 //     final body = {
 //       "deviceid": user.toString(),
 //       "usrcode": userCode.toString(),
@@ -96,7 +96,7 @@ class RateMasterController extends GetxController {
 
     isLoading.value = true;
 
-    final url = Uri.parse(ApiUrls.profile);
+    final url = Uri.parse(ApiUrls.getMasterData);
     final body = {
       "deviceid": username ?? '',
       "usrcode": userCode ?? '',

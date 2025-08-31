@@ -108,8 +108,10 @@ class DockCollectionController extends GetxController {
 
   Future<void> fetchRoutes() async {
     final db = await _kanhaDBHelper.database;
-    final result = await db.rawQuery('SELECT rtCode FROM bmcCollection');
-    routeData.assignAll(result.map((row) => row['rtCode'].toString()).toSet());
+    final result = await db.rawQuery('SELECT rtCode FROM truckArrival');
+    print("this is result ${result}");
+    routeData.assignAll(result.map((row) => row['rtcode'].toString()).toSet());
+    print("this is result ${routeData}");
   }
 
   Future<void> initializeMemberCollData() async {
@@ -184,15 +186,15 @@ Future updateSelectedMilkType(String milk) async {
       final db = await KanhaDBHelper.instance.database;
       final result = await db.query(
         'mppMaster',
-        where: 'code = ?',
+        where: 'socCode = ?',
         whereArgs: [code],
       );
 
       if (result.isNotEmpty) {
-        mppName.value = result.first['mppName'] as String;
-        mppSocCode.value = result.first['socCode'].toString();
-        mppRouteCode.value = result.first['routecode'].toString();
-        mppBmcCode.value = result.first['bmccode'].toString();
+        mppName.value = result.first['socName'] as String;
+        // mppSocCode.value = result.first['socCode'].toString();
+        // mppRouteCode.value = result.first['routecode'].toString();
+        // mppBmcCode.value = result.first['bmccode'].toString();
       } else {
         mppName.value = '';
       }
